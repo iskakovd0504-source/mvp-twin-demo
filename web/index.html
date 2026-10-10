@@ -26,6 +26,16 @@
   #floorctl input { flex: 1; }
   #floorctl b { min-width: 64px; text-align: right; }
   label.chk { font-size: 12px; color: #94a3b8; display: flex; gap: 6px; align-items: center; margin-top: 6px; cursor: pointer; }
+  details { border: 1px solid #1e293b; border-radius: 10px; margin: 8px 0; background: #0b1426; }
+  details summary { cursor: pointer; padding: 10px 12px; font-size: 13px; font-weight: 600; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸ "; color: #38bdf8; }
+  details[open] summary::before { content: "▾ "; }
+  details .dbody { padding: 0 12px 12px; }
+  .microw { display: flex; gap: 6px; }
+  .microw input { flex: 1; }
+  .microw button { padding: 8px 10px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #fff; cursor: pointer; }
+  .microw button.live { border-color: #ef4444; color: #fca5a5; animation: pulse 1s infinite; }
   #alertbar { position: absolute; top: 12px; left: 12px; right: 12px; display: none; background: rgba(127,29,29,.92); border: 1px solid #f87171; padding: 8px 12px; border-radius: 10px; font-size: 13px; z-index: 3; }
   #alertbar.on { display: block; animation: pulse 1.2s infinite; }
   #awidget { position: absolute; right: 12px; bottom: 48px; width: 300px; background: rgba(15,23,42,.92); border: 1px solid #334155; border-radius: 12px; padding: 10px; z-index: 3; }
@@ -47,23 +57,23 @@
 </script>
 </head>
 <body>
-<div id="scene"><div id="alertbar"></div><div id="awidget"><b style="font-size:12px">FM-агент</b><div class="chips"><button data-a="где перерасход?">перерасход</button><button data-a="авария">авария</button><button data-a="статус">статус</button></div><input id="q2" placeholder="спроси агента…"/><div id="agentlog2">Жми чип или пиши: перерасход / авария / статус</div></div><div id="hint">Клик по этажу/стояку — смета и материалы · слайдер — фокус на этаж · X-Ray — вскрыть инженерию</div></div>
+<div id="scene"><div id="alertbar"></div><div id="awidget"><b style="font-size:12px">FM-агент</b><div class="chips"><button data-a="где перерасход?">перерасход</button><button data-a="авария">авария</button><button data-a="статус">статус</button></div><div class="microw"><input id="q2" placeholder="спроси агента…"/><button id="mic2" title="Голос">🎤</button></div><div id="agentlog2">Жми чип, говори или пиши: перерасход / авария / статус</div></div><div id="hint">Клик по этажу/стояку — смета и материалы · слайдер — фокус на этаж · X-Ray — вскрыть инженерию</div></div>
 <div id="panel">
   <div class="badge">BIM LOD300 · данные выдуманы (MOCK)</div>
   <div class="rowbtns"><button id="demoplay" class="hot">▶ Автоплей 5 мин</button><button id="demoreset">Сброс</button></div>
-  <h2 id="objname">Объект…</h2>
-  <div id="objmeta" class="card"></div>
+  <details open><summary>🏢 Объект</summary><div class="dbody"><h2 id="objname" style="margin-top:0">Объект…</h2><div id="objmeta" class="card"></div></div></details>
 
-  <h2>Этаж</h2>
+  <details open><summary>🏗 Этаж и вид</summary><div class="dbody">
   <div id="floorctl"><input id="floor" type="range" min="1" max="20" value="20"/><b id="floorv">эт 20</b></div>
   <div id="floorinfo" class="card">Кликни по башне — материалы и смета этажа.</div>
-  <label class="chk"><input id="xray" type="checkbox"/> X-Ray: скрыть фасад, показать стояки (как на референсе)</label>
+  <label class="chk"><input id="xray" type="checkbox"/> X-Ray: скрыть фасад, показать стояки</label>
   <label class="chk"><input id="struct" type="checkbox" checked/> Конструктив (плиты + пилоны + ядро)</label>
   <label class="chk"><input id="section" type="checkbox"/> Разрез: план этажа + 4 квартиры</label>
   <label class="chk"><input id="night" type="checkbox"/> Ночь: фасад + фонари</label>
   <div id="aptinfo" class="card">Включи «Разрез», кликни по квартире — цена и статус.</div>
+  </div></details>
 
-  <h2>BIM-слои — как в модели</h2>
+  <details><summary>🔧 BIM-слои</summary><div class="dbody">
   <div class="layers">
     <button id="btn-water" style="color:#38bdf8">ВК вода</button>
     <button id="btn-heat" style="color:#fb7185">ОВ тепло</button>
@@ -71,21 +81,26 @@
     <button id="btn-vent" style="color:#e879f9">Вент</button>
   </div>
   <div id="netinfo" class="card">Кликни по цветному стояку в шахте башни.</div>
+  </div></details>
 
-  <h2>Смета: котлован → сдача</h2>
+  <details open><summary>💰 Смета — готовность %</summary><div class="dbody">
+  <div style="font-size:11px;color:#94a3b8">% = готовность работ, под ним материалы этапа (MOCK).</div>
   <div id="estimate"></div>
   <div class="rowbtns"><button id="csv">Экспорт CSV</button><button id="copyd">Копировать GUID</button></div>
   <button class="stub-btn">IFC GUID · ведомость · КС-2 (в пилоте)</button>
+  </div></details>
 
-  <h2>FM-агент (заглушка)</h2>
+  <details><summary>🤖 FM-агент + 🎤</summary><div class="dbody">
   <div id="agent">
-    <input id="q" placeholder="где перерасход? / статус / авария…"/>
-    <div id="agentlog" class="card">Спроси: перерасход, авария, поручение, статус, уборка</div>
+    <div class="microw"><input id="q" placeholder="где перерасход? / статус…"/><button id="mic" title="Голос">🎤</button></div>
+    <div id="agentlog" class="card">Спроси голосом или текстом: перерасход, авария, поручение, статус, уборка</div>
   </div>
+  </div></details>
 
-  <h2>Картина дня стройки</h2>
+  <details><summary>📊 Картина дня</summary><div class="dbody">
   <div id="daily"></div>
   <button class="stub-btn">Кадастр · Телеметрия ИТП · Зона отключения (в пилоте)</button>
+  </div></details>
 </div>
 <script type="module" src="app.js"></script>
 </body>

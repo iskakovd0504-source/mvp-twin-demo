@@ -406,7 +406,7 @@ async function init() {
   document.getElementById('objmeta').innerHTML =
     `<b>${MOCK.object.address}</b><br/>Кадастр: ${MOCK.object.cadastre}<br/>${MOCK.object.status}`;
   document.getElementById('estimate').innerHTML = MOCK.estimate.map(e =>
-    `<div class="card"><b>${e.stage}</b> — ${(e.sum / 1e6).toFixed(0)} млн ₸ · ${e.done}%<div class="bar"><div style="width:${e.done}%"></div></div></div>`).join('');
+    `<div class="card"><b>${e.stage}</b> — ${(e.sum / 1e6).toFixed(0)} млн ₸ · готовность ${e.done}%<div class="bar"><div style="width:${e.done}%"></div></div><div style="font-size:11px;color:#94a3b8;margin-top:4px">${e.mats || ''}</div></div>`).join('');
   document.getElementById('daily').innerHTML =
     MOCK.sensors.map(s => `<div class="card"><b>${s.id}</b><br/>${s.val} · ${s.trend} · <b>${s.flag}</b></div>`).join('') +
     `<div class="card"><b>Голос стройки</b><br/>` + MOCK.appeals.map(a => `${a.theme} — ${a.count}`).join('<br/>') + `</div>`;
@@ -423,6 +423,18 @@ async function init() {
   document.getElementById('q').addEventListener('keydown', e => { if (e.key === 'Enter') agent(e.target.value); });
   document.getElementById('q2').addEventListener('keydown', e => { if (e.key === 'Enter') agent(e.target.value); });
   document.querySelectorAll('#awidget .chips button').forEach(b => b.onclick = () => agent(b.dataset.a));
+  const voice = (input, btn) => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { agent('статус'); document.getElementById('agentlog2').innerHTML += '<br/><span style="color:#f87171">🎤 не поддерживается в этом браузере — пиши текстом</span>'; return; }
+    const r = new SR(); r.lang = 'ru-RU'; r.interimResults = false;
+    btn.classList.add('live');
+    r.onresult = (e) => { const t = e.results[0][0].transcript; input.value = t; agent(t); };
+    r.onend = () => btn.classList.remove('live');
+    r.onerror = () => btn.classList.remove('live');
+    try { r.start(); } catch { btn.classList.remove('live'); }
+  };
+  document.getElementById('mic').onclick = () => voice(document.getElementById('q'), document.getElementById('mic'));
+  document.getElementById('mic2').onclick = () => voice(document.getElementById('q2'), document.getElementById('mic2'));
   document.getElementById('csv').onclick = exportCSV;
   document.getElementById('copyd').onclick = () => {
     const t = 'Fl-' + String(state.floor).padStart(2, '0') + ' (MOCK)';
