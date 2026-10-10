@@ -620,6 +620,15 @@ function updateCounts() {
   setCnt('c-floor', 7, 'amber');
 }
 
+function flashCard(el) {
+  if (!el) return;
+  el.classList.remove('hot');
+  void el.offsetWidth;
+  el.classList.add('hot');
+  clearTimeout(flashCard._t);
+  flashCard._t = setTimeout(() => el.classList.remove('hot'), 1800);
+}
+
 function flashSection(id) {
   const d = document.getElementById(id);
   if (!d) return;
@@ -743,13 +752,14 @@ function showEq(id) {
     pulseList.push(m);
     setTimeout(() => { pulseList = pulseList.filter(x => x !== m); }, 4000);
   }
+  flashCard(document.querySelector(`[data-eqcard="${id}"]`));
   alertBar(`🔮 ${e.name} · здоровье ${e.health}% · ТО ${e.to} · ${e.state}`);
 }
 
 function renderPred() {
   const col = (h) => h < 65 ? '#f87171' : h < 85 ? '#fbbf24' : '#34d399';
   document.getElementById('pred').innerHTML = MOCK.equipment.map(e =>
-    `<div class="card"><b>${e.name}</b> · ${e.place} · <span style="color:${col(e.health)}">здоровье ${e.health}%</span><div class="bar"><div style="width:${e.health}%;background:${col(e.health)}"></div></div><div style="font-size:11px;color:#94a3b8;margin-top:4px">ТО ${e.to} · ресурса ${e.rul} · ${e.state}</div><button data-eq="${e.id}" style="margin-top:6px;width:100%;padding:6px;border-radius:8px;border:1px solid #2c3d5c;background:#16213a;color:#7dd3fc;cursor:pointer;font-size:12px">📍 Показать узел</button></div>`).join('');
+    `<div class="card" data-eqcard="${e.id}"><b>${e.name}</b> · ${e.place} · <span style="color:${col(e.health)}">здоровье ${e.health}%</span><div class="bar"><div style="width:${e.health}%;background:${col(e.health)}"></div></div><div style="font-size:11px;color:#94a3b8;margin-top:4px">ТО ${e.to} · ресурса ${e.rul} · ${e.state}</div><button data-eq="${e.id}" style="margin-top:6px;width:100%;padding:6px;border-radius:8px;border:1px solid #2c3d5c;background:#16213a;color:#7dd3fc;cursor:pointer;font-size:12px">📍 Показать узел</button></div>`).join('');
   document.querySelectorAll('#pred [data-eq]').forEach(b => b.onclick = () => showEq(b.dataset.eq));
 }
 
@@ -938,12 +948,12 @@ async function init() {
     if (!hit) return;
     markSelected(hit.object);
     const u = hit.object.userData;
-    if (u.type === 'net') { showNet(u.net); flashSection('d-nets'); }
-    else if (u.type === 'floor') { selectFloor(u.n); flashSection('d-floor'); }
-    else if (u.type === 'plot') { showPlot(u.own, u.name, u.pid); flashSection('d-plot'); }
+    if (u.type === 'net') { showNet(u.net); flashSection('d-nets'); flashCard(document.getElementById('netinfo')); }
+    else if (u.type === 'floor') { selectFloor(u.n); flashSection('d-floor'); flashCard(document.getElementById('floorinfo')); }
+    else if (u.type === 'plot') { showPlot(u.own, u.name, u.pid); flashSection('d-plot'); flashCard(document.getElementById('parcelinfo')); }
     else if (u.type === 'eq') showEq(u.eq);
-    else if (u.type === 'street') showStreet(u.kind, u.id);
-    else if (u.type === 'apt' && u.apt !== 'HALL') { showApt(u.floor, u.apt); flashSection('d-floor'); }
+    else if (u.type === 'street') { showStreet(u.kind, u.id); flashCard(document.getElementById('streetinfo')); }
+    else if (u.type === 'apt' && u.apt !== 'HALL') { showApt(u.floor, u.apt); flashSection('d-floor'); flashCard(document.getElementById('aptinfo')); }
   });
 
   const clock = new THREE.Clock();
