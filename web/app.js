@@ -126,7 +126,7 @@ function buildTower() {
   const dummy = new THREE.Object3D();
   let ci = 0;
   const slabGeo = new THREE.BoxGeometry(W, 0.45, D);
-  const glassMat = new THREE.MeshStandardMaterial({ color: 0x7dd3fc, roughness: 0.15, metalness: 0.55, transparent: true, opacity: 0.55 });
+  const glassMat = new THREE.MeshStandardMaterial({ color: 0x9fd8f5, roughness: 0.12, metalness: 0.45, transparent: true, opacity: 0.68 });
   const slabEdge = new THREE.EdgesGeometry(slabGeo);
 
   for (let f = 1; f <= FLOORS; f++) {
@@ -191,17 +191,17 @@ function buildTower() {
   riser(4.5, 0.2, 0.3, 0x22d3ee, 'water');
   riser(5.4, 0.2, 0.3, 0xf97316, 'heat');
 
-  // наружные вводы от границы участка к стилобату
+  // наружные вводы от границы участка к стилобату (идут над землей, в дом)
   const intro = (z, y, c, net) => {
     const curve = new THREE.CatmullRomCurve3(
-      [new THREE.Vector3(-60, y, z), new THREE.Vector3(-25, y, z), new THREE.Vector3(-W / 2 - 4, y, z * 0.3)]);
+      [new THREE.Vector3(-60, 0.4, z), new THREE.Vector3(-25, 1.1, z), new THREE.Vector3(-W / 2 - 4, y, z * 0.25)]);
     const m = new THREE.Mesh(new THREE.TubeGeometry(curve, 32, 0.4, 8),
       new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: 0.4 }));
     m.userData = { type: 'net', net }; groups[net].add(m); pickables.push(m);
   };
-  intro(14, 0.6, 0x38bdf8, 'water');
-  intro(20, 0.9, 0xfb7185, 'heat');
-  intro(-24, 1.2, 0xfacc15, 'power');
+  intro(14, 2.2, 0x38bdf8, 'water');
+  intro(20, 2.6, 0xfb7185, 'heat');
+  intro(-24, 3.0, 0xfacc15, 'power');
 }
 
 function floorCalc(n) {
@@ -420,7 +420,9 @@ async function init() {
   const renderTasks = () => {
     document.getElementById('tasks').innerHTML = MOCK.tasks.map(t =>
       `<label class="chk" style="${doneTasks.has(t.id) ? 'text-decoration:line-through;opacity:.6' : ''}"><input type="checkbox" data-t="${t.id}" ${doneTasks.has(t.id) ? 'checked' : ''}/> <b>${t.id}</b> · ${t.text} · <span style="color:${t.overdue ? '#f87171' : '#94a3b8'}">${t.due}</span></label>`).join('');
-    document.getElementById('taskcount').textContent = MOCK.tasks.filter(t => !doneTasks.has(t.id)).length;
+    const open = MOCK.tasks.filter(t => !doneTasks.has(t.id)).length;
+    document.getElementById('taskcount').textContent = open;
+    document.getElementById('st-open').textContent = open;
     document.querySelectorAll('#tasks input').forEach(c => c.onchange = () => {
       c.checked ? doneTasks.add(c.dataset.t) : doneTasks.delete(c.dataset.t);
       localStorage.setItem('twin_tasks', JSON.stringify([...doneTasks]));
@@ -433,7 +435,6 @@ async function init() {
   const lag = Math.max(...MOCK.estimate.map(e => (e.plan ?? e.done) - e.done));
   document.getElementById('st-ready').textContent = avg + '%';
   document.getElementById('st-lag').textContent = lag > 0 ? '−' + lag + ' п.п.' : '0';
-  document.getElementById('st-open').textContent = MOCK.tasks.length;
   document.getElementById('daily').innerHTML =
     MOCK.sensors.map(s => `<div class="card"><b>${s.id}</b><br/>${s.val} · ${s.trend} · <b>${s.flag}</b></div>`).join('') +
     `<div class="card"><b>Голос стройки</b><br/>` + MOCK.appeals.map(a => `${a.theme} — ${a.count}`).join('<br/>') + `</div>`;
