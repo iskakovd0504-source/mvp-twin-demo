@@ -355,13 +355,32 @@ function buildSite() {
   fill.rotation.x = -Math.PI / 2; fill.position.y = 0.06;
   fill.userData = { type: 'plot', own: true };
   scene.add(fill); pickables.push(fill);
-  // соседи: серые коробки без данных
-  const nmat = new THREE.MeshStandardMaterial({ color: 0x3a4763, roughness: 1, transparent: true, opacity: 0.7 });
-  [['склад', 78, 6, 0], ['дома', -78, 8, 10]].forEach(([nm, x, h, z]) => {
-    const b = new THREE.Mesh(new THREE.BoxGeometry(34, h, 30), nmat.clone());
-    b.position.set(x, h / 2, z); b.castShadow = true;
-    b.userData = { type: 'plot', own: false, name: nm };
-    scene.add(b); pickables.push(b);
+  // соседи: 10 участков по диаметру — кадастр из открытых данных
+  const spots = [
+    { x: 78, z: 2, w: 30, d: 26 }, { x: 76, z: -32, w: 26, d: 22 }, { x: 30, z: 62, w: 30, d: 22 },
+    { x: -28, z: 62, w: 32, d: 22 }, { x: -80, z: 12, w: 34, d: 30 }, { x: -78, z: -30, w: 28, d: 20 },
+    { x: -20, z: -34, w: 30, d: 14 }, { x: 112, z: 8, w: 26, d: 24 }, { x: 34, z: -34, w: 24, d: 14 },
+    { x: -112, z: 4, w: 30, d: 28 },
+  ];
+  MOCK.plots.forEach((p, i) => {
+    const s = spots[i % spots.length];
+    if (p.built) {
+      const b = new THREE.Mesh(new THREE.BoxGeometry(s.w * 0.55, 5 + (i % 3) * 2, s.d * 0.5),
+        new THREE.MeshStandardMaterial({ color: 0x46536e, roughness: 1, transparent: true, opacity: 0.85 }));
+      b.position.set(s.x, 2.5 + (i % 3), s.z); b.castShadow = true;
+      b.userData = { type: 'plot', own: false, pid: p.id };
+      scene.add(b); pickables.push(b);
+    }
+    const edge = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(s.x - s.w / 2, 0.15, s.z - s.d / 2), new THREE.Vector3(s.x + s.w / 2, 0.15, s.z - s.d / 2),
+      new THREE.Vector3(s.x + s.w / 2, 0.15, s.z + s.d / 2), new THREE.Vector3(s.x - s.w / 2, 0.15, s.z + s.d / 2)]),
+      new THREE.LineBasicMaterial({ color: 0x5b6b8c }));
+    scene.add(edge);
+    const fillN = new THREE.Mesh(new THREE.PlaneGeometry(s.w, s.d),
+      new THREE.MeshBasicMaterial({ color: p.built ? 0x46536e : 0x2f6b4f, transparent: true, opacity: 0.14 }));
+    fillN.rotation.x = -Math.PI / 2; fillN.position.set(s.x, 0.07, s.z);
+    fillN.userData = { type: 'plot', own: false, pid: p.id };
+    scene.add(fillN); pickables.push(fillN);
   });
   // река Тобол: полоса на севере
   riverMesh = new THREE.Mesh(new THREE.PlaneGeometry(500, 56),
@@ -403,12 +422,17 @@ function buildSite() {
   scene.add(trunk); scene.add(crown);
 }
 
-function showPlot(own, name) {
+function showPlot(own, name, pid) {
   const P = MOCK.parcel, R = MOCK.river;
-  document.getElementById('parcelinfo').innerHTML = own
-    ? `<b>Наш участок</b> · ${P.cadastre}<br/>${P.area} · ${P.status}<br/>🌳 Деревьев в учете: <b>${P.trees}</b><br/>🌊 ${R.name}: ${R.level}, ${R.forecast}<br/><span class="mono">Соседи: ${P.neighbors.join(' · ')}</span>`
+  if (own) {
+    document.getElementById('parcelinfo').innerHTML =
+      `<b>⭐ Наш участок</b> · ${P.cadastre}<br/>${P.area} · ${P.status}<br/>🌳 Деревьев в учете: <b>${P.trees}</b><br/>🌊 ${R.name}: ${R.level}, ${R.forecast}<br/><span class="mono">Рядом участков в кадастре: ${MOCK.plots.length} — ткни в любой</span>`;
+    return;
+  }
+  const p = MOCK.plots.find(x => x.id === pid);
+  document.getElementById('parcelinfo').innerHTML = p
+    ? `<b>Участок ${p.id}</b> · ${p.cadastre} (открытые данные)<br/>${p.area} · ${p.use}<br/>Владелец: ${p.owner} · ${p.status}<br/><span style="color:#94a3b8">Полные данные (сети, сметы) — только по своему. Датчики и сметы соседей не показываем.</span>`
     : `<b>Чужой участок (${name || 'сосед'})</b> — данных нет.<br/>Показываем только свой: граница приватности.`;
-  if (!own) alertBar('Чужой участок — панель только для своего');
 }
 
 function floodDemo() {
@@ -732,7 +756,7 @@ async function init() {
     const u = hit.object.userData;
     if (u.type === 'net') { showNet(u.net); flashSection('d-nets'); }
     else if (u.type === 'floor') { selectFloor(u.n); flashSection('d-floor'); }
-    else if (u.type === 'plot') { showPlot(u.own, u.name); flashSection('d-plot'); }
+    else if (u.type === 'plot') { showPlot(u.own, u.name, u.pid); flashSection('d-plot'); }
     else if (u.type === 'eq') showEq(u.eq);
     else if (u.type === 'street') showStreet(u.kind, u.id);
     else if (u.type === 'apt' && u.apt !== 'HALL') { showApt(u.floor, u.apt); flashSection('d-floor'); }
