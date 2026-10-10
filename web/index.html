@@ -84,6 +84,9 @@
 <div id="scene"><div id="alertbar"></div><div id="awidget" class="mini"><div id="ahead"><b>🤖 FM-агент</b><button id="atoggle" title="Развернуть">⛶</button></div><div id="abody"><div class="chips"><button data-a="где перерасход?">перерасход</button><button data-a="авария">авария</button><button data-a="статус">статус</button></div><div class="microw"><input id="q2" placeholder="спроси агента…"/><button id="mic2" title="Голос">🎤</button></div><div id="agentlog2">Жми чип, говори или пиши: перерасход / авария / статус</div></div></div><div id="hint">Ткни в этаж — увидишь что построено и сколько стоит · Ползунок — подняться по этажам · «Просвет» — трубы внутри</div></div>
 <div id="panel">
   <div class="badge">BIM LOD300 · данные выдуманы (MOCK)</div>
+  <div style="font-size:11px;color:var(--mut);margin-bottom:4px">Смотреть глазами:</div>
+  <div class="rowbtns" id="roles"><button data-r="dev">🏗 Застройщик</button><button data-r="gos">🏛 Госприемка</button><button data-r="inv">💼 Инвестор</button><button data-r="own">🔑 Житель</button></div>
+  <div id="rolecard" class="card" style="border-color:#8a6d1c">Выбери роль — панель и камера подстроятся под тебя.</div>
   <div class="stats"><div class="stat"><b id="st-ready">—</b><span>готовность объекта</span></div><div class="stat"><b id="st-lag" style="color:var(--red)">—</b><span>отставание max</span></div><div class="stat"><b id="st-open">—</b><span>поручений открыто</span></div></div>
   <div class="rowbtns"><button id="demoplay" class="hot">▶ Автоплей 5 мин</button><button id="demoreset">Сброс</button></div>
   <details id="d-obj" open><summary>🏢 Дом и адрес</summary><div class="dbody"><h2 id="objname" style="margin-top:0">Объект…</h2><div id="objmeta" class="card"></div><div style="font-size:11.5px;color:var(--mut)">Не знаешь с чего начать? Жми <b>▶ Автоплей</b> — дом сам себя покажет за 5 минут.</div></div></details>

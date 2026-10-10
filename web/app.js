@@ -457,6 +457,22 @@ function floodDemo() {
   }, 500 * (i + 1))));
 }
 
+function setRole(r) {
+  const R = MOCK.roles[r];
+  if (!R) return;
+  document.querySelectorAll('#roles button').forEach(b => b.classList.toggle('hot', b.dataset.r === r));
+  const names = { dev: '🏗 Владелец стройкомпании', gos: '🏛 Госприемка', inv: '💼 Инвестор', own: '🔑 Владелец площадей' };
+  let extra = '';
+  if (r === 'gos') extra = '<br/><span class="mono">' + MOCK.docs.map(d => `${d.s} ${d.n}`).join('<br/>') + '</span>';
+  if (r === 'inv') { const s = MOCK.sales; extra = `<br/>🏠 Квартиры: продано ${s.apt.sold}/${s.apt.total}, бронь ${s.apt.reserved}<br/>🏪 Коммерция: ${s.comm.sold}/${s.comm.total}`; }
+  document.getElementById('rolecard').innerHTML =
+    `<b>${names[r]}</b> — что важно:<br/>` + R.kpi.map(([k, v]) => `• ${k}: <b>${v}</b>`).join('<br/>') + extra;
+  if (r === 'dev') { flashSection('d-money'); selectFloor(9); }
+  if (r === 'gos') { flashSection('d-daily'); alertBar('🏛 Приемка: 2 предписания открыто — фасад эт 9, витраж стилобата'); }
+  if (r === 'inv') { flashSection('d-floor'); state.section = true; document.getElementById('section').checked = true; selectFloor(12); showApt(12, 'B'); }
+  if (r === 'own') { flashSection('d-floor'); state.section = true; document.getElementById('section').checked = true; selectFloor(12); showApt(12, 'B'); alertBar('🔑 Твоя квартира B на 12 эт: бронь, ключи 2027-2кв'); }
+}
+
 function flashSection(id) {
   const d = document.getElementById(id);
   if (!d) return;
@@ -737,7 +753,8 @@ async function init() {
   aw.onclick = () => { if (aw.classList.contains('mini')) setMini(false); };
   document.getElementById('csv').onclick = exportCSV;
   document.getElementById('flood').onclick = floodDemo;
-  document.getElementById('blackout').onclick = blackout;  document.getElementById('copyd').onclick = () => {
+  document.getElementById('blackout').onclick = blackout;
+  document.querySelectorAll('#roles button').forEach(b => b.onclick = () => setRole(b.dataset.r));  document.getElementById('copyd').onclick = () => {
     const t = 'Fl-' + String(state.floor).padStart(2, '0') + ' (MOCK)';
     navigator.clipboard?.writeText(t);
     document.getElementById('floorinfo').innerHTML += `<br/><span style="color:#34d399">GUID ${t} скопирован</span>`;
