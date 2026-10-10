@@ -464,6 +464,45 @@ function floodDemo() {
   }, 500 * (i + 1))));
 }
 
+const MASTERS = { plumb: '🔧 Сантехник Серік', elec: '⚡ Электрик Асхат', clean: '🧹 Клининг Айгерим', uk: '🏢 УК-диспетчер', lift: '🛗 Лифтер Болат' };
+let resTasks = JSON.parse(localStorage.getItem('twin_restasks') || '[]');
+function classifyResident(t) {
+  t = t.toLowerCase();
+  if (/теч|кран|вода|труба|засор|батаре/.test(t)) return ['plumb', '2 часа'];
+  if (/свет|розетк|электри|щиток|подъезд.*темно|лифт/.test(t)) return t.includes('лифт') ? ['lift', '1 час'] : ['elec', '3 часа'];
+  if (/гряз|убор|мусор|подъезд/.test(t)) return ['clean', 'сегодня'];
+  if (/шум|сосед|парков|шлагбаум/.test(t)) return ['uk', 'завтра'];
+  return ['uk', 'завтра'];
+}
+function renderResTasks() {
+  document.getElementById('restasks').innerHTML = resTasks.length
+    ? resTasks.map((t, i) => `<div class="card" style="margin:6px 0;${t.done ? 'opacity:.55' : ''}"><label class="chk" style="margin:0;${t.done ? 'text-decoration:line-through' : ''}"><input type="checkbox" data-r="${i}" ${t.done ? 'checked' : ''}/> <b>${t.master}</b> · ${t.text} · <span style="color:#94a3b8">${t.due}</span></label></div>`).join('')
+    : '<div style="font-size:12px;color:#94a3b8">Пока тихо. Напиши — мастер прибежит 🛠️</div>';
+  document.querySelectorAll('#restasks input').forEach(c => c.onchange = () => {
+    resTasks[+c.dataset.r].done = c.checked;
+    localStorage.setItem('twin_restasks', JSON.stringify(resTasks));
+    renderResTasks();
+  });
+}
+function sendChat(text) {
+  text = (text || '').trim();
+  if (!text) return;
+  const log = document.getElementById('chatlog');
+  log.innerHTML += `<div>🧑‍🦰 <b>Жилец:</b> ${text}</div>`;
+  const [m, due] = classifyResident(text);
+  const task = { master: MASTERS[m], text, due, done: false };
+  resTasks.unshift(task);
+  localStorage.setItem('twin_restasks', JSON.stringify(resTasks));
+  renderResTasks();
+  log.innerHTML += `<div>🤖 <b>Дом:</b> принял! ${MASTERS[m]} уже вызван, придет: ${due}. Заявка №Ж-${100 + resTasks.length} (MOCK)</div>`;
+  log.scrollTop = log.scrollHeight;
+  document.getElementById('feedlist').innerHTML =
+    `<div>💬 ${new Date().toTimeString().slice(0, 5)} — жилец: «${text.slice(0, 40)}» → ${MASTERS[m]} (MOCK)</div>` +
+    document.getElementById('feedlist').innerHTML;
+  alertBar(`🛠️ ${MASTERS[m]} вызван! Придет: ${due}`);
+  flashSection('d-chat');
+}
+
 function setRole(r) {
   const R = MOCK.roles[r];
   if (!R) return;
@@ -761,7 +800,14 @@ async function init() {
   document.getElementById('csv').onclick = exportCSV;
   document.getElementById('flood').onclick = floodDemo;
   document.getElementById('blackout').onclick = blackout;
-  document.querySelectorAll('#roles button').forEach(b => b.onclick = () => setRole(b.dataset.r));  document.getElementById('copyd').onclick = () => {
+  document.querySelectorAll('#roles button').forEach(b => b.onclick = () => setRole(b.dataset.r));
+  document.getElementById('chatlog').innerHTML =
+    `<div>🧑‍🦱 <b>Мадина (эт 9):</b> здравствуйте, в подъезде лампочка моргает</div>` +
+    `<div>🤖 <b>Дом:</b> принято! ⚡ Электрик Асхат вызван, придет: 3 часа ✅ (MOCK)</div>`;
+  renderResTasks();
+  const sendQc = () => { sendChat(document.getElementById('qc').value); document.getElementById('qc').value = ''; };
+  document.getElementById('qcsend').onclick = sendQc;
+  document.getElementById('qc').addEventListener('keydown', e => { if (e.key === 'Enter') sendQc(); });  document.getElementById('copyd').onclick = () => {
     const t = 'Fl-' + String(state.floor).padStart(2, '0') + ' (MOCK)';
     navigator.clipboard?.writeText(t);
     document.getElementById('floorinfo').innerHTML += `<br/><span style="color:#34d399">GUID ${t} скопирован</span>`;
