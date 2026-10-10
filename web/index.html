@@ -49,13 +49,21 @@
   details[open] summary::before { content: "▾ "; }
   details .dbody { padding: 0 12px 12px; }
   details.flash { border-color: var(--acc); box-shadow: 0 0 0 2px #38bdf866, 0 12px 32px -16px #38bdf8aa; }
+  .cnt { display: inline-block; min-width: 20px; text-align: center; font-size: 11px; font-weight: 800; padding: 1px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
+  .cnt:empty { display: none; }
+  .cnt.red { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; }
+  .cnt.amber { background: #451a03; color: #fcd34d; border: 1px solid #b45309; }
+  .cnt.info { background: #172554; color: #93c5fd; border: 1px solid #3b82f6; }
+  #alertbar { position: absolute; top: 12px; left: 12px; right: 12px; display: none; background: linear-gradient(90deg,#1e293b,#334155); border: 1px solid #64748b; padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: 600; z-index: 3; }
   .microw { display: flex; gap: 6px; }
   .microw input { flex: 1; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--line); background: #0a1222; color: #fff; font-size: 13px; }
   .microw button { padding: 8px 11px; border-radius: 10px; border: 1px solid var(--line); background: #16213a; color: #fff; cursor: pointer; transition: transform .08s; }
   .microw button:hover { transform: translateY(-1px); }
   .microw button.live { border-color: #ef4444; color: #fca5a5; animation: pulse 1s infinite; }
-  #alertbar { position: absolute; top: 12px; left: 12px; right: 12px; display: none; background: linear-gradient(90deg,#7f1d1d,#b91c1cee); border: 1px solid #f87171; padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: 600; z-index: 3; box-shadow: 0 10px 30px -10px #ef444488; }
   #alertbar.on { display: block; animation: pulse 1.2s infinite; }
+  #alertbar.bad { background: linear-gradient(90deg,#7f1d1d,#b91c1cee); border-color: #f87171; box-shadow: 0 10px 30px -10px #ef444488; }
+  #alertbar.warn { background: linear-gradient(90deg,#57370a,#92600eee); border-color: #fbbf24; box-shadow: 0 10px 30px -10px #f59e0b88; }
+  #alertbar.good { background: linear-gradient(90deg,#064e3b,#059669ee); border-color: #34d399; box-shadow: 0 10px 30px -10px #10b98188; animation: none; }
   #awidget { position: absolute; right: 12px; bottom: 12px; width: 272px; background: rgba(11,19,34,.9); backdrop-filter: blur(12px); border: 1px solid var(--line); border-radius: 14px; padding: 10px; z-index: 3; box-shadow: 0 18px 40px -18px #000; }
   #awidget.mini { width: auto; padding: 6px 10px; cursor: pointer; }
   #awidget.mini #abody { display: none; }
@@ -85,13 +93,13 @@
 <div id="panel">
   <div class="badge">BIM LOD300 · данные выдуманы (MOCK)</div>
   <div style="font-size:11px;color:var(--mut);margin-bottom:4px">Смотреть глазами:</div>
-  <div class="rowbtns" id="roles"><button data-r="dev">🏗 Застройщик</button><button data-r="gos">🏛 Госприемка</button><button data-r="inv">💼 Инвестор</button><button data-r="own">🔑 Житель</button></div>
+  <div class="rowbtns" id="roles"><button data-r="dev">🏗 Застройщик</button><button data-r="gos">🏛 Акимат</button><button data-r="inv">💼 Инвестор</button><button data-r="own">🔑 Житель</button></div>
   <div id="rolecard" class="card" style="border-color:#8a6d1c">Выбери роль — панель и камера подстроятся под тебя.</div>
   <div class="stats"><div class="stat"><b id="st-ready">—</b><span>готовность объекта</span></div><div class="stat"><b id="st-lag" style="color:var(--red)">—</b><span>отставание max</span></div><div class="stat"><b id="st-open">—</b><span>поручений открыто</span></div></div>
   <div class="rowbtns"><button id="demoplay" class="hot">▶ Автоплей 5 мин</button><button id="demoreset">Сброс</button></div>
-  <details id="d-obj" open><summary>🏢 Дом и адрес</summary><div class="dbody"><h2 id="objname" style="margin-top:0">Объект…</h2><div id="objmeta" class="card"></div><div style="font-size:11.5px;color:var(--mut)">Не знаешь с чего начать? Жми <b>▶ Автоплей</b> — дом сам себя покажет за 5 минут.</div></div></details>
+  <details id="d-obj" open><summary>🏢 Дом и адрес <span class="cnt" id="c-obj"></span></summary><div class="dbody"><h2 id="objname" style="margin-top:0">Объект…</h2><div id="objmeta" class="card"></div><div style="font-size:11.5px;color:var(--mut)">Не знаешь с чего начать? Жми <b>▶ Автоплей</b> — дом сам себя покажет за 5 минут.</div></div></details>
 
-  <details id="d-floor" open><summary>🏗 Этажи: что где готово</summary><div class="dbody">
+  <details id="d-floor" open><summary>🏗 Этажи: что где готово <span class="cnt" id="c-floor"></span></summary><div class="dbody">
   <div id="floorctl"><input id="floor" type="range" min="1" max="20" value="20"/><b id="floorv">эт 20</b></div>
   <div id="floorinfo" class="card">Кликни по башне — материалы и смета этажа.</div>
   <label class="chk"><input id="xray" type="checkbox"/> Просвет: убрать стены, показать трубы</label>
@@ -101,7 +109,13 @@
   <div id="aptinfo" class="card">Включи «Разрез», кликни по квартире — цена и статус.</div>
   </div></details>
 
-  <details id="d-nets"><summary>🔧 Трубы и провода</summary><div class="dbody">
+  <details id="d-chat"><summary>💬 Чат жильцов — вызывает мастера <span class="cnt" id="c-chat"></span></summary><div class="dbody">
+  <div id="chatlog" class="card" style="max-height:180px;overflow-y:auto"></div>
+  <div class="microw"><input id="qc" placeholder="Напиши как жилец: течет кран…"/><button id="qcsend" title="Отправить">➤</button></div>
+  <div id="restasks"></div>
+  </div></details>
+
+  <details id="d-nets"><summary>🔧 Трубы и провода <span class="cnt" id="c-nets"></span></summary><div class="dbody">
   <div class="layers">
     <button id="btn-water" style="color:#38bdf8">ВК вода</button>
     <button id="btn-heat" style="color:#fb7185">ОВ тепло</button>
@@ -112,45 +126,39 @@
   <div style="font-size:11px;color:#94a3b8">Легенда: <span style="color:#38bdf8">■</span> вода <span style="color:#fb7185">■</span> тепло <span style="color:#facc15">■</span> свет <span style="color:#e879f9">■</span> вент</div>
   </div></details>
 
-  <details id="d-money" open><summary>💰 Деньги и сроки — готовность %</summary><div class="dbody">
+  <details id="d-money" open><summary>💰 Деньги и сроки — готовность % <span class="cnt" id="c-money"></span></summary><div class="dbody">
   <div style="font-size:11px;color:#94a3b8">% = сколько уже построено. Желтая риска — сколько должно быть.</div>
   <div id="estimate"></div>
   <div class="rowbtns"><button id="csv">Экспорт CSV</button><button id="copyd">Копировать GUID</button></div>
   <button class="stub-btn">IFC GUID · ведомость · КС-2 (в пилоте)</button>
   </div></details>
 
-  <details id="d-agent"><summary>🤖 Помощник — спроси голосом 🎤</summary><div class="dbody">
+  <details id="d-agent"><summary>🤖 Помощник — спроси голосом 🎤 <span class="cnt" id="c-agent"></span></summary><div class="dbody">
   <div id="agent">
     <div class="microw"><input id="q" placeholder="где перерасход? / статус…"/><button id="mic" title="Голос">🎤</button></div>
     <div id="agentlog" class="card">Спроси голосом или текстом: перерасход, авария, поручение, статус, уборка</div>
   </div>
   </div></details>
 
-  <details id="d-plot"><summary>🌳 Участок, река и двор</summary><div class="dbody">
+  <details id="d-plot"><summary>🌳 Участок, река и двор <span class="cnt" id="c-plot"></span></summary><div class="dbody">
   <div id="parcelinfo" class="card">Свой — золотой. Вокруг 10 участков: ткни в любой — кадастр из открытых данных. Полные данные только по своему.</div>
   <div class="rowbtns"><button id="flood">🌊 Прогноз паводка</button></div>
   </div></details>
 
-  <details id="d-street"><summary>🏙 Двор и улица</summary><div class="dbody">  <div class="rowbtns"><button id="blackout">💥 Порыв: зона отключения</button></div>
+  <details id="d-street"><summary>🏙 Двор и улица <span class="cnt" id="c-street"></span></summary><div class="dbody">  <div class="rowbtns"><button id="blackout">💥 Порыв: зона отключения</button></div>
   <div id="streetinfo" class="card">Ткни в баки, ямы на дороге или фонарь — статус и заявка. Отказ фонаря №3 уже мигает.</div>
   </div></details>
 
-  <details id="d-pred"><summary>🔮 Предиктив и ТО — все системы</summary><div class="dbody">
+  <details id="d-pred"><summary>🔮 Предиктив и ТО — все системы <span class="cnt" id="c-pred"></span></summary><div class="dbody">
   <div style="font-size:11px;color:#94a3b8">% = здоровье узла. Жми «показать» — камера летит точно на насос/датчик.</div>
   <div id="pred"></div>
   </div></details>
 
-  <details id="d-chat"><summary>💬 Чат жильцов — вызывает мастера</summary><div class="dbody">
-  <div id="chatlog" class="card" style="max-height:180px;overflow-y:auto"></div>
-  <div class="microw"><input id="qc" placeholder="Напиши как жилец: течет кран…"/><button id="qcsend" title="Отправить">➤</button></div>
-  <div id="restasks"></div>
-  </div></details>
-
-  <details id="d-tasks"><summary>📋 Задания мастерам (<span id="taskcount">5</span>)</summary><div class="dbody">
+  <details id="d-tasks"><summary>📋 Задания мастерам (<span id="taskcount">5</span>) <span class="cnt" id="c-tasks"></span></summary><div class="dbody">
   <div id="tasks"></div>
   </div></details>
 
-  <details id="d-daily"><summary>📊 Что сегодня на стройке</summary><div class="dbody">
+  <details id="d-daily"><summary>📊 Что сегодня на стройке <span class="cnt" id="c-daily"></span></summary><div class="dbody">
   <div id="daily"></div>
   <div id="feed" class="card"><b>Лента событий</b><div id="feedlist"></div></div>
   <button class="stub-btn">Кадастр · Телеметрия ИТП · Зона отключения (в пилоте)</button>

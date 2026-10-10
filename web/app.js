@@ -499,7 +499,7 @@ function floodDemo() {
           ? `⛔ Вода встала у набережной (+1.2 м). <b>Дом выше паводка на +${margin} м — подтоплений нет.</b> (MOCK-симуляция)`
           : `Вода идет… запас над домом +${margin} м`)
         : (last ? R.forecast : `Вода уходит… уровень +${lv.toFixed(1)} м`));
-    if (last) alertBar(rising ? `🌊 Паводок встал у набережной. Запас дома +${margin} м — сухо` : 'Река в норме: ' + R.level);
+    if (last) alertBar(rising ? `🌊 Паводок встал у набережной. Запас дома +${margin} м — сухо` : 'Река в норме: ' + R.level, rising ? 'good' : 'good');
   }, 500 * (i + 1))));
 }
 
@@ -521,6 +521,7 @@ function renderResTasks() {
     resTasks[+c.dataset.r].done = c.checked;
     localStorage.setItem('twin_restasks', JSON.stringify(resTasks));
     renderResTasks();
+    updateCounts();
   });
 }
 function sendChat(text) {
@@ -538,7 +539,7 @@ function sendChat(text) {
   document.getElementById('feedlist').innerHTML =
     `<div>💬 ${new Date().toTimeString().slice(0, 5)} — жилец: «${text.slice(0, 40)}» → ${MASTERS[m]} (MOCK)</div>` +
     document.getElementById('feedlist').innerHTML;
-  alertBar(`🛠️ ${MASTERS[m]} вызван! Придет: ${due}`);
+  alertBar(`🛠️ ${MASTERS[m]} вызван! Придет: ${due}`, 'good');
   flashSection('d-chat');
 }
 
@@ -546,16 +547,51 @@ function setRole(r) {
   const R = MOCK.roles[r];
   if (!R) return;
   document.querySelectorAll('#roles button').forEach(b => b.classList.toggle('hot', b.dataset.r === r));
-  const names = { dev: '🏗 Владелец стройкомпании', gos: '🏛 Госприемка', inv: '💼 Инвестор', own: '🔑 Владелец площадей' };
+  const names = { dev: '🏗 Владелец стройкомпании', gos: '🏛 Акимат — взгляд города', inv: '💼 Инвестор', own: '🔑 Владелец площадей' };
   let extra = '';
   if (r === 'gos') extra = '<br/><span class="mono">' + MOCK.docs.map(d => `${d.s} ${d.n}`).join('<br/>') + '</span>';
   if (r === 'inv') { const s = MOCK.sales; extra = `<br/>🏠 Квартиры: продано ${s.apt.sold}/${s.apt.total}, бронь ${s.apt.reserved}<br/>🏪 Коммерция: ${s.comm.sold}/${s.comm.total}`; }
   document.getElementById('rolecard').innerHTML =
     `<b>${names[r]}</b> — что важно:<br/>` + R.kpi.map(([k, v]) => `• ${k}: <b>${v}</b>`).join('<br/>') + extra;
   if (r === 'dev') { flashSection('d-money'); selectFloor(9); }
-  if (r === 'gos') { flashSection('d-daily'); alertBar('🏛 Приемка: 2 предписания открыто — фасад эт 9, витраж стилобата'); }
+  if (r === 'gos') { flashSection('d-daily'); alertBar('🏛 Акимат: 2 предписания открыто — фасад эт 9, витраж стилобата', 'warn'); }
   if (r === 'inv') { flashSection('d-money'); const s = MOCK.sales; alertBar(`💼 Продано ${s.apt.sold}/${s.apt.total} квартир · готовность объекта ${Math.round(MOCK.estimate.reduce((a, e) => a + e.done, 0) / MOCK.estimate.length)}%`); }
   if (r === 'own') { flashSection('d-floor'); state.section = true; document.getElementById('section').checked = true; selectFloor(12); showApt(12, 'B'); alertBar('🔑 Твоя квартира B на 12 эт: бронь, ключи 2027-2кв'); }
+}
+
+let selBox = null;
+function markSelected(obj) {
+  if (selBox) { scene.remove(selBox); selBox.geometry.dispose(); selBox = null; }
+  if (!obj) return;
+  selBox = new THREE.BoxHelper(obj, 0xffd166);
+  selBox.material.depthTest = false;
+  selBox.renderOrder = 999;
+  scene.add(selBox);
+}
+
+function setCnt(id, n, kind) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = n > 0 ? n : '';
+  el.className = 'cnt' + (n > 0 ? ' ' + kind : '');
+}
+
+function updateCounts() {
+  const doneT = new Set(JSON.parse(localStorage.getItem('twin_tasks') || '[]'));
+  const openT = MOCK.tasks.filter(t => !doneT.has(t.id));
+  setCnt('c-tasks', openT.length, openT.some(t => t.overdue) ? 'red' : 'info');
+  const openR = resTasks.filter(t => !t.done).length;
+  setCnt('c-chat', openR, 'info');
+  setCnt('c-pred', MOCK.equipment.filter(e => e.health < 65).length, 'red');
+  setCnt('c-money', MOCK.estimate.filter(e => e.done < (e.plan ?? e.done)).length, 'amber');
+  let badNets = 0;
+  for (const k of ['water', 'heat', 'power', 'vent']) {
+    if ((MOCK.networks[k].lines || []).some(l => l.state !== 'норма')) badNets++;
+  }
+  setCnt('c-nets', badNets, 'amber');
+  setCnt('c-daily', MOCK.sensors.filter(s => s.flag !== 'норма').length + 1, 'amber');
+  setCnt('c-street', 4, 'amber');
+  setCnt('c-floor', 7, 'amber');
 }
 
 function flashSection(id) {
@@ -614,13 +650,13 @@ function showStreet(kind, id) {
     el.innerHTML = full
       ? `<b>🗑 Бак №3 переполнен</b> — вывоз через 2ч, перевозчик уведомлен (MOCK). Статус площадки: <b>требует вывоза</b>`
       : `<b>🗑 Бак №${id + 1}</b> — заполнен ${35 + id * 10}%, норма. Вывоз по графику.`;
-    if (full) alertBar('🗑 Мусорная площадка: бак №3 переполнен — заявка перевозчику');
+    if (full) alertBar('🗑 Мусорная площадка: бак №3 переполнен — заявка перевозчику', 'warn');
   } else if (kind === 'pot') {
     el.innerHTML = `<b>🕳 Яма №${id + 1}</b> — 40 см, фото с координатой → заявка в 109 создана (MOCK). Устранить за 48ч.`;
-    alertBar('🕳 Дефект дороги зафиксирован — заявка в 109');
+    alertBar('🕳 Дефект дороги зафиксирован — заявка в 109', 'warn');
   } else if (kind === 'lamp') {
     el.innerHTML = `<b>💡 Фонарь №3</b> — отказ драйвера, темно с 21:04. Заявка электрику, устранить за 1–2 дня (MOCK).`;
-    alertBar('💡 Отказ светоточки №3 — заявка создана');
+    alertBar('💡 Отказ светоточки №3 — заявка создана', 'warn');
   }
   document.getElementById('feedlist').innerHTML =
     `<div>🏙 ${new Date().toTimeString().slice(0, 5)} — ${kind === 'bin' ? 'бак №3: заявка на вывоз' : kind === 'pot' ? 'яма: заявка в 109' : 'фонарь №3: заявка электрику'} (MOCK)</div>` +
@@ -724,11 +760,13 @@ function agent(q) {
   } else { alertBar(''); say(`<b>Агент:</b> понимаю: авария / перерасход / поручение / статус / уборка · KZ: апат / шығын / тапсырма / мәртебе / тазалау. Полный LLM — в пилоте.`); }
 }
 
-function alertBar(t) {
+function alertBar(t, kind) {
   const b = document.getElementById('alertbar');
+  b.classList.remove('bad', 'warn', 'good');
   if (!t) { b.classList.remove('on'); b.textContent = ''; return; }
-  b.textContent = '⚠ ' + t;
+  b.textContent = (/⚠|💥|🕳|🔮/.test(t) ? '' : '⚠ ') + t;
   b.classList.add('on');
+  if (kind) b.classList.add(kind);
   clearTimeout(alertBar._t);
   alertBar._t = setTimeout(() => b.classList.remove('on'), 9000);
 }
@@ -792,9 +830,10 @@ async function init() {
       was ? doneTasks.add(c.dataset.t) : doneTasks.delete(c.dataset.t);
       localStorage.setItem('twin_tasks', JSON.stringify([...doneTasks]));
       renderTasks();
+      updateCounts();
       const left = MOCK.tasks.filter(t => !doneTasks.has(t.id)).length;
       if (was) {
-        alertBar(`✅ ${c.dataset.t} закрыто. Осталось заданий: ${left}`);
+        alertBar(`✅ ${c.dataset.t} закрыто. Осталось заданий: ${left}`, 'good');
         document.getElementById('feedlist').innerHTML =
           `<div>✅ ${new Date().toTimeString().slice(0, 5)} — ${c.dataset.t} закрыто мастером (MOCK)</div>` +
           document.getElementById('feedlist').innerHTML;
@@ -803,6 +842,7 @@ async function init() {
     document.querySelectorAll('#tasks [data-g]').forEach(b => b.onclick = () => gotoTask(b.dataset.g));
   };
   renderTasks();
+  updateCounts();
   document.getElementById('feedlist').innerHTML = MOCK.feed.map(f => `<div>🕐 ${f.t} — ${f.e}</div>`).join('');
   const avg = Math.round(MOCK.estimate.reduce((a, e) => a + e.done, 0) / MOCK.estimate.length);
   const lag = Math.max(...MOCK.estimate.map(e => (e.plan ?? e.done) - e.done));
@@ -869,6 +909,7 @@ async function init() {
     ray.setFromCamera(ptr, camera);
     const hit = ray.intersectObjects(pickables, false)[0];
     if (!hit) return;
+    markSelected(hit.object);
     const u = hit.object.userData;
     if (u.type === 'net') { showNet(u.net); flashSection('d-nets'); }
     else if (u.type === 'floor') { selectFloor(u.n); flashSection('d-floor'); }
