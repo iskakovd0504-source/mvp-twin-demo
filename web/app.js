@@ -340,6 +340,14 @@ function showNet(net) {
   }
 }
 
+function gotoTask(id) {
+  const t = MOCK.tasks.find(x => x.id === id);
+  if (!t) return;
+  if (t.net) showNet(t.net);
+  selectFloor(t.floor ?? 20);
+  alertBar(`${t.id} · ${t.text} — показано на модели`);
+}
+
 function agent(q) {
   q = (q || '').toLowerCase();
   const log = document.getElementById('agentlog');
@@ -419,7 +427,7 @@ async function init() {
   const doneTasks = new Set(JSON.parse(localStorage.getItem('twin_tasks') || '[]'));
   const renderTasks = () => {
     document.getElementById('tasks').innerHTML = MOCK.tasks.map(t =>
-      `<label class="chk" style="${doneTasks.has(t.id) ? 'text-decoration:line-through;opacity:.6' : ''}"><input type="checkbox" data-t="${t.id}" ${doneTasks.has(t.id) ? 'checked' : ''}/> <b>${t.id}</b> · ${t.text} · <span style="color:${t.overdue ? '#f87171' : '#94a3b8'}">${t.due}</span></label>`).join('');
+      `<div class="card" style="margin:6px 0;${doneTasks.has(t.id) ? 'opacity:.55' : ''}"><label class="chk" style="margin:0;${doneTasks.has(t.id) ? 'text-decoration:line-through' : ''}"><input type="checkbox" data-t="${t.id}" ${doneTasks.has(t.id) ? 'checked' : ''}/> <b>${t.id}</b> · ${t.text} · <span style="color:${t.overdue ? '#f87171' : '#94a3b8'}">${t.due}</span></label><button data-g="${t.id}" style="margin-top:6px;width:100%;padding:6px;border-radius:8px;border:1px solid #2c3d5c;background:#16213a;color:#7dd3fc;cursor:pointer;font-size:12px">📍 Показать где</button></div>`).join('');
     const open = MOCK.tasks.filter(t => !doneTasks.has(t.id)).length;
     document.getElementById('taskcount').textContent = open;
     document.getElementById('st-open').textContent = open;
@@ -428,6 +436,7 @@ async function init() {
       localStorage.setItem('twin_tasks', JSON.stringify([...doneTasks]));
       renderTasks();
     });
+    document.querySelectorAll('#tasks [data-g]').forEach(b => b.onclick = () => gotoTask(b.dataset.g));
   };
   renderTasks();
   document.getElementById('feedlist').innerHTML = MOCK.feed.map(f => `<div>🕐 ${f.t} — ${f.e}</div>`).join('');
