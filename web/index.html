@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Twin 3D — ЖК 20 этажей (MOCK)</title>
+<style>
+  * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+  body { margin: 0; display: flex; height: 100vh; background: #070d1a; color: #e5e7eb; overflow: hidden; }
+  #scene { flex: 1; position: relative; }
+  #scene canvas { display: block; }
+  #hint { position: absolute; left: 12px; bottom: 12px; background: rgba(15,23,42,.85); border: 1px solid #1e293b;
+    padding: 8px 12px; border-radius: 10px; font-size: 12px; color: #94a3b8; }
+  #panel { width: 400px; background: #0f172a; border-left: 1px solid #1e293b; padding: 14px; overflow-y: auto; z-index: 2; }
+  h2 { font-size: 15px; margin: 12px 0 6px; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #1e293b; color: #fbbf24; margin-bottom: 6px; }
+  .layers button { margin: 2px; padding: 6px 10px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e5e7eb; cursor: pointer; font-size: 12px; }
+  .layers button.on { outline: 2px solid currentColor; }
+  .card { background: #1e293b; border-radius: 10px; padding: 10px; margin: 8px 0; font-size: 13px; }
+  .card b { color: #fff; }
+  button.stub-btn { width: 100%; margin-top: 6px; padding: 7px; border-radius: 8px; border: 1px dashed #64748b; background: transparent; color: #94a3b8; cursor: not-allowed; }
+  #agent input { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: #0b1220; color: #fff; }
+  .bar { height: 8px; background: #334155; border-radius: 4px; overflow: hidden; margin-top: 4px; }
+  .bar > div { height: 100%; background: linear-gradient(90deg,#38bdf8,#818cf8); }
+  #floorctl { display: flex; gap: 8px; align-items: center; }
+  #floorctl input { flex: 1; }
+  #floorctl b { min-width: 64px; text-align: right; }
+  label.chk { font-size: 12px; color: #94a3b8; display: flex; gap: 6px; align-items: center; margin-top: 6px; cursor: pointer; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="scene"><div id="hint">Клик по этажу/стояку — смета и материалы · слайдер — фокус на этаж · X-Ray — вскрыть инженерию</div></div>
+<div id="panel">
+  <div class="badge">BIM LOD300 · данные выдуманы (MOCK)</div>
+  <h2 id="objname">Объект…</h2>
+  <div id="objmeta" class="card"></div>
+
+  <h2>Этаж</h2>
+  <div id="floorctl"><input id="floor" type="range" min="1" max="20" value="20"/><b id="floorv">эт 20</b></div>
+  <div id="floorinfo" class="card">Кликни по башне — материалы и смета этажа.</div>
+  <label class="chk"><input id="xray" type="checkbox"/> X-Ray: скрыть фасад, показать стояки (как на референсе)</label>
+  <label class="chk"><input id="struct" type="checkbox" checked/> Конструктив (плиты + пилоны + ядро)</label>
+
+  <h2>BIM-слои — как в модели</h2>
+  <div class="layers">
+    <button id="btn-water" style="color:#38bdf8">ВК вода</button>
+    <button id="btn-heat" style="color:#fb7185">ОВ тепло</button>
+    <button id="btn-power" style="color:#facc15">ЭО свет</button>
+    <button id="btn-vent" style="color:#e879f9">Вент</button>
+  </div>
+  <div id="netinfo" class="card">Кликни по цветному стояку в шахте башни.</div>
+
+  <h2>Смета: котлован → сдача</h2>
+  <div id="estimate"></div>
+  <button class="stub-btn">IFC GUID · ведомость · КС-2 (в пилоте)</button>
+
+  <h2>FM-агент (заглушка)</h2>
+  <div id="agent">
+    <input id="q" placeholder="где перерасход? / статус / авария…"/>
+    <div id="agentlog" class="card">Спроси: перерасход, авария, поручение, статус, уборка</div>
+  </div>
+
+  <h2>Картина дня стройки</h2>
+  <div id="daily"></div>
+  <button class="stub-btn">Кадастр · Телеметрия ИТП · Зона отключения (в пилоте)</button>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
