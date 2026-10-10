@@ -340,7 +340,7 @@ function showNet(net) {
   }
 }
 
-let riverMesh = null;
+let riverMesh = null, gaugePole = null, floodTimers = [];
 function buildSite() {
   // свой участок: золотая рамка + заливка
   const W2 = 46, D2 = 36;
@@ -370,6 +370,17 @@ function buildSite() {
   const bank = new THREE.Mesh(new THREE.BoxGeometry(500, 1.2, 4),
     new THREE.MeshStandardMaterial({ color: 0x55607a }));
   bank.position.set(0, 0.6, -48); scene.add(bank);
+  // гидропост: столб с 4 рисками (каждые 0.3м)
+  gaugePole = new THREE.Group();
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 5, 8),
+    new THREE.MeshStandardMaterial({ color: 0xe2e8f0 }));
+  pole.position.y = 2.5; gaugePole.add(pole);
+  for (let i = 0; i < 4; i++) {
+    const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.12, 8),
+      new THREE.MeshStandardMaterial({ color: i < 2 ? 0x34d399 : 0xf87171, emissive: i < 2 ? 0x34d399 : 0xf87171, emissiveIntensity: 0.6 }));
+    ring.position.y = 0.5 + i * 0.35; gaugePole.add(ring);
+  }
+  gaugePole.position.set(-20, 0, -52); scene.add(gaugePole);
   // деревья в учете: 46 шт по границе и у реки
   const N = (MOCK.parcel && MOCK.parcel.trees) || 46;
   const trunk = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.25, 0.35, 2.4, 6),
@@ -401,12 +412,24 @@ function showPlot(own, name) {
 
 function floodDemo() {
   const R = MOCK.river;
-  const on = riverMesh.position.y < 0.5;
-  riverMesh.position.y = on ? 1.1 : 0.1;
-  riverMesh.material.opacity = on ? 1 : 0.85;
-  alertBar(on ? `🌊 Паводок-симуляция: ${R.forecast}` : 'Река в норме: ' + R.level);
-  document.getElementById('parcelinfo').innerHTML =
-    `<b>${R.name}</b> · ${R.sensor}<br/>${on ? '⚠ ' + R.forecast + ' (MOCK-симуляция)' : R.forecast}`;
+  floodTimers.forEach(clearTimeout); floodTimers = [];
+  const rising = riverMesh.position.y < 0.5;
+  const steps = rising ? [0.4, 0.7, 0.9, 1.1] : [0.7, 0.4, 0.1];
+  const SAFE = 2.4; // стилобат: дом стоит на +2.4м
+  steps.forEach((lv, i) => floodTimers.push(setTimeout(() => {
+    riverMesh.position.y = lv;
+    riverMesh.material.opacity = 0.85 + (lv / 1.1) * 0.15;
+    const last = i === steps.length - 1;
+    const margin = (SAFE - lv).toFixed(1);
+    document.getElementById('parcelinfo').innerHTML =
+      `<b>🌊 ${R.name}</b> · уровень <b>+${lv.toFixed(1)} м</b> · ${R.sensor}<br/>` +
+      (rising
+        ? (last
+          ? `⛔ Вода встала у набережной (+1.2 м). <b>Дом выше паводка на +${margin} м — подтоплений нет.</b> (MOCK-симуляция)`
+          : `Вода идет… запас над домом +${margin} м`)
+        : (last ? R.forecast : `Вода уходит… уровень +${lv.toFixed(1)} м`));
+    if (last) alertBar(rising ? `🌊 Паводок встал у набережной. Запас дома +${margin} м — сухо` : 'Река в норме: ' + R.level);
+  }, 500 * (i + 1))));
 }
 
 function gotoTask(id) {
