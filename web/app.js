@@ -886,6 +886,7 @@ async function init() {
   document.getElementById('st-lag').textContent = lag > 0 ? '−' + lag + ' п.п.' : '0';
   document.getElementById('daily').innerHTML =
     MOCK.sensors.map(s => `<div class="card"><b>${s.id}</b><br/>${s.val} · ${s.trend} · <b>${s.flag}</b></div>`).join('') +
+    `<div class="card" style="border-color:#8a6d1c"><b>💰 Найдено денег (MOCK)</b><br/>Перерасход тепла ${MOCK.savings.heatPct}% ≈ <b>₸ ${(MOCK.savings.heatBase * MOCK.savings.heatPct / 100).toLocaleString('ru')}/мес</b><br/>Предотвращенная авария насоса ≈ <b>₸ ${MOCK.savings.pumpAvoid.toLocaleString('ru')}</b></div>` +
     `<div class="card"><b>Голос народа</b> — жалобы рядом с домом<br/>` + MOCK.appeals.map(a => `${a.theme} — ${a.count}`).join('<br/>') + `</div>`;
 
   buildTower(); resize(); buildEq(); buildUrban(); renderPred(); selectFloor(20); showNet('heat'); syncLayers();
