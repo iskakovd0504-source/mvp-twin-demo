@@ -18,6 +18,7 @@ python3 -m http.server 8080
 * `web/app.js` — three.js: каркас, стояки, xray, разрез квартир, ночь, агент-заглушка
 * `web/mock.json` — сети, здание, смета, датчики, обращения
 * `docs/demo-scenario.md` — сценарий 5 минут
+* `docs/gton-map.md` — причем тут G TON: 47 задач → наш выбор → оффер
 
 ## Что реально, что stub
 
