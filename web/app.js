@@ -210,7 +210,12 @@ function floorCalc(n) {
 }
 
 function buildSection(n) {
-  if (sectionGroup) { scene.remove(sectionGroup); }
+  if (sectionGroup) {
+    scene.remove(sectionGroup);
+    for (let i = pickables.length - 1; i >= 0; i--) {
+      if (pickables[i].userData && pickables[i].userData.type === 'apt') pickables.splice(i, 1);
+    }
+  }
   sectionGroup = new THREE.Group();
   if (n <= 0 || !state.section) { scene.add(sectionGroup); syncSection(); return; }
   const y = 7 + (n - 1) * FH;
@@ -371,8 +376,10 @@ async function init() {
 
   for (const n of ['water', 'heat', 'power', 'vent'])
     document.getElementById('btn-' + n).onclick = (e) => { state[n] = !state[n]; syncLayers(); };
-  document.getElementById('xray').onchange = (e) => { state.xray = e.target.checked; syncLayers(); };
-  document.getElementById('struct').onchange = (e) => { state.struct = e.target.checked; syncLayers(); };
+  document.getElementById('xray').onchange = (e) => { state.xray = e.target.checked; syncLayers(); syncSection(); };
+  document.getElementById('struct').onchange = (e) => { state.struct = e.target.checked; syncLayers(); syncSection(); };
+  document.getElementById('section').onchange = (e) => { state.section = e.target.checked; selectFloor(state.floor); };
+  document.getElementById('night').onchange = (e) => setNight(e.target.checked);
   document.getElementById('floor').oninput = (e) => selectFloor(+e.target.value);
   document.getElementById('q').addEventListener('keydown', e => { if (e.key === 'Enter') agent(e.target.value); });
 
@@ -387,6 +394,7 @@ async function init() {
     const u = hit.object.userData;
     if (u.type === 'net') showNet(u.net);
     else if (u.type === 'floor') selectFloor(u.n);
+    else if (u.type === 'apt' && u.apt !== 'HALL') showApt(u.floor, u.apt);
   });
 
   const clock = new THREE.Clock();
