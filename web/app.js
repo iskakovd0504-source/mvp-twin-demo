@@ -354,6 +354,29 @@ function selectFloor(n) {
   buildSection(n);
 }
 
+function applyFocus() {
+  const net = state.lastNet;
+  for (const [nn, g] of Object.entries(groups)) {
+    if (!['water', 'heat', 'power', 'vent'].includes(nn)) continue;
+    g.visible = state[nn];
+    const on = nn === net;
+    g.children.forEach(o => {
+      if (o.material) {
+        o.material.transparent = false;
+        o.material.opacity = 1;
+        if (o.material.emissive) o.material.emissiveIntensity = on ? 1.25 : 0.55;
+      }
+    });
+  }
+  document.querySelectorAll('.layers button').forEach(b => {
+    const n = b.id.replace('btn-', '');
+    const mine = n === net;
+    if (!state[n]) { b.style.opacity = 0.3; b.style.boxShadow = 'none'; }
+    else if (mine) { b.style.opacity = 1; b.style.boxShadow = `0 0 0 2px currentColor inset, 0 6px 22px -6px currentColor`; }
+    else { b.style.opacity = 0.85; b.style.boxShadow = 'none'; }
+  });
+}
+
 function showNet(net) {
   state.lastNet = net;
   const rows = MOCK.networks[net].lines.map(l =>
@@ -361,22 +384,7 @@ function showNet(net) {
     Object.entries(l).filter(([k]) => k !== 'id' && k !== 'state').map(([k, v]) => `${k}: ${v}`).join(' · ') + `</div>`).join('');
   document.getElementById('netinfo').innerHTML =
     `<b>${{ water: '🔵 ВК · вода', heat: '🔴 ОВ · тепло', power: '🟡 ЭО · свет', vent: '🟣 Вентиляция ДУ' }[net]}</b>${rows}`;
-  for (const [nn, g] of Object.entries(groups)) {
-    if (!['water', 'heat', 'power', 'vent'].includes(nn)) continue;
-    const on = nn === net;
-    g.children.forEach(o => {
-      if (o.material) {
-        o.material.transparent = true;
-        o.material.opacity = on ? 1 : 0.16;
-        if (o.material.emissive) o.material.emissiveIntensity = on ? 1.1 : 0.06;
-      }
-    });
-  }
-  document.querySelectorAll('.layers button').forEach(b => {
-    const mine = b.id === 'btn-' + net;
-    b.style.opacity = mine ? 1 : 0.4;
-    b.style.boxShadow = mine ? `0 0 0 2px currentColor inset, 0 6px 22px -6px currentColor` : 'none';
-  });
+  applyFocus();
 }
 
 let riverMesh = null, gaugePole = null, floodTimers = [];
@@ -758,9 +766,8 @@ function syncLayers() {
   for (const n of ['water', 'heat', 'power', 'vent']) {
     const b = document.getElementById('btn-' + n);
     b.classList.toggle('on', state[n]);
-    b.style.opacity = state[n] ? '' : 0.3;
   }
-  if (state.lastNet && state[state.lastNet]) showNet(state.lastNet);
+  applyFocus();
 }
 
 async function init() {
@@ -808,7 +815,7 @@ async function init() {
   buildTower(); resize(); buildEq(); buildUrban(); renderPred(); selectFloor(20); showNet('heat'); syncLayers();
 
   for (const n of ['water', 'heat', 'power', 'vent'])
-    document.getElementById('btn-' + n).onclick = (e) => { state[n] = !state[n]; syncLayers(); };
+    document.getElementById('btn-' + n).onclick = () => { state[n] = !state[n]; state[n] ? showNet(n) : syncLayers(); };
   document.getElementById('xray').onchange = (e) => { state.xray = e.target.checked; syncLayers(); syncSection(); };
   document.getElementById('struct').onchange = (e) => { state.struct = e.target.checked; syncLayers(); syncSection(); };
   document.getElementById('section').onchange = (e) => { state.section = e.target.checked; selectFloor(state.floor); };
