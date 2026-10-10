@@ -4,6 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Twin 3D — ЖК 20 этажей (MOCK)</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230f172a'/><rect x='7' y='4' width='7' height='24' fill='%2338bdf8'/><rect x='18' y='9' width='7' height='19' fill='%23fb7185'/></svg>"/>
 <style>
   * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
   body { margin: 0; display: flex; height: 100vh; background: #070d1a; color: #e5e7eb; overflow: hidden; }
@@ -86,6 +87,7 @@
     <button id="btn-vent" style="color:#e879f9">Вент</button>
   </div>
   <div id="netinfo" class="card">Кликни по цветному стояку в шахте башни.</div>
+  <div style="font-size:11px;color:#94a3b8">Легенда: <span style="color:#38bdf8">■</span> вода <span style="color:#fb7185">■</span> тепло <span style="color:#facc15">■</span> свет <span style="color:#e879f9">■</span> вент</div>
   </div></details>
 
   <details open><summary>💰 Смета — готовность %</summary><div class="dbody">
@@ -102,8 +104,13 @@
   </div>
   </div></details>
 
+  <details><summary>📋 Поручения (<span id="taskcount">5</span>)</summary><div class="dbody">
+  <div id="tasks"></div>
+  </div></details>
+
   <details><summary>📊 Картина дня</summary><div class="dbody">
   <div id="daily"></div>
+  <div id="feed" class="card"><b>Лента событий</b><div id="feedlist"></div></div>
   <button class="stub-btn">Кадастр · Телеметрия ИТП · Зона отключения (в пилоте)</button>
   </div></details>
 </div>

@@ -345,20 +345,22 @@ function agent(q) {
   const log = document.getElementById('agentlog');
   const log2 = document.getElementById('agentlog2');
   const say = (h) => { log.innerHTML = h; if (log2) log2.innerHTML = h.replaceAll('<b>Агент:</b>', '🤖 ').replaceAll('<b>Картина дня:</b>', '📊 '); };
-  if (q.includes('перерасход')) { showNet('heat'); selectFloor(17); alertBar('ОВ перерасход +14% · эт 14–20 · поручение ИТП 24ч');
-    say(`<b>Агент:</b> перерасход ОВ эт 14–20 (+14%). Поручение наладчику ИТП, 24ч. Этаж 17 подсвечен. (MOCK)`);
-  } else if (q.includes('авари')) { showNet('power'); alertBar('Перегруз паркинг 91% · БКТП · зона отключения −1');
-    say(`<b>Агент:</b> риск — паркинг перегруз 91% (зарядки). Зона отключения: паркинг −1 (расчет в пилоте).`);
-  } else if (q.includes('поручен')) {
+  const KZ = /шығын|апат|мәртебе|тапсырма|тазалау|кім|қайда/.test(q);
+  if (q.includes('перерасход') || q.includes('шығын')) { showNet('heat'); selectFloor(17); alertBar('ОВ перерасход +14% · эт 14–20 · поручение ИТП 24ч');
+    say(`<b>Агент:</b> перерасход ОВ эт 14–20 (+14%). Поручение наладчику ИТП, 24ч. Этаж 17 подсвечен. (MOCK)${KZ ? ' · (KZ: шығын табылды)' : ''}`);
+  } else if (q.includes('авари') || q.includes('апат')) { showNet('power'); alertBar('Перегруз паркинг 91% · БКТП · зона отключения −1');
+    say(`<b>Агент:</b> риск — паркинг перегруз 91% (зарядки). Зона отключения: паркинг −1 (расчет в пилоте).${KZ ? ' · (KZ: апат орны −1)' : ''}`);
+  } else if (q.includes('поручен') || q.includes('тапсырма')) {
     alertBar('');
-    say(`<b>Агент:</b> открытых 5, просрочено 2 — фасад эт 9, витраж стилобата (MOCK).`);
-  } else if (q.includes('статус')) {
+    const open = MOCK.tasks.filter(t => !JSON.parse(localStorage.getItem('twin_tasks') || '[]').includes(t.id)).length;
+    say(`<b>Агент:</b> открытых ${open}, просрочено 2 — фасад эт 9, витраж стилобата (MOCK).`);
+  } else if (q.includes('статус') || q.includes('мәртебе')) {
     alertBar('');
-    say(`<b>Картина дня:</b> каркас 64%, фасад 38%, инженерия 22%. Риски: ИТП, насос ХВС-2, шум после 22:00.`);
-  } else if (q.includes('убор')) {
+    say(`<b>Картина дня:</b> каркас 64%/71%, фасад 38%/45%, инженерия 22%/30%. Риски: ИТП, насос ХВС-2, шум после 22:00.`);
+  } else if (q.includes('убор') || q.includes('тазалау')) {
     alertBar('');
     say(`<b>Агент:</b> грязь на выезде КПП — 3 обращения. Поручение подрядчику (MOCK).`);
-  } else { alertBar(''); say(`<b>Агент:</b> понимаю: авария / перерасход / поручение / статус / уборка. Полный LLM — в пилоте.`); }
+  } else { alertBar(''); say(`<b>Агент:</b> понимаю: авария / перерасход / поручение / статус / уборка · KZ: апат / шығын / тапсырма / мәртебе / тазалау. Полный LLM — в пилоте.`); }
 }
 
 function alertBar(t) {
@@ -371,7 +373,7 @@ function alertBar(t) {
 }
 
 function exportCSV() {
-  const rows = [['stage', 'sum_mln', 'done_pct'], ...MOCK.estimate.map(e => [e.stage, Math.round(e.sum / 1e6), e.done])];
+  const rows = [['stage', 'sum_mln', 'fact_pct', 'plan_pct'], ...MOCK.estimate.map(e => [e.stage, Math.round(e.sum / 1e6), e.done, e.plan ?? e.done])];
   const csv = rows.map(r => r.map(v => `"${String(v).replaceAll('"', '""')}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: 'text/csv' }));
@@ -409,8 +411,24 @@ async function init() {
   document.getElementById('objname').textContent = MOCK.object.name;
   document.getElementById('objmeta').innerHTML =
     `<b>${MOCK.object.address}</b><br/>Кадастр: ${MOCK.object.cadastre}<br/>${MOCK.object.status}`;
-  document.getElementById('estimate').innerHTML = MOCK.estimate.map(e =>
-    `<div class="card"><b>${e.stage}</b> — ${(e.sum / 1e6).toFixed(0)} млн ₸ · готовность ${e.done}%<div class="bar"><div style="width:${e.done}%"></div></div><div style="font-size:11px;color:#94a3b8;margin-top:4px">${e.mats || ''}</div></div>`).join('');
+  document.getElementById('estimate').innerHTML = MOCK.estimate.map(e => {
+    const d = e.done - (e.plan ?? e.done);
+    const flag = d === 0 ? '<span style="color:#34d399">в срок</span>' : `<span style="color:#f87171">отставание ${-d} п.п.</span>`;
+    return `<div class="card"><b>${e.stage}</b> — ${(e.sum / 1e6).toFixed(0)} млн ₸ · факт ${e.done}% / план ${e.plan}% · ${flag}<div class="bar" style="position:relative"><div style="width:${e.done}%"></div><div style="position:absolute;top:-2px;left:${e.plan}%;width:2px;height:12px;background:#fbbf24"></div></div><div style="font-size:11px;color:#94a3b8;margin-top:4px">${e.mats || ''}</div></div>`;
+  }).join('');
+  const doneTasks = new Set(JSON.parse(localStorage.getItem('twin_tasks') || '[]'));
+  const renderTasks = () => {
+    document.getElementById('tasks').innerHTML = MOCK.tasks.map(t =>
+      `<label class="chk" style="${doneTasks.has(t.id) ? 'text-decoration:line-through;opacity:.6' : ''}"><input type="checkbox" data-t="${t.id}" ${doneTasks.has(t.id) ? 'checked' : ''}/> <b>${t.id}</b> · ${t.text} · <span style="color:${t.overdue ? '#f87171' : '#94a3b8'}">${t.due}</span></label>`).join('');
+    document.getElementById('taskcount').textContent = MOCK.tasks.filter(t => !doneTasks.has(t.id)).length;
+    document.querySelectorAll('#tasks input').forEach(c => c.onchange = () => {
+      c.checked ? doneTasks.add(c.dataset.t) : doneTasks.delete(c.dataset.t);
+      localStorage.setItem('twin_tasks', JSON.stringify([...doneTasks]));
+      renderTasks();
+    });
+  };
+  renderTasks();
+  document.getElementById('feedlist').innerHTML = MOCK.feed.map(f => `<div>🕐 ${f.t} — ${f.e}</div>`).join('');
   document.getElementById('daily').innerHTML =
     MOCK.sensors.map(s => `<div class="card"><b>${s.id}</b><br/>${s.val} · ${s.trend} · <b>${s.flag}</b></div>`).join('') +
     `<div class="card"><b>Голос стройки</b><br/>` + MOCK.appeals.map(a => `${a.theme} — ${a.count}`).join('<br/>') + `</div>`;
@@ -443,8 +461,7 @@ async function init() {
   const setMini = (m) => { aw.classList.toggle('mini', m); at.textContent = m ? '⛶' : '—'; };
   at.onclick = (e) => { e.stopPropagation(); setMini(!aw.classList.contains('mini')); };
   aw.onclick = () => { if (aw.classList.contains('mini')) setMini(false); };
-  document.getElementById('csv').onclick = exportCSV;
-  document.getElementById('copyd').onclick = () => {
+  document.getElementById('csv').onclick = exportCSV;  document.getElementById('copyd').onclick = () => {
     const t = 'Fl-' + String(state.floor).padStart(2, '0') + ' (MOCK)';
     navigator.clipboard?.writeText(t);
     document.getElementById('floorinfo').innerHTML += `<br/><span style="color:#34d399">GUID ${t} скопирован</span>`;
