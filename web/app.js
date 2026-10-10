@@ -4,7 +4,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let MOCK = null;
 const FLOORS = 20, FH = 3.1;
-const state = { water: true, heat: true, power: true, vent: true, struct: true, xray: false, floor: 20, section: false, night: false, apt: null };
+const state = { water: true, heat: true, power: true, vent: true, struct: true, dense: true, xray: false, floor: 20, section: false, night: false, apt: null };
+const denseMeshes = [];
 const APTS = [
   { id: 'A', rooms: '1к', area: 38.4, price: 15200000, status: 'свободна' },
   { id: 'B', rooms: '2к', area: 56.2, price: 21900000, status: 'бронь' },
@@ -206,7 +207,32 @@ function buildTower() {
     branch('heat', 0xfb7185, y - 0.3, 1.7, 0.10);
     branch('power', 0xfacc15, y - 0.55, 2.2, 0.07);
     if (f % 5 === 1) branch('vent', 0xe879f9, y + 0.35, -3.5, 0.13); // вент-разводка на 4 этажах для читаемости
+    if (f % 4 === 1) denseFloor(y); // плотный BIM-слой через 5 этажей
   }
+
+function denseFloor(y) {
+  const put = (geo, color, net, x, yy, z, ry) => {
+    const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.5, roughness: 0.5 }));
+    m.position.set(x, yy, z);
+    if (ry) m.rotation.y = ry;
+    m.userData = { type: 'net', net };
+    groups[net].add(m); pickables.push(m); denseMeshes.push(m);
+    return m;
+  };
+  // кабельный лоток (желтый) + крышка
+  put(new THREE.BoxGeometry(W - 2, 0.12, 1.1), 0xfacc15, 'power', 0, y - 0.75, 3.4);
+  for (let i = 0; i < 6; i++) put(new THREE.BoxGeometry(0.12, 0.12, 1.1), 0xfacc15, 'power', -W / 2 + 2 + i * 5.6, y - 0.68, 3.4);
+  // два параллельных воздуховода (циан/белый)
+  put(new THREE.BoxGeometry(W - 4, 0.5, 0.8), 0x22d3ee, 'vent', 0, y + 0.15, -4.5);
+  put(new THREE.BoxGeometry(W - 6, 0.4, 0.6), 0xe2e8f0, 'vent', 1, y + 0.1, -5.6);
+  // опуски к квартирам: 4 пары вода/тепло
+  for (const dx of [-12, -4, 4, 12]) {
+    put(new THREE.CylinderGeometry(0.07, 0.07, 2.3, 6), 0x38bdf8, 'water', dx, y - 1.2, 1.1);
+    put(new THREE.CylinderGeometry(0.07, 0.07, 2.3, 6), 0xfb7185, 'heat', dx + 0.35, y - 1.2, 1.7);
+  }
+  // подвесы трассы
+  for (let i = 0; i < 5; i++) put(new THREE.CylinderGeometry(0.04, 0.04, 1.1, 6), 0x94a3b8, 'vent', -W / 2 + 4 + i * 6.5, y + 0.9, -4.5);
+}
   const intro = (z, y, c, net) => {
     const curve = new THREE.CatmullRomCurve3(
       [new THREE.Vector3(-60, 0.4, z), new THREE.Vector3(-25, 1.1, z), new THREE.Vector3(-W / 2 - 4, y, z * 0.25)]);
@@ -859,6 +885,7 @@ async function init() {
   document.getElementById('xray').onchange = (e) => { state.xray = e.target.checked; syncLayers(); syncSection(); };
   document.getElementById('struct').onchange = (e) => { state.struct = e.target.checked; syncLayers(); syncSection(); };
   document.getElementById('section').onchange = (e) => { state.section = e.target.checked; selectFloor(state.floor); };
+  document.getElementById('dense').onchange = (e) => { state.dense = e.target.checked; denseMeshes.forEach(m => m.visible = state.dense); };
   document.getElementById('night').onchange = (e) => setNight(e.target.checked);
   document.getElementById('floor').oninput = (e) => selectFloor(+e.target.value);
   document.getElementById('q').addEventListener('keydown', e => { if (e.key === 'Enter') agent(e.target.value); });
