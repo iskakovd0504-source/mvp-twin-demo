@@ -429,6 +429,11 @@ async function init() {
   };
   renderTasks();
   document.getElementById('feedlist').innerHTML = MOCK.feed.map(f => `<div>🕐 ${f.t} — ${f.e}</div>`).join('');
+  const avg = Math.round(MOCK.estimate.reduce((a, e) => a + e.done, 0) / MOCK.estimate.length);
+  const lag = Math.max(...MOCK.estimate.map(e => (e.plan ?? e.done) - e.done));
+  document.getElementById('st-ready').textContent = avg + '%';
+  document.getElementById('st-lag').textContent = lag > 0 ? '−' + lag + ' п.п.' : '0';
+  document.getElementById('st-open').textContent = MOCK.tasks.length;
   document.getElementById('daily').innerHTML =
     MOCK.sensors.map(s => `<div class="card"><b>${s.id}</b><br/>${s.val} · ${s.trend} · <b>${s.flag}</b></div>`).join('') +
     `<div class="card"><b>Голос стройки</b><br/>` + MOCK.appeals.map(a => `${a.theme} — ${a.count}`).join('<br/>') + `</div>`;
