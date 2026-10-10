@@ -106,7 +106,7 @@ function buildTower() {
   for (const k of ['water', 'heat', 'power', 'vent', 'struct', 'facade']) {
     groups[k] = new THREE.Group(); scene.add(groups[k]);
   }
-  ground();
+  ground(); buildSite();
 
   // паркинг -1 (полупрозрачный)
   const park = new THREE.Mesh(new THREE.BoxGeometry(W + 14, 3.4, D + 14),
@@ -340,6 +340,75 @@ function showNet(net) {
   }
 }
 
+let riverMesh = null;
+function buildSite() {
+  // свой участок: золотая рамка + заливка
+  const W2 = 46, D2 = 36;
+  const pts = [new THREE.Vector3(-W2, 0.15, -D2), new THREE.Vector3(W2, 0.15, -D2),
+    new THREE.Vector3(W2, 0.15, D2), new THREE.Vector3(-W2, 0.15, D2), new THREE.Vector3(-W2, 0.15, -D2)];
+  const frame = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
+    new THREE.LineBasicMaterial({ color: 0xfbbf24 }));
+  scene.add(frame);
+  const fill = new THREE.Mesh(new THREE.PlaneGeometry(W2 * 2, D2 * 2),
+    new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.06 }));
+  fill.rotation.x = -Math.PI / 2; fill.position.y = 0.06;
+  fill.userData = { type: 'plot', own: true };
+  scene.add(fill); pickables.push(fill);
+  // соседи: серые коробки без данных
+  const nmat = new THREE.MeshStandardMaterial({ color: 0x3a4763, roughness: 1, transparent: true, opacity: 0.7 });
+  [['склад', 78, 6, 0], ['дома', -78, 8, 10]].forEach(([nm, x, h, z]) => {
+    const b = new THREE.Mesh(new THREE.BoxGeometry(34, h, 30), nmat.clone());
+    b.position.set(x, h / 2, z); b.castShadow = true;
+    b.userData = { type: 'plot', own: false, name: nm };
+    scene.add(b); pickables.push(b);
+  });
+  // река Тобол: полоса на севере
+  riverMesh = new THREE.Mesh(new THREE.PlaneGeometry(500, 56),
+    new THREE.MeshStandardMaterial({ color: 0x1d6fa5, roughness: 0.25, metalness: 0.35, transparent: true, opacity: 0.85 }));
+  riverMesh.rotation.x = -Math.PI / 2; riverMesh.position.set(0, 0.1, -78);
+  scene.add(riverMesh);
+  const bank = new THREE.Mesh(new THREE.BoxGeometry(500, 1.2, 4),
+    new THREE.MeshStandardMaterial({ color: 0x55607a }));
+  bank.position.set(0, 0.6, -48); scene.add(bank);
+  // деревья в учете: 46 шт по границе и у реки
+  const N = (MOCK.parcel && MOCK.parcel.trees) || 46;
+  const trunk = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.25, 0.35, 2.4, 6),
+    new THREE.MeshStandardMaterial({ color: 0x6b4a2f, roughness: 1 }), N);
+  const crown = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1.7, 0),
+    new THREE.MeshStandardMaterial({ color: 0x2f9e5f, roughness: 0.9, flatShading: true }), N);
+  const d = new THREE.Object3D();
+  let seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < N; i++) {
+    const side = i % 4;
+    const x = side === 0 ? -W2 - 4 - rnd() * 8 : side === 1 ? W2 + 4 + rnd() * 8 : (rnd() - 0.5) * 110;
+    const z = side < 2 ? (rnd() - 0.5) * 70 : side === 2 ? -D2 - 5 - rnd() * 6 : D2 + 5 + rnd() * 8;
+    d.position.set(x, 1.2, z); d.updateMatrix(); trunk.setMatrixAt(i, d.matrix);
+    d.position.y = 3.4; d.scale.setScalar(0.85 + rnd() * 0.5); d.updateMatrix(); crown.setMatrixAt(i, d.matrix);
+    d.scale.setScalar(1);
+  }
+  trunk.castShadow = crown.castShadow = true;
+  scene.add(trunk); scene.add(crown);
+}
+
+function showPlot(own, name) {
+  const P = MOCK.parcel, R = MOCK.river;
+  document.getElementById('parcelinfo').innerHTML = own
+    ? `<b>Наш участок</b> · ${P.cadastre}<br/>${P.area} · ${P.status}<br/>🌳 Деревьев в учете: <b>${P.trees}</b><br/>🌊 ${R.name}: ${R.level}, ${R.forecast}<br/><span class="mono">Соседи: ${P.neighbors.join(' · ')}</span>`
+    : `<b>Чужой участок (${name || 'сосед'})</b> — данных нет.<br/>Показываем только свой: граница приватности.`;
+  if (!own) alertBar('Чужой участок — панель только для своего');
+}
+
+function floodDemo() {
+  const R = MOCK.river;
+  const on = riverMesh.position.y < 0.5;
+  riverMesh.position.y = on ? 1.1 : 0.1;
+  riverMesh.material.opacity = on ? 1 : 0.85;
+  alertBar(on ? `🌊 Паводок-симуляция: ${R.forecast}` : 'Река в норме: ' + R.level);
+  document.getElementById('parcelinfo').innerHTML =
+    `<b>${R.name}</b> · ${R.sensor}<br/>${on ? '⚠ ' + R.forecast + ' (MOCK-симуляция)' : R.forecast}`;
+}
+
 function gotoTask(id) {
   const t = MOCK.tasks.find(x => x.id === id);
   if (!t) return;
@@ -432,9 +501,17 @@ async function init() {
     document.getElementById('taskcount').textContent = open;
     document.getElementById('st-open').textContent = open;
     document.querySelectorAll('#tasks input').forEach(c => c.onchange = () => {
-      c.checked ? doneTasks.add(c.dataset.t) : doneTasks.delete(c.dataset.t);
+      const was = c.checked;
+      was ? doneTasks.add(c.dataset.t) : doneTasks.delete(c.dataset.t);
       localStorage.setItem('twin_tasks', JSON.stringify([...doneTasks]));
       renderTasks();
+      const left = MOCK.tasks.filter(t => !doneTasks.has(t.id)).length;
+      if (was) {
+        alertBar(`✅ ${c.dataset.t} закрыто. Осталось заданий: ${left}`);
+        document.getElementById('feedlist').innerHTML =
+          `<div>✅ ${new Date().toTimeString().slice(0, 5)} — ${c.dataset.t} закрыто мастером (MOCK)</div>` +
+          document.getElementById('feedlist').innerHTML;
+      }
     });
     document.querySelectorAll('#tasks [data-g]').forEach(b => b.onclick = () => gotoTask(b.dataset.g));
   };
@@ -446,7 +523,7 @@ async function init() {
   document.getElementById('st-lag').textContent = lag > 0 ? '−' + lag + ' п.п.' : '0';
   document.getElementById('daily').innerHTML =
     MOCK.sensors.map(s => `<div class="card"><b>${s.id}</b><br/>${s.val} · ${s.trend} · <b>${s.flag}</b></div>`).join('') +
-    `<div class="card"><b>Голос стройки</b><br/>` + MOCK.appeals.map(a => `${a.theme} — ${a.count}`).join('<br/>') + `</div>`;
+    `<div class="card"><b>Голос народа</b> — жалобы рядом с домом<br/>` + MOCK.appeals.map(a => `${a.theme} — ${a.count}`).join('<br/>') + `</div>`;
 
   buildTower(); resize(); selectFloor(20); showNet('heat'); syncLayers();
 
@@ -476,7 +553,8 @@ async function init() {
   const setMini = (m) => { aw.classList.toggle('mini', m); at.textContent = m ? '⛶' : '—'; };
   at.onclick = (e) => { e.stopPropagation(); setMini(!aw.classList.contains('mini')); };
   aw.onclick = () => { if (aw.classList.contains('mini')) setMini(false); };
-  document.getElementById('csv').onclick = exportCSV;  document.getElementById('copyd').onclick = () => {
+  document.getElementById('csv').onclick = exportCSV;
+  document.getElementById('flood').onclick = floodDemo;  document.getElementById('copyd').onclick = () => {
     const t = 'Fl-' + String(state.floor).padStart(2, '0') + ' (MOCK)';
     navigator.clipboard?.writeText(t);
     document.getElementById('floorinfo').innerHTML += `<br/><span style="color:#34d399">GUID ${t} скопирован</span>`;
@@ -495,6 +573,7 @@ async function init() {
     const u = hit.object.userData;
     if (u.type === 'net') showNet(u.net);
     else if (u.type === 'floor') selectFloor(u.n);
+    else if (u.type === 'plot') showPlot(u.own, u.name);
     else if (u.type === 'apt' && u.apt !== 'HALL') showApt(u.floor, u.apt);
   });
 
