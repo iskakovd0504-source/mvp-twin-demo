@@ -339,17 +339,54 @@ function showNet(net) {
 function agent(q) {
   q = (q || '').toLowerCase();
   const log = document.getElementById('agentlog');
-  if (q.includes('перерасход')) { showNet('heat'); selectFloor(17);
+  if (q.includes('перерасход')) { showNet('heat'); selectFloor(17); alertBar('ОВ перерасход +14% · эт 14–20 · поручение ИТП 24ч');
     log.innerHTML = `<b>Агент:</b> перерасход ОВ эт 14–20 (+14%). Поручение наладчику ИТП, 24ч. Этаж 17 подсвечен. (MOCK)`;
-  } else if (q.includes('авари')) { showNet('power');
+  } else if (q.includes('авари')) { showNet('power'); alertBar('Перегруз паркинг 91% · БКТП · зона отключения −1');
     log.innerHTML = `<b>Агент:</b> риск — паркинг перегруз 91% (зарядки). Зона отключения: паркинг −1 (расчет в пилоте).`;
   } else if (q.includes('поручен')) {
+    alertBar('');
     log.innerHTML = `<b>Агент:</b> открытых 5, просрочено 2 — фасад эт 9, витраж стилобата (MOCK).`;
   } else if (q.includes('статус')) {
+    alertBar('');
     log.innerHTML = `<b>Картина дня:</b> каркас 64%, фасад 38%, инженерия 22%. Риски: ИТП, насос ХВС-2, шум после 22:00.`;
   } else if (q.includes('убор')) {
+    alertBar('');
     log.innerHTML = `<b>Агент:</b> грязь на выезде КПП — 3 обращения. Поручение подрядчику (MOCK).`;
-  } else log.innerHTML = `<b>Агент:</b> понимаю: авария / перерасход / поручение / статус / уборка. Полный LLM — в пилоте.`;
+  } else { alertBar(''); log.innerHTML = `<b>Агент:</b> понимаю: авария / перерасход / поручение / статус / уборка. Полный LLM — в пилоте.`; }
+}
+
+function alertBar(t) {
+  const b = document.getElementById('alertbar');
+  if (!t) { b.classList.remove('on'); b.textContent = ''; return; }
+  b.textContent = '⚠ ' + t;
+  b.classList.add('on');
+  clearTimeout(alertBar._t);
+  alertBar._t = setTimeout(() => b.classList.remove('on'), 9000);
+}
+
+function exportCSV() {
+  const rows = [['stage', 'sum_mln', 'done_pct'], ...MOCK.estimate.map(e => [e.stage, Math.round(e.sum / 1e6), e.done])];
+  const csv = rows.map(r => r.map(v => `"${String(v).replaceAll('"', '""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: 'text/csv' }));
+  a.download = 'smeta-mock.csv'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+let demoTimers = [];
+function demoStop() { demoTimers.forEach(clearTimeout); demoTimers = []; controls.autoRotate = false; }
+function demoPlay() {
+  demoStop(); controls.autoRotate = true;
+  const seq = [
+    [0, () => { selectFloor(20); showNet('heat'); }],
+    [1200, () => selectFloor(17)],
+    [2600, () => { state.xray = true; syncLayers(); syncSection(); }],
+    [4000, () => { state.xray = false; syncLayers(); state.section = true; document.getElementById('section').checked = true; selectFloor(12); }],
+    [5600, () => showApt(12, 'B')],
+    [7000, () => { setNight(true); showNet('power'); alertBar('Перегруз паркинг 91% · вечерний пик (MOCK)'); }],
+    [8600, () => { setNight(false); alertBar(''); agent('статус'); }],
+  ];
+  seq.forEach(([t, fn]) => demoTimers.push(setTimeout(fn, t)));
 }
 
 function syncLayers() {
@@ -382,6 +419,14 @@ async function init() {
   document.getElementById('night').onchange = (e) => setNight(e.target.checked);
   document.getElementById('floor').oninput = (e) => selectFloor(+e.target.value);
   document.getElementById('q').addEventListener('keydown', e => { if (e.key === 'Enter') agent(e.target.value); });
+  document.getElementById('csv').onclick = exportCSV;
+  document.getElementById('copyd').onclick = () => {
+    const t = 'Fl-' + String(state.floor).padStart(2, '0') + ' (MOCK)';
+    navigator.clipboard?.writeText(t);
+    document.getElementById('floorinfo').innerHTML += `<br/><span style="color:#34d399">GUID ${t} скопирован</span>`;
+  };
+  document.getElementById('demoplay').onclick = demoPlay;
+  document.getElementById('demoreset').onclick = () => { demoStop(); alertBar(''); setNight(false); state.xray = false; state.section = false; document.getElementById('section').checked = false; syncLayers(); selectFloor(20); showNet('heat'); };
 
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
   renderer.domElement.addEventListener('click', (e) => {
