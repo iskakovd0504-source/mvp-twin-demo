@@ -312,8 +312,15 @@ function selectFloor(n) {
   document.getElementById('floorv').textContent = n === 0 ? 'стилобат' : n === -1 ? 'ядро' : 'эт ' + n;
   if (n > 0) {
     const c = floorCalc(n);
+    const teams = ['СтройМонтаж-А', 'ФасадПрофи', 'СтройМонтаж-А', 'ИнжСистемы'];
+    const team = teams[n % teams.length];
+    const frame = 100, fac = Math.max(0, Math.min(100, 140 - n * 5)), mep = Math.max(0, Math.min(100, 90 - n * 4));
+    const late = n === 9 ? '⚠ отстает на 4 дня (витраж)' : n > 14 ? '⚠ перерасход тепла' : '✅ в графике';
     document.getElementById('floorinfo').innerHTML =
-      `<b>Этаж ${n}</b> · ${c.cost}<br/>Бетон ${c.concrete} · Арматура ${c.rebar}<br/>Фасад ${c.facade} · Трубы ${c.pipes} · Кабель ${c.cable}<br/><span style="color:#94a3b8">GUID: Fl-${String(n).padStart(2, '0')}… (MOCK, ведомость в пилоте)</span>`;
+      `<b>Этаж ${n}</b> · ${c.cost} · ${late}<br/>` +
+      `🧱 Каркас ${frame}% · 🪟 Фасад ${fac}% · 🔧 Инженерия ${mep}%<br/>` +
+      `Бетон ${c.concrete} · Арматура ${c.rebar} · Фасад ${c.facade}<br/>Трубы ${c.pipes} · Кабель ${c.cable}<br/>` +
+      `👷 Подрядчик: ${team}<br/><span class="mono">Код этажа для сметы: Fl-${String(n).padStart(2, '0')}</span>`;
     controls.target.set(0, 7 + (n - 1) * FH, 0);
   } else if (n === 0) {
     document.getElementById('floorinfo').innerHTML = `<b>Стилобат</b> — коммерция, ИТП, насосная, паркинг −1. Смета укрупненно: ₸ 410 млн (MOCK).`;
@@ -469,7 +476,7 @@ function setRole(r) {
     `<b>${names[r]}</b> — что важно:<br/>` + R.kpi.map(([k, v]) => `• ${k}: <b>${v}</b>`).join('<br/>') + extra;
   if (r === 'dev') { flashSection('d-money'); selectFloor(9); }
   if (r === 'gos') { flashSection('d-daily'); alertBar('🏛 Приемка: 2 предписания открыто — фасад эт 9, витраж стилобата'); }
-  if (r === 'inv') { flashSection('d-floor'); state.section = true; document.getElementById('section').checked = true; selectFloor(12); showApt(12, 'B'); }
+  if (r === 'inv') { flashSection('d-money'); const s = MOCK.sales; alertBar(`💼 Продано ${s.apt.sold}/${s.apt.total} квартир · готовность объекта ${Math.round(MOCK.estimate.reduce((a, e) => a + e.done, 0) / MOCK.estimate.length)}%`); }
   if (r === 'own') { flashSection('d-floor'); state.section = true; document.getElementById('section').checked = true; selectFloor(12); showApt(12, 'B'); alertBar('🔑 Твоя квартира B на 12 эт: бронь, ключи 2027-2кв'); }
 }
 
