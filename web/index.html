@@ -28,6 +28,11 @@
   label.chk { font-size: 12px; color: #94a3b8; display: flex; gap: 6px; align-items: center; margin-top: 6px; cursor: pointer; }
   #alertbar { position: absolute; top: 12px; left: 12px; right: 12px; display: none; background: rgba(127,29,29,.92); border: 1px solid #f87171; padding: 8px 12px; border-radius: 10px; font-size: 13px; z-index: 3; }
   #alertbar.on { display: block; animation: pulse 1.2s infinite; }
+  #awidget { position: absolute; right: 12px; bottom: 48px; width: 300px; background: rgba(15,23,42,.92); border: 1px solid #334155; border-radius: 12px; padding: 10px; z-index: 3; }
+  #awidget input { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: #0b1220; color: #fff; font-size: 13px; }
+  #awidget .chips { display: flex; gap: 4px; flex-wrap: wrap; margin: 6px 0; }
+  #awidget .chips button { flex: 1; font-size: 11px; padding: 4px 6px; border-radius: 7px; border: 1px solid #475569; background: #1e293b; color: #e2e8f0; cursor: pointer; }
+  #agentlog2 { font-size: 12px; color: #cbd5e1; margin-top: 6px; max-height: 110px; overflow-y: auto; }
   @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(248,113,113,.6);} 50% { box-shadow: 0 0 0 8px rgba(248,113,113,0);} }
   .rowbtns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
   .rowbtns button { flex: 1; min-width: 110px; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: #1e293b; color: #e5e7eb; cursor: pointer; font-size: 12px; }
@@ -42,7 +47,7 @@
 </script>
 </head>
 <body>
-<div id="scene"><div id="alertbar"></div><div id="hint">Клик по этажу/стояку — смета и материалы · слайдер — фокус на этаж · X-Ray — вскрыть инженерию</div></div>
+<div id="scene"><div id="alertbar"></div><div id="awidget"><b style="font-size:12px">FM-агент</b><div class="chips"><button data-a="где перерасход?">перерасход</button><button data-a="авария">авария</button><button data-a="статус">статус</button></div><input id="q2" placeholder="спроси агента…"/><div id="agentlog2">Жми чип или пиши: перерасход / авария / статус</div></div><div id="hint">Клик по этажу/стояку — смета и материалы · слайдер — фокус на этаж · X-Ray — вскрыть инженерию</div></div>
 <div id="panel">
   <div class="badge">BIM LOD300 · данные выдуманы (MOCK)</div>
   <div class="rowbtns"><button id="demoplay" class="hot">▶ Автоплей 5 мин</button><button id="demoreset">Сброс</button></div>

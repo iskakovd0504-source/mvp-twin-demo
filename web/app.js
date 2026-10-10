@@ -339,20 +339,22 @@ function showNet(net) {
 function agent(q) {
   q = (q || '').toLowerCase();
   const log = document.getElementById('agentlog');
+  const log2 = document.getElementById('agentlog2');
+  const say = (h) => { log.innerHTML = h; if (log2) log2.innerHTML = h.replaceAll('<b>Агент:</b>', '🤖 ').replaceAll('<b>Картина дня:</b>', '📊 '); };
   if (q.includes('перерасход')) { showNet('heat'); selectFloor(17); alertBar('ОВ перерасход +14% · эт 14–20 · поручение ИТП 24ч');
-    log.innerHTML = `<b>Агент:</b> перерасход ОВ эт 14–20 (+14%). Поручение наладчику ИТП, 24ч. Этаж 17 подсвечен. (MOCK)`;
+    say(`<b>Агент:</b> перерасход ОВ эт 14–20 (+14%). Поручение наладчику ИТП, 24ч. Этаж 17 подсвечен. (MOCK)`);
   } else if (q.includes('авари')) { showNet('power'); alertBar('Перегруз паркинг 91% · БКТП · зона отключения −1');
-    log.innerHTML = `<b>Агент:</b> риск — паркинг перегруз 91% (зарядки). Зона отключения: паркинг −1 (расчет в пилоте).`;
+    say(`<b>Агент:</b> риск — паркинг перегруз 91% (зарядки). Зона отключения: паркинг −1 (расчет в пилоте).`);
   } else if (q.includes('поручен')) {
     alertBar('');
-    log.innerHTML = `<b>Агент:</b> открытых 5, просрочено 2 — фасад эт 9, витраж стилобата (MOCK).`;
+    say(`<b>Агент:</b> открытых 5, просрочено 2 — фасад эт 9, витраж стилобата (MOCK).`);
   } else if (q.includes('статус')) {
     alertBar('');
-    log.innerHTML = `<b>Картина дня:</b> каркас 64%, фасад 38%, инженерия 22%. Риски: ИТП, насос ХВС-2, шум после 22:00.`;
+    say(`<b>Картина дня:</b> каркас 64%, фасад 38%, инженерия 22%. Риски: ИТП, насос ХВС-2, шум после 22:00.`);
   } else if (q.includes('убор')) {
     alertBar('');
-    log.innerHTML = `<b>Агент:</b> грязь на выезде КПП — 3 обращения. Поручение подрядчику (MOCK).`;
-  } else { alertBar(''); log.innerHTML = `<b>Агент:</b> понимаю: авария / перерасход / поручение / статус / уборка. Полный LLM — в пилоте.`; }
+    say(`<b>Агент:</b> грязь на выезде КПП — 3 обращения. Поручение подрядчику (MOCK).`);
+  } else { alertBar(''); say(`<b>Агент:</b> понимаю: авария / перерасход / поручение / статус / уборка. Полный LLM — в пилоте.`); }
 }
 
 function alertBar(t) {
@@ -419,6 +421,8 @@ async function init() {
   document.getElementById('night').onchange = (e) => setNight(e.target.checked);
   document.getElementById('floor').oninput = (e) => selectFloor(+e.target.value);
   document.getElementById('q').addEventListener('keydown', e => { if (e.key === 'Enter') agent(e.target.value); });
+  document.getElementById('q2').addEventListener('keydown', e => { if (e.key === 'Enter') agent(e.target.value); });
+  document.querySelectorAll('#awidget .chips button').forEach(b => b.onclick = () => agent(b.dataset.a));
   document.getElementById('csv').onclick = exportCSV;
   document.getElementById('copyd').onclick = () => {
     const t = 'Fl-' + String(state.floor).padStart(2, '0') + ' (MOCK)';
