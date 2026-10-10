@@ -432,11 +432,82 @@ function floodDemo() {
   }, 500 * (i + 1))));
 }
 
+function flashSection(id) {
+  const d = document.getElementById(id);
+  if (!d) return;
+  d.open = true;
+  d.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  d.classList.remove('flash');
+  void d.offsetWidth;
+  d.classList.add('flash');
+  clearTimeout(flashSection._t);
+  flashSection._t = setTimeout(() => d.classList.remove('flash'), 1600);
+}
+
+const eqMeshes = {};
+let pulseList = [];
+function buildEq() {
+  const grp = new THREE.Group(); scene.add(grp);
+  const put = (id, geo, mat, x, y, z, eq) => {
+    const m = new THREE.Mesh(geo, mat);
+    m.position.set(x, y, z); m.castShadow = true;
+    m.userData = { type: 'eq', eq: eq || id };
+    grp.add(m); pickables.push(m); eqMeshes[eq || id] = m;
+    return m;
+  };
+  const E = Object.fromEntries(MOCK.equipment.map(e => [e.id, e]));
+  const bad = (h) => h < 65 ? 0xf87171 : h < 85 ? 0xfbbf24 : 0x34d399;
+  // ИТП в стилобате
+  put('itp-1', new THREE.BoxGeometry(4.5, 3, 3.5),
+    new THREE.MeshStandardMaterial({ color: 0xb45454, roughness: 0.6, emissive: bad(E['itp-1'].health), emissiveIntensity: 0.25 }), -14, 1.8, 15.5);
+  // насос ХВС-2 в паркинге
+  put('pump-2', new THREE.CylinderGeometry(1.1, 1.1, 2.6, 12),
+    new THREE.MeshStandardMaterial({ color: 0x3f8fc4, roughness: 0.4, emissive: bad(E['pump-2'].health), emissiveIntensity: 0.3 }), 14, 0.4, 12);
+  // БКТП
+  put('bktp', new THREE.BoxGeometry(5, 2.2, 4),
+    new THREE.MeshStandardMaterial({ color: 0x8a7a3a, roughness: 0.7, emissive: bad(E['bktp'].health), emissiveIntensity: 0.25 }), -14, 1.2, -15);
+  // маркеры: кровля АХУ + лифт + датчик эт.17
+  const mark = (id, x, y, z) => {
+    const m = new THREE.Mesh(new THREE.OctahedronGeometry(1.1),
+      new THREE.MeshStandardMaterial({ color: bad(MOCK.equipment.find(e => e.id === id).health), emissive: bad(MOCK.equipment.find(e => e.id === id).health), emissiveIntensity: 0.9, roughness: 0.3 }));
+    m.position.set(x, y, z); m.userData = { type: 'eq', eq: id };
+    grp.add(m); pickables.push(m); eqMeshes[id + ':m'] = m;
+    if (MOCK.equipment.find(e => e.id === id).health < 75) pulseList.push(m);
+  };
+  mark('ahu-1', -8, 7 + H + 4.6, -4);
+  mark('lift-1', 8, 34, -2);
+  mark('itp-1', -14, 5.2, 15.5);
+}
+
+function showEq(id) {
+  const e = MOCK.equipment.find(x => x.id === id);
+  if (!e) return;
+  flashSection('d-pred');
+  if (e.net) showNet(e.net);
+  if (e.floor >= 0) selectFloor(e.floor);
+  const m = eqMeshes[id];
+  if (m) {
+    controls.target.copy(m.position);
+    pulseList.push(m);
+    setTimeout(() => { pulseList = pulseList.filter(x => x !== m); }, 4000);
+  }
+  alertBar(`🔮 ${e.name} · здоровье ${e.health}% · ТО ${e.to} · ${e.state}`);
+}
+
+function renderPred() {
+  const col = (h) => h < 65 ? '#f87171' : h < 85 ? '#fbbf24' : '#34d399';
+  document.getElementById('pred').innerHTML = MOCK.equipment.map(e =>
+    `<div class="card"><b>${e.name}</b> · ${e.place} · <span style="color:${col(e.health)}">здоровье ${e.health}%</span><div class="bar"><div style="width:${e.health}%;background:${col(e.health)}"></div></div><div style="font-size:11px;color:#94a3b8;margin-top:4px">ТО ${e.to} · ресурса ${e.rul} · ${e.state}</div><button data-eq="${e.id}" style="margin-top:6px;width:100%;padding:6px;border-radius:8px;border:1px solid #2c3d5c;background:#16213a;color:#7dd3fc;cursor:pointer;font-size:12px">📍 Показать узел</button></div>`).join('');
+  document.querySelectorAll('#pred [data-eq]').forEach(b => b.onclick = () => showEq(b.dataset.eq));
+}
+
 function gotoTask(id) {
   const t = MOCK.tasks.find(x => x.id === id);
   if (!t) return;
+  if (t.eq) { showEq(t.eq); return; }
   if (t.net) showNet(t.net);
   selectFloor(t.floor ?? 20);
+  flashSection('d-floor');
   alertBar(`${t.id} · ${t.text} — показано на модели`);
 }
 
@@ -548,7 +619,7 @@ async function init() {
     MOCK.sensors.map(s => `<div class="card"><b>${s.id}</b><br/>${s.val} · ${s.trend} · <b>${s.flag}</b></div>`).join('') +
     `<div class="card"><b>Голос народа</b> — жалобы рядом с домом<br/>` + MOCK.appeals.map(a => `${a.theme} — ${a.count}`).join('<br/>') + `</div>`;
 
-  buildTower(); resize(); selectFloor(20); showNet('heat'); syncLayers();
+  buildTower(); resize(); buildEq(); renderPred(); selectFloor(20); showNet('heat'); syncLayers();
 
   for (const n of ['water', 'heat', 'power', 'vent'])
     document.getElementById('btn-' + n).onclick = (e) => { state[n] = !state[n]; syncLayers(); };
@@ -594,10 +665,11 @@ async function init() {
     const hit = ray.intersectObjects(pickables, false)[0];
     if (!hit) return;
     const u = hit.object.userData;
-    if (u.type === 'net') showNet(u.net);
-    else if (u.type === 'floor') selectFloor(u.n);
-    else if (u.type === 'plot') showPlot(u.own, u.name);
-    else if (u.type === 'apt' && u.apt !== 'HALL') showApt(u.floor, u.apt);
+    if (u.type === 'net') { showNet(u.net); flashSection('d-nets'); }
+    else if (u.type === 'floor') { selectFloor(u.n); flashSection('d-floor'); }
+    else if (u.type === 'plot') { showPlot(u.own, u.name); flashSection('d-plot'); }
+    else if (u.type === 'eq') showEq(u.eq);
+    else if (u.type === 'apt' && u.apt !== 'HALL') { showApt(u.floor, u.apt); flashSection('d-floor'); }
   });
 
   const clock = new THREE.Clock();
@@ -607,6 +679,8 @@ async function init() {
     if (!tickOn) return;
     if (t - last < 50) return; // ~20fps лимит для слабых машин
     last = t;
+    const s = 1 + Math.sin(performance.now() / 300) * 0.12;
+    pulseList.forEach(m => m.scale.setScalar(s));
     const dt = Math.min(clock.getDelta(), 0.05);
     for (const f of flows) {
       if (!f.dot.parent.visible) continue;

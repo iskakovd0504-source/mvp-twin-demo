@@ -48,6 +48,7 @@
   details summary::before { content: "▸ "; color: var(--acc); }
   details[open] summary::before { content: "▾ "; }
   details .dbody { padding: 0 12px 12px; }
+  details.flash { border-color: var(--acc); box-shadow: 0 0 0 2px #38bdf866, 0 12px 32px -16px #38bdf8aa; }
   .microw { display: flex; gap: 6px; }
   .microw input { flex: 1; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--line); background: #0a1222; color: #fff; font-size: 13px; }
   .microw button { padding: 8px 11px; border-radius: 10px; border: 1px solid var(--line); background: #16213a; color: #fff; cursor: pointer; transition: transform .08s; }
@@ -85,9 +86,9 @@
   <div class="badge">BIM LOD300 · данные выдуманы (MOCK)</div>
   <div class="stats"><div class="stat"><b id="st-ready">—</b><span>готовность объекта</span></div><div class="stat"><b id="st-lag" style="color:var(--red)">—</b><span>отставание max</span></div><div class="stat"><b id="st-open">—</b><span>поручений открыто</span></div></div>
   <div class="rowbtns"><button id="demoplay" class="hot">▶ Автоплей 5 мин</button><button id="demoreset">Сброс</button></div>
-  <details open><summary>🏢 Дом и адрес</summary><div class="dbody"><h2 id="objname" style="margin-top:0">Объект…</h2><div id="objmeta" class="card"></div><div style="font-size:11.5px;color:var(--mut)">Не знаешь с чего начать? Жми <b>▶ Автоплей</b> — дом сам себя покажет за 5 минут.</div></div></details>
+  <details id="d-obj" open><summary>🏢 Дом и адрес</summary><div class="dbody"><h2 id="objname" style="margin-top:0">Объект…</h2><div id="objmeta" class="card"></div><div style="font-size:11.5px;color:var(--mut)">Не знаешь с чего начать? Жми <b>▶ Автоплей</b> — дом сам себя покажет за 5 минут.</div></div></details>
 
-  <details open><summary>🏗 Этажи: что где готово</summary><div class="dbody">
+  <details id="d-floor" open><summary>🏗 Этажи: что где готово</summary><div class="dbody">
   <div id="floorctl"><input id="floor" type="range" min="1" max="20" value="20"/><b id="floorv">эт 20</b></div>
   <div id="floorinfo" class="card">Кликни по башне — материалы и смета этажа.</div>
   <label class="chk"><input id="xray" type="checkbox"/> Просвет: убрать стены, показать трубы</label>
@@ -97,7 +98,7 @@
   <div id="aptinfo" class="card">Включи «Разрез», кликни по квартире — цена и статус.</div>
   </div></details>
 
-  <details><summary>🔧 Трубы и провода</summary><div class="dbody">
+  <details id="d-nets"><summary>🔧 Трубы и провода</summary><div class="dbody">
   <div class="layers">
     <button id="btn-water" style="color:#38bdf8">ВК вода</button>
     <button id="btn-heat" style="color:#fb7185">ОВ тепло</button>
@@ -108,30 +109,35 @@
   <div style="font-size:11px;color:#94a3b8">Легенда: <span style="color:#38bdf8">■</span> вода <span style="color:#fb7185">■</span> тепло <span style="color:#facc15">■</span> свет <span style="color:#e879f9">■</span> вент</div>
   </div></details>
 
-  <details open><summary>💰 Деньги и сроки — готовность %</summary><div class="dbody">
+  <details id="d-money" open><summary>💰 Деньги и сроки — готовность %</summary><div class="dbody">
   <div style="font-size:11px;color:#94a3b8">% = сколько уже построено. Желтая риска — сколько должно быть.</div>
   <div id="estimate"></div>
   <div class="rowbtns"><button id="csv">Экспорт CSV</button><button id="copyd">Копировать GUID</button></div>
   <button class="stub-btn">IFC GUID · ведомость · КС-2 (в пилоте)</button>
   </div></details>
 
-  <details><summary>🤖 Помощник — спроси голосом 🎤</summary><div class="dbody">
+  <details id="d-agent"><summary>🤖 Помощник — спроси голосом 🎤</summary><div class="dbody">
   <div id="agent">
     <div class="microw"><input id="q" placeholder="где перерасход? / статус…"/><button id="mic" title="Голос">🎤</button></div>
     <div id="agentlog" class="card">Спроси голосом или текстом: перерасход, авария, поручение, статус, уборка</div>
   </div>
   </div></details>
 
-  <details><summary>🌳 Участок, река и двор</summary><div class="dbody">
+  <details id="d-plot"><summary>🌳 Участок, река и двор</summary><div class="dbody">
   <div id="parcelinfo" class="card">Ткни в свой участок (подсвечен) — кадастр и деревья. Соседи серые — их данные не показываем.</div>
   <div class="rowbtns"><button id="flood">🌊 Прогноз паводка</button></div>
   </div></details>
 
-  <details><summary>📋 Задания мастерам (<span id="taskcount">5</span>)</summary><div class="dbody">
+  <details id="d-pred"><summary>🔮 Предиктив и ТО — все системы</summary><div class="dbody">
+  <div style="font-size:11px;color:#94a3b8">% = здоровье узла. Жми «показать» — камера летит точно на насос/датчик.</div>
+  <div id="pred"></div>
+  </div></details>
+
+  <details id="d-tasks"><summary>📋 Задания мастерам (<span id="taskcount">5</span>)</summary><div class="dbody">
   <div id="tasks"></div>
   </div></details>
 
-  <details><summary>📊 Что сегодня на стройке</summary><div class="dbody">
+  <details id="d-daily"><summary>📊 Что сегодня на стройке</summary><div class="dbody">
   <div id="daily"></div>
   <div id="feed" class="card"><b>Лента событий</b><div id="feedlist"></div></div>
   <button class="stub-btn">Кадастр · Телеметрия ИТП · Зона отключения (в пилоте)</button>
