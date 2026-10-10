@@ -95,8 +95,8 @@ function riser(x, z, r, color, net) {
   m.castShadow = true;
   m.userData = { type: 'net', net };
   groups[net].add(m); pickables.push(m);
-  for (let i = 0; i < 4; i++) {
-    const dot = new THREE.Mesh(new THREE.SphereGeometry(0.5, 10, 10), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+  for (let i = 0; i < 3; i++) {
+    const dot = new THREE.Mesh(new THREE.SphereGeometry(0.32, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 }));
     groups[net].add(dot);
     flows.push({ dot, x, z, t: Math.random(), speed: 0.05 + Math.random() * 0.04 });
   }
@@ -183,15 +183,30 @@ function buildTower() {
   chill.userData = { type: 'net', net: 'heat' };
   groups.heat.add(chill); pickables.push(chill);
 
-  // стояки в шахте (пучок как на 1-м референсе: маджента/желтый/голубой)
-  riser(4.5, -2, 0.42, 0xe879f9, 'vent');
-  riser(5.4, -2, 0.34, 0xfacc15, 'power');
-  riser(6.3, -2, 0.38, 0xfb7185, 'heat');
-  riser(7.2, -2, 0.34, 0x38bdf8, 'water');
-  riser(4.5, 0.2, 0.3, 0x22d3ee, 'water');
-  riser(5.4, 0.2, 0.3, 0xf97316, 'heat');
+  // стояки в шахте — тоньше, как в BIM (были огромные)
+  riser(4.5, -2, 0.30, 0xe879f9, 'vent');
+  riser(5.4, -2, 0.24, 0xfacc15, 'power');
+  riser(6.3, -2, 0.27, 0xfb7185, 'heat');
+  riser(7.2, -2, 0.24, 0x38bdf8, 'water');
+  riser(4.5, 0.2, 0.22, 0x22d3ee, 'water');
+  riser(5.4, 0.2, 0.22, 0xf97316, 'heat');
 
-  // наружные вводы от границы участка к стилобату (идут над землей, в дом)
+  // поквартирная разводка: тонкие ветки от шахты по каждому этажу, как в BIM
+  const branch = (net, color, y, z, r) => {
+    const g = new THREE.CylinderGeometry(r, r, W - 3, 8);
+    const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.55, roughness: 0.5 }));
+    m.rotation.z = Math.PI / 2;
+    m.position.set(0, y, z);
+    m.userData = { type: 'net', net };
+    groups[net].add(m); pickables.push(m);
+  };
+  for (let f = 1; f <= FLOORS; f++) {
+    const y = 7 + (f - 1) * FH + 2.35; // под потолком
+    branch('water', 0x38bdf8, y, 1.1, 0.10);
+    branch('heat', 0xfb7185, y - 0.3, 1.7, 0.10);
+    branch('power', 0xfacc15, y - 0.55, 2.2, 0.07);
+    if (f % 5 === 1) branch('vent', 0xe879f9, y + 0.35, -3.5, 0.13); // вент-разводка на 4 этажах для читаемости
+  }
   const intro = (z, y, c, net) => {
     const curve = new THREE.CatmullRomCurve3(
       [new THREE.Vector3(-60, 0.4, z), new THREE.Vector3(-25, 1.1, z), new THREE.Vector3(-W / 2 - 4, y, z * 0.25)]);
@@ -327,25 +342,41 @@ function selectFloor(n) {
   } else {
     document.getElementById('floorinfo').innerHTML = `<b>Ядро</b> — 3 лифта + лестница, стояки ОВ/ВК/ЭО/ДУ. Клик по цветному стояку — сеть.`;
   }
-  // подсветка выбранной плиты
+  // подсветка выбранной плиты — ярко
   floorMeshes.forEach(m => {
-    if (m.material.emissive && m.userData.type === 'floor')
-      m.material.emissive.setHex(m.userData.n === n ? 0x0ea5e9 : (state.night && groups.facade.children.includes(m) ? 0xffc873 : 0x000000)),
-      m.material.emissiveIntensity = m.userData.n === n ? 0.45 : (state.night && groups.facade.children.includes(m) ? 0.55 : 0);
+    if (m.material.emissive && m.userData.type === 'floor') {
+      const sel = m.userData.n === n;
+      m.material.emissive.setHex(sel ? 0x0ea5e9 : (state.night && groups.facade.children.includes(m) ? 0xffc873 : 0x000000));
+      m.material.emissiveIntensity = sel ? 0.85 : (state.night && groups.facade.children.includes(m) ? 0.55 : 0);
+      m.material.transparent = sel ? false : m.material.transparent;
+    }
   });
   buildSection(n);
 }
 
 function showNet(net) {
+  state.lastNet = net;
   const rows = MOCK.networks[net].lines.map(l =>
     `<div style="margin-top:6px;border-top:1px solid #334155;padding-top:6px"><b>${l.id}</b> — ${l.state}<br/>` +
     Object.entries(l).filter(([k]) => k !== 'id' && k !== 'state').map(([k, v]) => `${k}: ${v}`).join(' · ') + `</div>`).join('');
   document.getElementById('netinfo').innerHTML =
-    `<b>${{ water: 'ВК · вода', heat: 'ОВ · тепло', power: 'ЭО · свет', vent: 'Вентиляция ДУ' }[net]}</b>${rows}`;
+    `<b>${{ water: '🔵 ВК · вода', heat: '🔴 ОВ · тепло', power: '🟡 ЭО · свет', vent: '🟣 Вентиляция ДУ' }[net]}</b>${rows}`;
   for (const [nn, g] of Object.entries(groups)) {
     if (!['water', 'heat', 'power', 'vent'].includes(nn)) continue;
-    g.children.forEach(o => { if (o.material && o.material.emissive) o.material.emissiveIntensity = (nn === net ? 1.2 : 0.5); });
+    const on = nn === net;
+    g.children.forEach(o => {
+      if (o.material) {
+        o.material.transparent = true;
+        o.material.opacity = on ? 1 : 0.16;
+        if (o.material.emissive) o.material.emissiveIntensity = on ? 1.1 : 0.06;
+      }
+    });
   }
+  document.querySelectorAll('.layers button').forEach(b => {
+    const mine = b.id === 'btn-' + net;
+    b.style.opacity = mine ? 1 : 0.4;
+    b.style.boxShadow = mine ? `0 0 0 2px currentColor inset, 0 6px 22px -6px currentColor` : 'none';
+  });
 }
 
 let riverMesh = null, gaugePole = null, floodTimers = [];
@@ -724,8 +755,12 @@ function syncLayers() {
   groups.struct.visible = state.struct;
   groups.facade.visible = !state.xray;
   document.getElementById('xray').checked = state.xray;
-  for (const n of ['water', 'heat', 'power', 'vent'])
-    document.getElementById('btn-' + n).classList.toggle('on', state[n]);
+  for (const n of ['water', 'heat', 'power', 'vent']) {
+    const b = document.getElementById('btn-' + n);
+    b.classList.toggle('on', state[n]);
+    b.style.opacity = state[n] ? '' : 0.3;
+  }
+  if (state.lastNet && state[state.lastNet]) showNet(state.lastNet);
 }
 
 async function init() {
