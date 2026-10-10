@@ -579,7 +579,7 @@ function setRole(r) {
   if (r === 'inv') { const s = MOCK.sales; extra = `<br/>🏠 Квартиры: продано ${s.apt.sold}/${s.apt.total}, бронь ${s.apt.reserved}<br/>🏪 Коммерция: ${s.comm.sold}/${s.comm.total}`; }
   document.getElementById('rolecard').innerHTML =
     `<b>${names[r]}</b> — что важно:<br/>` + R.kpi.map(([k, v]) => `• ${k}: <b>${v}</b>`).join('<br/>') + extra;
-  if (r === 'dev') { flashSection('d-money'); selectFloor(9); }
+  if (r === 'dev') { flashSection('d-daily'); selectFloor(9); }
   if (r === 'gos') { flashSection('d-daily'); alertBar('🏛 Акимат: 2 предписания открыто — фасад эт 9, витраж стилобата', 'warn'); }
   if (r === 'inv') { flashSection('d-money'); const s = MOCK.sales; alertBar(`💼 Продано ${s.apt.sold}/${s.apt.total} квартир · готовность объекта ${Math.round(MOCK.estimate.reduce((a, e) => a + e.done, 0) / MOCK.estimate.length)}%`); }
   if (r === 'own') { flashSection('d-floor'); state.section = true; document.getElementById('section').checked = true; selectFloor(12); showApt(12, 'B'); alertBar('🔑 Твоя квартира B на 12 эт: бронь, ключи 2027-2кв'); }
