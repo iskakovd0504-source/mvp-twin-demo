@@ -302,6 +302,7 @@ function showApt(floor, id) {
   const price = Math.round(a.price * k / 100000) / 10;
   document.getElementById('aptinfo').innerHTML =
     `<b>Квартира ${a.id} · ${a.rooms} · эт ${floor}</b> — ${a.area} м² · ₸ ${price} млн · <b>${a.status}</b><br/>` +
+    `🧾 Квитанция (MOCK): тепло ₸ ${Math.round(a.area * 310).toLocaleString('ru')} · вода ₸ ${Math.round(a.area * 95).toLocaleString('ru')} · свет ₸ ${Math.round(a.area * 210).toLocaleString('ru')} · сверка: утечек нет<br/>` +
     `Отделка white-box (MOCK) · Окна на юг · Стояки ОВ/ВК за стеной холла · GUID: Apt-${floor}${a.id}…`;
 }
 
@@ -479,6 +480,69 @@ function buildEq() {
   mark('itp-1', -14, 5.2, 15.5);
 }
 
+function showStreet(kind, id) {
+  flashSection('d-street');
+  const el = document.getElementById('streetinfo');
+  if (kind === 'bin') {
+    const full = id === 2;
+    el.innerHTML = full
+      ? `<b>🗑 Бак №3 переполнен</b> — вывоз через 2ч, перевозчик уведомлен (MOCK). Статус площадки: <b>требует вывоза</b>`
+      : `<b>🗑 Бак №${id + 1}</b> — заполнен ${35 + id * 10}%, норма. Вывоз по графику.`;
+    if (full) alertBar('🗑 Мусорная площадка: бак №3 переполнен — заявка перевозчику');
+  } else if (kind === 'pot') {
+    el.innerHTML = `<b>🕳 Яма №${id + 1}</b> — 40 см, фото с координатой → заявка в 109 создана (MOCK). Устранить за 48ч.`;
+    alertBar('🕳 Дефект дороги зафиксирован — заявка в 109');
+  } else if (kind === 'lamp') {
+    el.innerHTML = `<b>💡 Фонарь №3</b> — отказ драйвера, темно с 21:04. Заявка электрику, устранить за 1–2 дня (MOCK).`;
+    alertBar('💡 Отказ светоточки №3 — заявка создана');
+  }
+  document.getElementById('feedlist').innerHTML =
+    `<div>🏙 ${new Date().toTimeString().slice(0, 5)} — ${kind === 'bin' ? 'бак №3: заявка на вывоз' : kind === 'pot' ? 'яма: заявка в 109' : 'фонарь №3: заявка электрику'} (MOCK)</div>` +
+    document.getElementById('feedlist').innerHTML;
+}
+
+let lampFail = null;
+function buildUrban() {
+  // дорога на востоке
+  const road = new THREE.Mesh(new THREE.PlaneGeometry(22, 170),
+    new THREE.MeshStandardMaterial({ color: 0x232c40, roughness: 1 }));
+  road.rotation.x = -Math.PI / 2; road.position.set(66, 0.08, 0); road.receiveShadow = true; scene.add(road);
+  // ямы
+  [[64, 18], [68, -12]].forEach(([x, z], i) => {
+    const p = new THREE.Mesh(new THREE.CircleGeometry(1.4, 14),
+      new THREE.MeshStandardMaterial({ color: 0x05070c, roughness: 1 }));
+    p.rotation.x = -Math.PI / 2; p.position.set(x, 0.14, z);
+    p.userData = { type: 'street', kind: 'pot', id: i };
+    scene.add(p); pickables.push(p);
+  });
+  // мусорная площадка: 3 бака
+  [0, 1, 2].forEach(i => {
+    const bad = i === 2;
+    const b = new THREE.Mesh(new THREE.BoxGeometry(1.6, bad ? 2.0 : 1.5, 1.6),
+      new THREE.MeshStandardMaterial({ color: bad ? 0xb44444 : 0x3f7a52, roughness: 0.8, emissive: bad ? 0xb44444 : 0x000000, emissiveIntensity: bad ? 0.5 : 0 }));
+    b.position.set(30 + i * 2.4, 0.8, 24); b.castShadow = true;
+    b.userData = { type: 'street', kind: 'bin', id: i };
+    scene.add(b); pickables.push(b);
+    if (bad) pulseList.push(b);
+  });
+  // отказ фонаря №3: красный маркер
+  lampFail = new THREE.Mesh(new THREE.OctahedronGeometry(0.9),
+    new THREE.MeshStandardMaterial({ color: 0xf87171, emissive: 0xf87171, emissiveIntensity: 1 }));
+  lampFail.position.set(-52, 8.4, -30);
+  lampFail.userData = { type: 'street', kind: 'lamp', id: 3 };
+  scene.add(lampFail); pickables.push(lampFail); pulseList.push(lampFail);
+}
+
+function blackout() {
+  showNet('heat');
+  flashSection('d-street');
+  document.getElementById('streetinfo').innerHTML =
+    `<b>💥 Порыв Т-ввод (MOCK)</b> — расчет зоны за 3 сек:<br/>Без тепла: <b>эт 14–20 · 60 квартир · ~180 жителей</b><br/>Отключатель: задвижка В-3, ИТП на байпасе. Норматив КТЭК — 10 сек на расчет.`;
+  alertBar('💥 Порыв: без тепла эт 14–20 (60 кв). Зона рассчитана за 3 сек');
+  (groups.heat.children || []).forEach(o => { if (o.material && o.material.emissive) { o.material.emissiveIntensity = 1.4; pulseList.push(o); } });
+  setTimeout(() => { pulseList = pulseList.filter(m => !(groups.heat.children || []).includes(m)); syncLayers(); }, 6000);
+}
+
 function showEq(id) {
   const e = MOCK.equipment.find(x => x.id === id);
   if (!e) return;
@@ -619,7 +683,7 @@ async function init() {
     MOCK.sensors.map(s => `<div class="card"><b>${s.id}</b><br/>${s.val} · ${s.trend} · <b>${s.flag}</b></div>`).join('') +
     `<div class="card"><b>Голос народа</b> — жалобы рядом с домом<br/>` + MOCK.appeals.map(a => `${a.theme} — ${a.count}`).join('<br/>') + `</div>`;
 
-  buildTower(); resize(); buildEq(); renderPred(); selectFloor(20); showNet('heat'); syncLayers();
+  buildTower(); resize(); buildEq(); buildUrban(); renderPred(); selectFloor(20); showNet('heat'); syncLayers();
 
   for (const n of ['water', 'heat', 'power', 'vent'])
     document.getElementById('btn-' + n).onclick = (e) => { state[n] = !state[n]; syncLayers(); };
@@ -648,7 +712,8 @@ async function init() {
   at.onclick = (e) => { e.stopPropagation(); setMini(!aw.classList.contains('mini')); };
   aw.onclick = () => { if (aw.classList.contains('mini')) setMini(false); };
   document.getElementById('csv').onclick = exportCSV;
-  document.getElementById('flood').onclick = floodDemo;  document.getElementById('copyd').onclick = () => {
+  document.getElementById('flood').onclick = floodDemo;
+  document.getElementById('blackout').onclick = blackout;  document.getElementById('copyd').onclick = () => {
     const t = 'Fl-' + String(state.floor).padStart(2, '0') + ' (MOCK)';
     navigator.clipboard?.writeText(t);
     document.getElementById('floorinfo').innerHTML += `<br/><span style="color:#34d399">GUID ${t} скопирован</span>`;
@@ -669,6 +734,7 @@ async function init() {
     else if (u.type === 'floor') { selectFloor(u.n); flashSection('d-floor'); }
     else if (u.type === 'plot') { showPlot(u.own, u.name); flashSection('d-plot'); }
     else if (u.type === 'eq') showEq(u.eq);
+    else if (u.type === 'street') showStreet(u.kind, u.id);
     else if (u.type === 'apt' && u.apt !== 'HALL') { showApt(u.floor, u.apt); flashSection('d-floor'); }
   });
 
