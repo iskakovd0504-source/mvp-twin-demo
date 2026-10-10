@@ -522,6 +522,7 @@ function setRole(r) {
 function flashSection(id) {
   const d = document.getElementById(id);
   if (!d) return;
+  document.querySelectorAll('#panel details[open]').forEach(x => { if (x !== d) x.open = false; });
   d.open = true;
   d.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   d.classList.remove('flash');
@@ -816,7 +817,10 @@ async function init() {
   document.getElementById('demoreset').onclick = () => { demoStop(); alertBar(''); setNight(false); state.xray = false; state.section = false; document.getElementById('section').checked = false; syncLayers(); selectFloor(20); showNet('heat'); };
 
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+  let downX = 0, downY = 0;
+  renderer.domElement.addEventListener('pointerdown', (e) => { downX = e.clientX; downY = e.clientY; });
   renderer.domElement.addEventListener('click', (e) => {
+    if (Math.hypot(e.clientX - downX, e.clientY - downY) > 6) return; // крутили — не клик
     const r = renderer.domElement.getBoundingClientRect();
     ptr.x = ((e.clientX - r.left) / r.width) * 2 - 1;
     ptr.y = -((e.clientY - r.top) / r.height) * 2 + 1;
