@@ -38,7 +38,12 @@
   .microw button.live { border-color: #ef4444; color: #fca5a5; animation: pulse 1s infinite; }
   #alertbar { position: absolute; top: 12px; left: 12px; right: 12px; display: none; background: rgba(127,29,29,.92); border: 1px solid #f87171; padding: 8px 12px; border-radius: 10px; font-size: 13px; z-index: 3; }
   #alertbar.on { display: block; animation: pulse 1.2s infinite; }
-  #awidget { position: absolute; right: 12px; bottom: 48px; width: 300px; background: rgba(15,23,42,.92); border: 1px solid #334155; border-radius: 12px; padding: 10px; z-index: 3; }
+  #awidget { position: absolute; right: 12px; bottom: 12px; width: 260px; background: rgba(15,23,42,.92); border: 1px solid #334155; border-radius: 12px; padding: 10px; z-index: 3; }
+  #awidget.mini { width: auto; padding: 6px 10px; cursor: pointer; }
+  #awidget.mini #abody { display: none; }
+  #ahead { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+  #ahead button { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 14px; }
+  #hint { max-width: 42%; }
   #awidget input { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #334155; background: #0b1220; color: #fff; font-size: 13px; }
   #awidget .chips { display: flex; gap: 4px; flex-wrap: wrap; margin: 6px 0; }
   #awidget .chips button { flex: 1; font-size: 11px; padding: 4px 6px; border-radius: 7px; border: 1px solid #475569; background: #1e293b; color: #e2e8f0; cursor: pointer; }
@@ -57,7 +62,7 @@
 </script>
 </head>
 <body>
-<div id="scene"><div id="alertbar"></div><div id="awidget"><b style="font-size:12px">FM-агент</b><div class="chips"><button data-a="где перерасход?">перерасход</button><button data-a="авария">авария</button><button data-a="статус">статус</button></div><div class="microw"><input id="q2" placeholder="спроси агента…"/><button id="mic2" title="Голос">🎤</button></div><div id="agentlog2">Жми чип, говори или пиши: перерасход / авария / статус</div></div><div id="hint">Клик по этажу/стояку — смета и материалы · слайдер — фокус на этаж · X-Ray — вскрыть инженерию</div></div>
+<div id="scene"><div id="alertbar"></div><div id="awidget" class="mini"><div id="ahead"><b>🤖 FM-агент</b><button id="atoggle" title="Развернуть">⛶</button></div><div id="abody"><div class="chips"><button data-a="где перерасход?">перерасход</button><button data-a="авария">авария</button><button data-a="статус">статус</button></div><div class="microw"><input id="q2" placeholder="спроси агента…"/><button id="mic2" title="Голос">🎤</button></div><div id="agentlog2">Жми чип, говори или пиши: перерасход / авария / статус</div></div></div><div id="hint">Клик по этажу/стояку — смета и материалы · слайдер — фокус на этаж · X-Ray — вскрыть инженерию</div></div>
 <div id="panel">
   <div class="badge">BIM LOD300 · данные выдуманы (MOCK)</div>
   <div class="rowbtns"><button id="demoplay" class="hot">▶ Автоплей 5 мин</button><button id="demoreset">Сброс</button></div>

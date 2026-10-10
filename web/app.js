@@ -435,6 +435,10 @@ async function init() {
   };
   document.getElementById('mic').onclick = () => voice(document.getElementById('q'), document.getElementById('mic'));
   document.getElementById('mic2').onclick = () => voice(document.getElementById('q2'), document.getElementById('mic2'));
+  const aw = document.getElementById('awidget'), at = document.getElementById('atoggle');
+  const setMini = (m) => { aw.classList.toggle('mini', m); at.textContent = m ? '⛶' : '—'; };
+  at.onclick = (e) => { e.stopPropagation(); setMini(!aw.classList.contains('mini')); };
+  aw.onclick = () => { if (aw.classList.contains('mini')) setMini(false); };
   document.getElementById('csv').onclick = exportCSV;
   document.getElementById('copyd').onclick = () => {
     const t = 'Fl-' + String(state.floor).padStart(2, '0') + ' (MOCK)';
