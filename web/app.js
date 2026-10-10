@@ -22,9 +22,11 @@ const flows = [];
 const floorMeshes = [];
 
 const container = document.getElementById('scene');
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.shadowMap.enabled = true;
+const Q = new URLSearchParams(location.search);
+const HQ = Q.get('hq') === '1';
+const renderer = new THREE.WebGLRenderer({ antialias: HQ, powerPreference: 'low-power' });
+renderer.setPixelRatio(1);
+renderer.shadowMap.enabled = HQ;
 container.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
@@ -37,9 +39,11 @@ camera.position.set(70, 62, 88);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 26, 0);
 controls.maxPolarAngle = Math.PI / 2.05;
-controls.autoRotate = true;
+controls.autoRotate = false;
 controls.autoRotateSpeed = 0.45;
 controls.addEventListener('start', () => { controls.autoRotate = false; });
+document.addEventListener('visibilitychange', () => { controls.autoRotate = false; tickOn = !document.hidden; });
+let tickOn = true;
 
 hemi = new THREE.HemisphereLight(0x93c5fd, 0x0f172a, 1.0);
 scene.add(hemi);
@@ -463,8 +467,12 @@ async function init() {
   });
 
   const clock = new THREE.Clock();
-  (function tick() {
+  let last = 0;
+  (function tick(t) {
     requestAnimationFrame(tick);
+    if (!tickOn) return;
+    if (t - last < 50) return; // ~20fps лимит для слабых машин
+    last = t;
     const dt = Math.min(clock.getDelta(), 0.05);
     for (const f of flows) {
       if (!f.dot.parent.visible) continue;
