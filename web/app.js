@@ -59,7 +59,7 @@ function resize() {
 }
 new ResizeObserver(resize).observe(container);
 
-let FLOORS = 20, FH = 3.1, H = 62, W = 34, D = 20;
+let H = 62;
 
 function ground() {
   const g = new THREE.Mesh(new THREE.PlaneGeometry(500, 500),
@@ -847,7 +847,7 @@ function syncLayers() {
 
 async function init() {
   try {
-  MOCK = await (await fetch('mock.json?v=10')).json();
+  MOCK = await (await fetch('mock.json?v=11')).json();
   GEO = MOCK.objects[OBJ] || MOCK.objects.gk;
   FLOORS = GEO.floors; FH = GEO.fh; H = FLOORS * FH; W = GEO.w; D = GEO.d;
   state.floor = FLOORS;
