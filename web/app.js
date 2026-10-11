@@ -847,7 +847,7 @@ function syncLayers() {
 
 async function init() {
   try {
-  MOCK = await (await fetch('mock.json?v=9')).json();
+  MOCK = await (await fetch('mock.json?v=10')).json();
   GEO = MOCK.objects[OBJ] || MOCK.objects.gk;
   FLOORS = GEO.floors; FH = GEO.fh; H = FLOORS * FH; W = GEO.w; D = GEO.d;
   state.floor = FLOORS;
@@ -902,7 +902,7 @@ async function init() {
   renderTasks();
   updateCounts();
   document.getElementById('feedlist').innerHTML = MOCK.feed.map(f => `<div>🕐 ${f.t} — ${f.e}</div>`).join('');
-  const avg = Math.round(EST.reduce((a, e) => a + e.done, 0) / EST.length;
+  const avg = Math.round(EST.reduce((a, e) => a + e.done, 0) / EST.length);
   const lag = Math.max(...EST.map(e => (e.plan ?? e.done) - e.done));
   document.getElementById('st-ready').textContent = avg + '%';
   document.getElementById('st-lag').textContent = lag > 0 ? '−' + lag + ' п.п.' : '0';
