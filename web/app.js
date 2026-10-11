@@ -78,7 +78,7 @@ function ground() {
     head.position.set(lx, 7.2, lz); scene.add(head);
     window.__lampHeads.push(head);
     const pl = new THREE.PointLight(0xffc873, 0, 60);
-    pl.position.set(lx, 7, lz); scene.add(pl);
+    pl.position.set(lx, 7, lz); pl.visible = false; scene.add(pl);
     lampLights.push(pl);
   }
 }
@@ -328,7 +328,7 @@ function setNight(on) {
     m.material.emissiveIntensity = on ? 0.55 : 0;
   });
   (window.__lampHeads || []).forEach(h => { h.material.emissiveIntensity = on ? 2.2 : 0.15; });
-  lampLights.forEach(l => { l.intensity = on ? 220 : 0; });
+  lampLights.forEach(l => { l.intensity = on ? 220 : 0; l.visible = on; });
 }
 
 function showApt(floor, id) {
