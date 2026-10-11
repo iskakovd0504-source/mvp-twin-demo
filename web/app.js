@@ -3,15 +3,11 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let MOCK = null;
-const FLOORS = 20, FH = 3.1;
+const OBJ = localStorage.getItem('twin_obj') || 'gk';
+let FLOORS = 20, FH = 3.1, W = 34, D = 20;
+let GEO = null, OD = null, EST = [], TASKS = [], EQ = [], NETS = {}, ROOMS = [];
 const state = { water: true, heat: true, power: true, vent: true, struct: true, dense: true, xray: false, floor: 20, section: false, night: false, apt: null };
 const denseMeshes = [];
-const APTS = [
-  { id: 'A', rooms: '1к', area: 38.4, price: 15200000, status: 'свободна' },
-  { id: 'B', rooms: '2к', area: 56.2, price: 21900000, status: 'бронь' },
-  { id: 'C', rooms: '2к', area: 62.7, price: 24100000, status: 'свободна' },
-  { id: 'D', rooms: '3к', area: 84.1, price: 31800000, status: 'продана' },
-];
 const APT_COLORS = { A: 0x38bdf8, B: 0xa78bfa, C: 0x34d399, D: 0xfbbf24 };
 let sectionGroup = null;
 const facadeMeshes = [];
@@ -63,8 +59,7 @@ function resize() {
 }
 new ResizeObserver(resize).observe(container);
 
-const H = FLOORS * FH; // ~62м
-const W = 34, D = 20;
+let FLOORS = 20, FH = 3.1, H = 62, W = 34, D = 20;
 
 function ground() {
   const g = new THREE.Mesh(new THREE.PlaneGeometry(500, 500),
@@ -272,30 +267,31 @@ function buildSection(n) {
     m.userData = { type: 'apt', floor: n, apt };
     sectionGroup.add(m); pickables.push(m);
   };
-  // 4 квартиры: перегородки + цветные подложки пола
-  const cols = [-12.75, -4.25, 4.25, 12.75];
-  APTS.forEach((a, i) => {
+  // 4 помещения: перегородки + цветные подложки пола (масштаб под ширину)
+  const unit = W / 4;
+  const cols = [-1.5 * unit, -0.5 * unit, 0.5 * unit, 1.5 * unit];
+  ROOMS.forEach((a, i) => {
     const cx = cols[i];
-    const patch = new THREE.Mesh(new THREE.BoxGeometry(7.6, 0.12, D - 3),
+    const patch = new THREE.Mesh(new THREE.BoxGeometry(unit - 1, 0.12, D - 3),
       new THREE.MeshStandardMaterial({ color: APT_COLORS[a.id], transparent: true, opacity: 0.35, roughness: 1 }));
     patch.position.set(cx, y + 0.32, 0);
     patch.userData = { type: 'apt', floor: n, apt: a.id };
     sectionGroup.add(patch); pickables.push(patch);
     // межквартирные стены
-    if (i > 0) wall(0.25, FH - 0.6, D - 2, cx - 4.2, 0, a.id);
+    if (i > 0) wall(0.25, FH - 0.6, D - 2, cx - unit / 2, 0, a.id);
     // комната/кухня внутри
-    wall(3.4, FH - 0.6, 0.22, cx + 0.4, -2, a.id);
-    wall(0.22, FH - 0.6, 4.5, cx - 1, 3.5, a.id);
+    wall(2.6, FH - 0.6, 0.22, cx + 0.3, -2, a.id);
+    wall(0.22, FH - 0.6, 3.4, cx - 0.8, 2.6, a.id);
     // кровать + диван + кухня (условная мебель)
     const bed = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.7, 3.2),
       new THREE.MeshStandardMaterial({ color: 0x64748b }));
-    bed.position.set(cx - 1.8, y + 0.6, -5); sectionGroup.add(bed);
+    bed.position.set(cx - 1.8, y + 0.6, -D / 2 + 2); sectionGroup.add(bed);
     const sofa = new THREE.Mesh(new THREE.BoxGeometry(3, 0.8, 1.2),
       new THREE.MeshStandardMaterial({ color: 0x475569 }));
-    sofa.position.set(cx + 1, y + 0.65, 5.5); sectionGroup.add(sofa);
+    sofa.position.set(cx + 1, y + 0.65, D / 2 - 1.5); sectionGroup.add(sofa);
     const kit = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1, 1),
       new THREE.MeshStandardMaterial({ color: 0x94a3b8 }));
-    kit.position.set(cx + 0.4, y + 0.75, -7.5); sectionGroup.add(kit);
+    kit.position.set(cx + 0.4, y + 0.75, -D / 2 + 0.8); sectionGroup.add(kit);
   });
   // входной холл у ядра
   wall(0.25, FH - 0.6, 6, -0.5, -2, 'HALL');
@@ -336,15 +332,20 @@ function setNight(on) {
 }
 
 function showApt(floor, id) {
-  const a = APTS.find(x => x.id === id);
-  if (!a) return;
+  const r = ROOMS.find(x => x.id === id);
+  if (!r) return;
   state.apt = id;
-  const k = 1 + (floor > 14 ? 0.12 : 0) + floor * 0.004;
-  const price = Math.round(a.price * k / 100000) / 10;
-  document.getElementById('aptinfo').innerHTML =
-    `<b>Квартира ${a.id} · ${a.rooms} · эт ${floor}</b> — ${a.area} м² · ₸ ${price} млн · <b>${a.status}</b><br/>` +
-    `🧾 Квитанция (MOCK): тепло ₸ ${Math.round(a.area * 310).toLocaleString('ru')} · вода ₸ ${Math.round(a.area * 95).toLocaleString('ru')} · свет ₸ ${Math.round(a.area * 210).toLocaleString('ru')} · сверка: утечек нет<br/>` +
-    `Отделка white-box (MOCK) · Окна на юг · Стояки ОВ/ВК за стеной холла · GUID: Apt-${floor}${a.id}…`;
+  let head;
+  if (GEO.billQ && r.price) {
+    const k = 1 + (floor > 14 ? 0.12 : 0) + floor * 0.004;
+    const price = Math.round(r.price * k / 100000) / 10;
+    head = `<b>Квартира ${r.id} · ${r.rooms} · эт ${floor}</b> — ${r.area} м² · ₸ ${price} млн · <b>${r.status}</b><br/>` +
+      `🧾 Квитанция (MOCK): тепло ₸ ${Math.round(r.area * 310).toLocaleString('ru')} · вода ₸ ${Math.round(r.area * 95).toLocaleString('ru')} · свет ₸ ${Math.round(r.area * 210).toLocaleString('ru')} · сверка: утечек нет<br/>`;
+  } else {
+    head = `<b>${r.label} · эт ${floor}</b> — ${r.area} м² · <b>${r.status}</b><br/>`;
+  }
+  document.getElementById('aptinfo').innerHTML = head +
+    `${r.sub} · GUID: Apt-${floor}${r.id}…`;
 }
 
 function selectFloor(n) {
@@ -356,7 +357,7 @@ function selectFloor(n) {
     const teams = ['СтройМонтаж-А', 'ФасадПрофи', 'СтройМонтаж-А', 'ИнжСистемы'];
     const team = teams[n % teams.length];
     const frame = 100, fac = Math.max(0, Math.min(100, 140 - n * 5)), mep = Math.max(0, Math.min(100, 90 - n * 4));
-    const late = n === 9 ? '⚠ отстает на 4 дня (витраж)' : n > 14 ? '⚠ перерасход тепла' : '✅ в графике';
+    const late = n === OD.lateFloor ? OD.lateText : n >= OD.hotFrom ? '⚠ перерасход тепла' : '✅ в графике';
     document.getElementById('floorinfo').innerHTML =
       `<b>Этаж ${n}</b> · ${c.cost} · ${late}<br/>` +
       `🧱 Каркас ${frame}% · 🪟 Фасад ${fac}% · 🔧 Инженерия ${mep}%<br/>` +
@@ -405,7 +406,7 @@ function applyFocus() {
 
 function showNet(net) {
   state.lastNet = net;
-  const rows = MOCK.networks[net].lines.map(l =>
+  const rows = NETS[net].lines.map(l =>
     `<div style="margin-top:6px;border-top:1px solid #334155;padding-top:6px"><b>${l.id}</b> — ${l.state}<br/>` +
     Object.entries(l).filter(([k]) => k !== 'id' && k !== 'state').map(([k, v]) => `${k}: ${v}`).join(' · ') + `</div>`).join('');
   document.getElementById('netinfo').innerHTML =
@@ -576,13 +577,13 @@ function setRole(r) {
   const names = { dev: '🏗 Владелец стройкомпании', gos: '🏛 Акимат — взгляд города', inv: '💼 Инвестор', own: '🔑 Владелец площадей' };
   let extra = '';
   if (r === 'gos') extra = '<br/><span class="mono">' + MOCK.docs.map(d => `${d.s} ${d.n}`).join('<br/>') + '</span>';
-  if (r === 'inv') { const s = MOCK.sales; extra = `<br/>🏠 Квартиры: продано ${s.apt.sold}/${s.apt.total}, бронь ${s.apt.reserved}<br/>🏪 Коммерция: ${s.comm.sold}/${s.comm.total}`; }
+  if (r === 'inv') { extra = '<br/>' + GEO.salesLine; }
   document.getElementById('rolecard').innerHTML =
     `<b>${names[r]}</b> — что важно:<br/>` + R.kpi.map(([k, v]) => `• ${k}: <b>${v}</b>`).join('<br/>') + extra;
-  if (r === 'dev') { flashSection('d-daily'); selectFloor(9); }
-  if (r === 'gos') { flashSection('d-daily'); alertBar('🏛 Акимат: 2 предписания открыто — фасад эт 9, витраж стилобата', 'warn'); }
-  if (r === 'inv') { flashSection('d-money'); const s = MOCK.sales; alertBar(`💼 Продано ${s.apt.sold}/${s.apt.total} квартир · готовность объекта ${Math.round(MOCK.estimate.reduce((a, e) => a + e.done, 0) / MOCK.estimate.length)}%`); }
-  if (r === 'own') { flashSection('d-floor'); state.section = true; document.getElementById('section').checked = true; selectFloor(12); showApt(12, 'B'); alertBar('🔑 Твоя квартира B на 12 эт: бронь, ключи 2027-2кв'); }
+  if (r === 'dev') { flashSection('d-daily'); selectFloor(OD.lateFloor || FLOORS); }
+  if (r === 'gos') { flashSection('d-daily'); alertBar('🏛 Акимат: предписания открыты — см. задания мастеров', 'warn'); }
+  if (r === 'inv') { flashSection('d-money'); alertBar('💼 ' + GEO.salesLine.replace(/<[^>]+>/g, ' '), 'good'); }
+  if (r === 'own') { flashSection('d-floor'); state.section = true; document.getElementById('section').checked = true; selectFloor(GEO.demoApt[0]); showApt(GEO.demoApt[0], GEO.demoApt[1]); alertBar('🔑 ' + GEO.ownerLine); }
 }
 
 let selBox = null;
@@ -604,15 +605,15 @@ function setCnt(id, n, kind) {
 
 function updateCounts() {
   const doneT = new Set(JSON.parse(localStorage.getItem('twin_tasks') || '[]'));
-  const openT = MOCK.tasks.filter(t => !doneT.has(t.id));
+  const openT = TASKS.filter(t => !doneT.has(t.id));
   setCnt('c-tasks', openT.length, openT.some(t => t.overdue) ? 'red' : 'info');
   const openR = resTasks.filter(t => !t.done).length;
   setCnt('c-chat', openR, 'info');
-  setCnt('c-pred', MOCK.equipment.filter(e => e.health < 65).length, 'red');
-  setCnt('c-money', MOCK.estimate.filter(e => e.done < (e.plan ?? e.done)).length, 'amber');
+  setCnt('c-pred', EQ.filter(e => e.health < 65).length, 'red');
+  setCnt('c-money', EST.filter(e => e.done < (e.plan ?? e.done)).length, 'amber');
   let badNets = 0;
   for (const k of ['water', 'heat', 'power', 'vent']) {
-    if ((MOCK.networks[k].lines || []).some(l => l.state !== 'норма')) badNets++;
+    if ((NETS[k].lines || []).some(l => l.state !== 'норма')) badNets++;
   }
   setCnt('c-nets', badNets, 'amber');
   setCnt('c-daily', MOCK.sensors.filter(s => s.flag !== 'норма').length + 1, 'amber');
@@ -653,7 +654,7 @@ function buildEq() {
     grp.add(m); pickables.push(m); eqMeshes[eq || id] = m;
     return m;
   };
-  const E = Object.fromEntries(MOCK.equipment.map(e => [e.id, e]));
+  const E = Object.fromEntries(EQ.map(e => [e.id, e]));
   const bad = (h) => h < 65 ? 0xf87171 : h < 85 ? 0xfbbf24 : 0x34d399;
   // ИТП в стилобате
   put('itp-1', new THREE.BoxGeometry(4.5, 3, 3.5),
@@ -667,13 +668,13 @@ function buildEq() {
   // маркеры: кровля АХУ + лифт + датчик эт.17
   const mark = (id, x, y, z) => {
     const m = new THREE.Mesh(new THREE.OctahedronGeometry(1.1),
-      new THREE.MeshStandardMaterial({ color: bad(MOCK.equipment.find(e => e.id === id).health), emissive: bad(MOCK.equipment.find(e => e.id === id).health), emissiveIntensity: 0.9, roughness: 0.3 }));
+      new THREE.MeshStandardMaterial({ color: bad(EQ.find(e => e.id === id).health), emissive: bad(EQ.find(e => e.id === id).health), emissiveIntensity: 0.9, roughness: 0.3 }));
     m.position.set(x, y, z); m.userData = { type: 'eq', eq: id };
     grp.add(m); pickables.push(m); eqMeshes[id + ':m'] = m;
-    if (MOCK.equipment.find(e => e.id === id).health < 75) pulseList.push(m);
+    if (EQ.find(e => e.id === id).health < 75) pulseList.push(m);
   };
   mark('ahu-1', -8, 7 + H + 4.6, -4);
-  mark('lift-1', 8, 34, -2);
+  mark('lift-1', 8, 7 + H * 0.55, -2);
   mark('itp-1', -14, 5.2, 15.5);
 }
 
@@ -734,14 +735,14 @@ function blackout() {
   showNet('heat');
   flashSection('d-street');
   document.getElementById('streetinfo').innerHTML =
-    `<b>💥 Порыв Т-ввод (MOCK)</b> — расчет зоны за 3 сек:<br/>Без тепла: <b>эт 14–20 · 60 квартир · ~180 жителей</b><br/>Отключатель: задвижка В-3, ИТП на байпасе. Норматив КТЭК — 10 сек на расчет.`;
-  alertBar('💥 Порыв: без тепла эт 14–20 (60 кв). Зона рассчитана за 3 сек');
+    `<b>💥 Порыв Т-ввод (MOCK)</b> — расчет зоны за 3 сек:<br/>Без тепла: <b>${OD.blackout}</b><br/>Отключатель: задвижка В-3, ИТП на байпасе. Норматив — 10 сек на расчет.`;
+  alertBar(`💥 Порыв: без тепла ${OD.blackout}. Зона рассчитана за 3 сек`);
   (groups.heat.children || []).forEach(o => { if (o.material && o.material.emissive) { o.material.emissiveIntensity = 1.4; pulseList.push(o); } });
   setTimeout(() => { pulseList = pulseList.filter(m => !(groups.heat.children || []).includes(m)); syncLayers(); }, 6000);
 }
 
 function showEq(id) {
-  const e = MOCK.equipment.find(x => x.id === id);
+  const e = EQ.find(x => x.id === id);
   if (!e) return;
   flashSection('d-pred');
   if (e.net) showNet(e.net);
@@ -758,13 +759,13 @@ function showEq(id) {
 
 function renderPred() {
   const col = (h) => h < 65 ? '#f87171' : h < 85 ? '#fbbf24' : '#34d399';
-  document.getElementById('pred').innerHTML = MOCK.equipment.map(e =>
+  document.getElementById('pred').innerHTML = EQ.map(e =>
     `<div class="card" data-eqcard="${e.id}"><b>${e.name}</b> · ${e.place} · <span style="color:${col(e.health)}">здоровье ${e.health}%</span><div class="bar"><div style="width:${e.health}%;background:${col(e.health)}"></div></div><div style="font-size:11px;color:#94a3b8;margin-top:4px">ТО ${e.to} · ресурса ${e.rul} · ${e.state}</div><button data-eq="${e.id}" style="margin-top:6px;width:100%;padding:6px;border-radius:8px;border:1px solid #2c3d5c;background:#16213a;color:#7dd3fc;cursor:pointer;font-size:12px">📍 Показать узел</button></div>`).join('');
   document.querySelectorAll('#pred [data-eq]').forEach(b => b.onclick = () => showEq(b.dataset.eq));
 }
 
 function gotoTask(id) {
-  const t = MOCK.tasks.find(x => x.id === id);
+  const t = TASKS.find(x => x.id === id);
   if (!t) return;
   if (t.eq) { showEq(t.eq); return; }
   if (t.net) showNet(t.net);
@@ -779,17 +780,17 @@ function agent(q) {
   const log2 = document.getElementById('agentlog2');
   const say = (h) => { log.innerHTML = h; if (log2) log2.innerHTML = h.replaceAll('<b>Агент:</b>', '🤖 ').replaceAll('<b>Картина дня:</b>', '📊 '); };
   const KZ = /шығын|апат|мәртебе|тапсырма|тазалау|кім|қайда/.test(q);
-  if (q.includes('перерасход') || q.includes('шығын')) { showNet('heat'); selectFloor(17); alertBar('ОВ перерасход +14% · эт 14–20 · поручение ИТП 24ч');
-    say(`<b>Агент:</b> перерасход ОВ эт 14–20 (+14%). Поручение наладчику ИТП, 24ч. Этаж 17 подсвечен. (MOCK)${KZ ? ' · (KZ: шығын табылды)' : ''}`);
+  if (q.includes('перерасход') || q.includes('шығын')) { showNet('heat'); selectFloor(OD.agentFloor); alertBar('ОВ ' + GEO.agentOver + ' · поручение ИТП 24ч');
+    say(`<b>Агент:</b> ${GEO.agentOver}. Поручение наладчику ИТП, 24ч. (MOCK)${KZ ? ' · (KZ: шығын табылды)' : ''}`);
   } else if (q.includes('авари') || q.includes('апат')) { showNet('power'); alertBar('Перегруз паркинг 91% · БКТП · зона отключения −1');
     say(`<b>Агент:</b> риск — паркинг перегруз 91% (зарядки). Зона отключения: паркинг −1 (расчет в пилоте).${KZ ? ' · (KZ: апат орны −1)' : ''}`);
   } else if (q.includes('поручен') || q.includes('тапсырма')) {
     alertBar('');
-    const open = MOCK.tasks.filter(t => !JSON.parse(localStorage.getItem('twin_tasks') || '[]').includes(t.id)).length;
+    const open = TASKS.filter(t => !JSON.parse(localStorage.getItem('twin_tasks') || '[]').includes(t.id)).length;
     say(`<b>Агент:</b> открытых ${open}, просрочено 2 — фасад эт 9, витраж стилобата (MOCK).`);
   } else if (q.includes('статус') || q.includes('мәртебе')) {
     alertBar('');
-    say(`<b>Картина дня:</b> каркас 64%/71%, фасад 38%/45%, инженерия 22%/30%. Риски: ИТП, насос ХВС-2, шум после 22:00.`);
+    say(`<b>Картина дня:</b> ` + EST.slice(0, 3).map(e => e.stage.split(' ')[0] + ' ' + e.done + '%/' + (e.plan ?? e.done) + '%').join(', ') + `. Риски: ИТП, насос ХВС-2, шум после 22:00.`);
   } else if (q.includes('убор') || q.includes('тазалау')) {
     alertBar('');
     say(`<b>Агент:</b> грязь на выезде КПП — 3 обращения. Поручение подрядчику (MOCK).`);
@@ -808,7 +809,7 @@ function alertBar(t, kind) {
 }
 
 function exportCSV() {
-  const rows = [['stage', 'sum_mln', 'fact_pct', 'plan_pct'], ...MOCK.estimate.map(e => [e.stage, Math.round(e.sum / 1e6), e.done, e.plan ?? e.done])];
+  const rows = [['stage', 'sum_mln', 'fact_pct', 'plan_pct'], ...EST.map(e => [e.stage, Math.round(e.sum / 1e6), e.done, e.plan ?? e.done])];
   const csv = rows.map(r => r.map(v => `"${String(v).replaceAll('"', '""')}"`).join(',')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: 'text/csv' }));
@@ -821,11 +822,11 @@ function demoStop() { demoTimers.forEach(clearTimeout); demoTimers = []; control
 function demoPlay() {
   demoStop(); controls.autoRotate = true;
   const seq = [
-    [0, () => { selectFloor(20); showNet('heat'); }],
-    [1200, () => selectFloor(17)],
+    [0, () => { selectFloor(GEO.demoFloors[0]); showNet('heat'); }],
+    [1200, () => selectFloor(GEO.demoFloors[1])],
     [2600, () => { state.xray = true; syncLayers(); syncSection(); }],
-    [4000, () => { state.xray = false; syncLayers(); state.section = true; document.getElementById('section').checked = true; selectFloor(12); }],
-    [5600, () => showApt(12, 'B')],
+    [4000, () => { state.xray = false; syncLayers(); state.section = true; document.getElementById('section').checked = true; selectFloor(GEO.demoFloors[2]); }],
+    [5600, () => showApt(GEO.demoApt[0], GEO.demoApt[1])],
     [7000, () => { setNight(true); showNet('power'); alertBar('Перегруз паркинг 91% · вечерний пик (MOCK)'); }],
     [8600, () => { setNight(false); alertBar(''); agent('статус'); }],
   ];
@@ -846,19 +847,39 @@ function syncLayers() {
 
 async function init() {
   MOCK = await (await fetch('mock.json')).json();
-  document.getElementById('objname').textContent = MOCK.object.name;
+  GEO = MOCK.objects[OBJ] || MOCK.objects.gk;
+  FLOORS = GEO.floors; FH = GEO.fh; H = FLOORS * FH; W = GEO.w; D = GEO.d;
+  state.floor = FLOORS;
+  const G = GEO.billQ;
+  OD = G ? { agentFloor: 17, lateFloor: 9, hotFrom: 14, lateText: '⚠ отстает на 4 дня (витраж)', blackout: 'эт 14–20 · 60 квартир · ~180 жителей' } : MOCK.objData[OBJ];
+  const META = G ? MOCK.object : MOCK.objData[OBJ].meta;
+  EST = G ? MOCK.estimate : MOCK.objData[OBJ].estimate;
+  TASKS = G ? MOCK.tasks : MOCK.objData[OBJ].tasks;
+  EQ = G ? MOCK.equipment : MOCK.objData[OBJ].equipment;
+  NETS = G ? MOCK.networks : MOCK.objData[OBJ].networks;
+  ROOMS = G
+    ? [{ id: 'A', rooms: '1к', area: 38.4, price: 15200000, status: 'свободна', sub: 'Отделка white-box (MOCK) · Окна на юг · Стояки ОВ/ВК за стеной холла' },
+       { id: 'B', rooms: '2к', area: 56.2, price: 21900000, status: 'бронь', sub: 'Отделка white-box (MOCK) · Окна на юг · Стояки ОВ/ВК за стеной холла' },
+       { id: 'C', rooms: '2к', area: 62.7, price: 24100000, status: 'свободна', sub: 'Отделка white-box (MOCK) · Окна на юг · Стояки ОВ/ВК за стеной холла' },
+       { id: 'D', rooms: '3к', area: 84.1, price: 31800000, status: 'продана', sub: 'Отделка white-box (MOCK) · Окна на юг · Стояки ОВ/ВК за стеной холла' }]
+    : MOCK.objData[OBJ].rooms;
+  document.getElementById('objname').textContent = META.name;
   document.getElementById('objmeta').innerHTML =
-    `<b>${MOCK.object.address}</b><br/>Кадастр: ${MOCK.object.cadastre}<br/>${MOCK.object.status}`;
-  document.getElementById('estimate').innerHTML = MOCK.estimate.map(e => {
+    `<b>${META.address}</b><br/>Кадастр: ${META.cadastre}<br/>${META.status}`;
+  const fl = document.getElementById('floor');
+  fl.max = FLOORS; fl.value = FLOORS;
+  camera.position.set(W + 36, 26 + H * 0.55, D + 68);
+  controls.target.set(0, 7 + H / 2, 0);
+  document.getElementById('estimate').innerHTML = EST.map(e => {
     const d = e.done - (e.plan ?? e.done);
     const flag = d === 0 ? '<span style="color:#34d399">в срок</span>' : `<span style="color:#f87171">отставание ${-d} п.п.</span>`;
     return `<div class="card"><b>${e.stage}</b> — ${(e.sum / 1e6).toFixed(0)} млн ₸ · факт ${e.done}% / план ${e.plan}% · ${flag}<div class="bar" style="position:relative"><div style="width:${e.done}%"></div><div style="position:absolute;top:-2px;left:${e.plan}%;width:2px;height:12px;background:#fbbf24"></div></div><div style="font-size:11px;color:#94a3b8;margin-top:4px">${e.mats || ''}</div></div>`;
   }).join('');
   const doneTasks = new Set(JSON.parse(localStorage.getItem('twin_tasks') || '[]'));
   const renderTasks = () => {
-    document.getElementById('tasks').innerHTML = MOCK.tasks.map(t =>
+    document.getElementById('tasks').innerHTML = TASKS.map(t =>
       `<div class="card" style="margin:6px 0;${doneTasks.has(t.id) ? 'opacity:.55' : ''}"><label class="chk" style="margin:0;${doneTasks.has(t.id) ? 'text-decoration:line-through' : ''}"><input type="checkbox" data-t="${t.id}" ${doneTasks.has(t.id) ? 'checked' : ''}/> <b>${t.id}</b> · ${t.text} · <span style="color:${t.overdue ? '#f87171' : '#94a3b8'}">${t.due}</span></label><button data-g="${t.id}" style="margin-top:6px;width:100%;padding:6px;border-radius:8px;border:1px solid #2c3d5c;background:#16213a;color:#7dd3fc;cursor:pointer;font-size:12px">📍 Показать где</button></div>`).join('');
-    const open = MOCK.tasks.filter(t => !doneTasks.has(t.id)).length;
+    const open = TASKS.filter(t => !doneTasks.has(t.id)).length;
     document.getElementById('taskcount').textContent = open;
     document.getElementById('st-open').textContent = open;
     document.querySelectorAll('#tasks input').forEach(c => c.onchange = () => {
@@ -867,7 +888,7 @@ async function init() {
       localStorage.setItem('twin_tasks', JSON.stringify([...doneTasks]));
       renderTasks();
       updateCounts();
-      const left = MOCK.tasks.filter(t => !doneTasks.has(t.id)).length;
+      const left = TASKS.filter(t => !doneTasks.has(t.id)).length;
       if (was) {
         alertBar(`✅ ${c.dataset.t} закрыто. Осталось заданий: ${left}`, 'good');
         document.getElementById('feedlist').innerHTML =
@@ -880,8 +901,8 @@ async function init() {
   renderTasks();
   updateCounts();
   document.getElementById('feedlist').innerHTML = MOCK.feed.map(f => `<div>🕐 ${f.t} — ${f.e}</div>`).join('');
-  const avg = Math.round(MOCK.estimate.reduce((a, e) => a + e.done, 0) / MOCK.estimate.length);
-  const lag = Math.max(...MOCK.estimate.map(e => (e.plan ?? e.done) - e.done));
+  const avg = Math.round(EST.reduce((a, e) => a + e.done, 0) / EST.length;
+  const lag = Math.max(...EST.map(e => (e.plan ?? e.done) - e.done));
   document.getElementById('st-ready').textContent = avg + '%';
   document.getElementById('st-lag').textContent = lag > 0 ? '−' + lag + ' п.п.' : '0';
   document.getElementById('daily').innerHTML =
@@ -889,7 +910,7 @@ async function init() {
     `<div class="card" style="border-color:#8a6d1c"><b>💰 Найдено денег (MOCK)</b><br/>Перерасход тепла ${MOCK.savings.heatPct}% ≈ <b>₸ ${(MOCK.savings.heatBase * MOCK.savings.heatPct / 100).toLocaleString('ru')}/мес</b><br/>Предотвращенная авария насоса ≈ <b>₸ ${MOCK.savings.pumpAvoid.toLocaleString('ru')}</b></div>` +
     `<div class="card"><b>Голос народа</b> — жалобы рядом с домом<br/>` + MOCK.appeals.map(a => `${a.theme} — ${a.count}`).join('<br/>') + `</div>`;
 
-  buildTower(); resize(); buildEq(); buildUrban(); renderPred(); selectFloor(20); showNet('heat'); syncLayers();
+  buildTower(); resize(); buildEq(); buildUrban(); renderPred(); selectFloor(FLOORS); showNet('heat'); syncLayers();
 
   for (const n of ['water', 'heat', 'power', 'vent'])
     document.getElementById('btn-' + n).onclick = () => { state[n] = !state[n]; state[n] ? showNet(n) : syncLayers(); };
@@ -921,6 +942,10 @@ async function init() {
   document.getElementById('csv').onclick = exportCSV;
   document.getElementById('flood').onclick = floodDemo;
   document.getElementById('blackout').onclick = blackout;
+  document.querySelectorAll('#objs button').forEach(b => {
+    b.classList.toggle('hot', b.dataset.o === OBJ);
+    b.onclick = () => { localStorage.setItem('twin_obj', b.dataset.o); location.reload(); };
+  });
   document.querySelectorAll('#roles button').forEach(b => b.onclick = () => setRole(b.dataset.r));
   document.getElementById('chatlog').innerHTML =
     `<div>🧑‍🦱 <b>Мадина (эт 9):</b> здравствуйте, в подъезде лампочка моргает</div>` +
@@ -934,7 +959,7 @@ async function init() {
     document.getElementById('floorinfo').innerHTML += `<br/><span style="color:#34d399">GUID ${t} скопирован</span>`;
   };
   document.getElementById('demoplay').onclick = demoPlay;
-  document.getElementById('demoreset').onclick = () => { demoStop(); alertBar(''); setNight(false); state.xray = false; state.section = false; document.getElementById('section').checked = false; syncLayers(); selectFloor(20); showNet('heat'); };
+  document.getElementById('demoreset').onclick = () => { demoStop(); alertBar(''); setNight(false); state.xray = false; state.section = false; document.getElementById('section').checked = false; syncLayers(); selectFloor(FLOORS); showNet('heat'); };
 
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
   let downX = 0, downY = 0;
