@@ -846,7 +846,8 @@ function syncLayers() {
 }
 
 async function init() {
-  MOCK = await (await fetch('mock.json')).json();
+  try {
+  MOCK = await (await fetch('mock.json?v=9')).json();
   GEO = MOCK.objects[OBJ] || MOCK.objects.gk;
   FLOORS = GEO.floors; FH = GEO.fh; H = FLOORS * FH; W = GEO.w; D = GEO.d;
   state.floor = FLOORS;
@@ -1000,5 +1001,10 @@ async function init() {
     controls.update();
     renderer.render(scene, camera);
   })();
+  } catch (err) {
+    console.error(err);
+    document.getElementById('objmeta').innerHTML = `<b style="color:#f87171">Не загрузилось: ${err.message}</b><br/>Обнови жестко: Ctrl+Shift+R`;
+    document.getElementById('hint').textContent = 'Ошибка старта: ' + err.message + ' — обнови страницу (Ctrl+Shift+R)';
+  }
 }
 init();
