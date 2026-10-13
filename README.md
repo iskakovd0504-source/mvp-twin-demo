@@ -5,11 +5,9 @@
 
 ## Запуск
 
-```bash
-cd web
-python3 -m http.server 8080
-# открыть http://localhost:8080
-```
+macOS/Linux: `bash web/start-demo.sh` — открыть http://localhost:8080
+Windows: `web\start-windows.bat` — открыть http://localhost:8080
+
 Без сборки, только статика. 3D — three.js с CDN (нужен интернет).
 
 ## Структура
