@@ -678,6 +678,18 @@ export function createStage(canvas) {
   const bim = new THREE.Group();
   model.add(bim);
 
+  /* Discipline layers — toggled from the on-screen switch. The ground grid
+     stays in `bim` so the site reference never disappears. */
+  const bimLayers = {
+    ar: new THREE.Group(), // АРХИТЕКТУРА
+    kr: new THREE.Group(), // КОНСТРУКТИВ
+    vk: new THREE.Group(), // ВК
+    ov: new THREE.Group(), // ОВ (отопление + вентиляция)
+    eo: new THREE.Group(), // ЭО
+    sm: new THREE.Group(), // СМЕТЫ
+  };
+  Object.values(bimLayers).forEach((g) => bim.add(g));
+
   const structMat = registerBim(lineMaterial(PALETTE.bim, 0.46));
   const structBright = registerBim(lineMaterial(PALETTE.bim, 0.95, null, true));
   const coreLineMat = registerBim(lineMaterial(0xffffff, 0.74));
@@ -775,10 +787,10 @@ export function createStage(canvas) {
     }
   }
 
-  addLines(bim, structurePoints, structMat);
-  addLines(bim, brightPoints, structBright);
-  addLines(bim, corePoints, coreLineMat);
-  addLines(bim, dimPoints, dimMat);
+  addLines(bimLayers.kr, structurePoints, structMat);
+  addLines(bimLayers.kr, brightPoints, structBright);
+  addLines(bimLayers.kr, corePoints, coreLineMat);
+  addLines(bimLayers.sm, dimPoints, dimMat);
 
   // translucent floor plates
   const plateMat = registerBim(
@@ -800,7 +812,7 @@ export function createStage(canvas) {
       );
       plate.rotation.x = -Math.PI / 2;
       plate.position.y = seg.y + i * fh;
-      bim.add(plate);
+      bimLayers.ar.add(plate);
     }
   }
   const podiumPlate = new THREE.Mesh(
@@ -809,17 +821,18 @@ export function createStage(canvas) {
   );
   podiumPlate.rotation.x = -Math.PI / 2;
   podiumPlate.position.y = 0.05;
-  bim.add(podiumPlate);
+  bimLayers.ar.add(podiumPlate);
 
   // MEP risers + branches
   const mepSpecs = [
-    { color: PALETTE.water, x: -2.6, z: -1.2, dir: [1, 0], label: "ВК" },
-    { color: PALETTE.heat, x: -1.1, z: -1.2, dir: [-1, 0], label: "ОВ" },
-    { color: PALETTE.power, x: 1.1, z: 1.2, dir: [0, 1], label: "ЭО" },
-    { color: PALETTE.vent, x: 2.6, z: 1.2, dir: [0, -1], label: "ВЕНТ" },
+    { color: PALETTE.water, x: -2.6, z: -1.2, dir: [1, 0], label: "ВК", layer: "vk" },
+    { color: PALETTE.heat, x: -1.1, z: -1.2, dir: [-1, 0], label: "ОВ", layer: "ov" },
+    { color: PALETTE.power, x: 1.1, z: 1.2, dir: [0, 1], label: "ЭО", layer: "eo" },
+    { color: PALETTE.vent, x: 2.6, z: 1.2, dir: [0, -1], label: "ВЕНТ", layer: "ov" },
   ];
 
   for (const spec of mepSpecs) {
+    const layer = bimLayers[spec.layer];
     const mat = registerBim(
       new THREE.MeshBasicMaterial({ color: spec.color, depthWrite: false })
     );
@@ -828,7 +841,7 @@ export function createStage(canvas) {
       mat
     );
     riser.position.set(spec.x, 63, spec.z);
-    bim.add(riser);
+    layer.add(riser);
 
     for (let y = 8; y <= 120; y += 16) {
       const node = new THREE.Mesh(
@@ -836,7 +849,7 @@ export function createStage(canvas) {
         mat
       );
       node.position.set(spec.x, y, spec.z);
-      bim.add(node);
+      layer.add(node);
     }
 
     const branchMat = registerBim(lineMaterial(spec.color, 0.92));
@@ -850,7 +863,7 @@ export function createStage(canvas) {
         branchPoints.push(spec.x, y, spec.z, spec.x, y, spec.z + lenZ);
       }
     }
-    addLines(bim, branchPoints, branchMat);
+    addLines(layer, branchPoints, branchMat);
   }
 
   // ground BIM grid
@@ -874,7 +887,7 @@ export function createStage(canvas) {
   );
   plazaOutline.rotation.x = -Math.PI / 2;
   plazaOutline.position.y = 0.04;
-  bim.add(plazaOutline);
+  bimLayers.ar.add(plazaOutline);
 
   // labels
   const labels = new THREE.Group();
@@ -1027,6 +1040,15 @@ export function createStage(canvas) {
       label.material.opacity = labelFade;
     });
 
+    // Progressive clarity — BIM linework sharpens as the model is revealed so
+    // every stage of the morph stays readable, not just the final frame.
+    const clarity = smooth(0.1, 0.92, p);
+    structMat.opacity = lerp(0.24, 0.6, clarity);
+    structBright.opacity = lerp(0.5, 1, clarity);
+    coreLineMat.opacity = lerp(0.36, 0.9, clarity);
+    dimMat.opacity = lerp(0.14, 0.78, clarity);
+    plateMat.opacity = lerp(0.02, 0.1, clarity);
+
     // A little lift of the BIM plates for readability
     bim.position.y = smooth(0.45, 1, p) * 0.6;
   };
@@ -1092,6 +1114,10 @@ export function createStage(canvas) {
   return {
     setProgress(value) {
       targetProgress = clamp(value, 0, 1);
+    },
+    setLayer(id, visible) {
+      const group = bimLayers[id];
+      if (group) group.visible = visible;
     },
     setMouse(x, y) {
       targetMouse.x = clamp(x, -1, 1);

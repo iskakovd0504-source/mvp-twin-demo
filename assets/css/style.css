@@ -1194,6 +1194,101 @@ body.is-ready .hero__footer {
   color: var(--bim);
 }
 
+/* ------------------------------------------------------------------
+   BIM discipline layers
+------------------------------------------------------------------- */
+
+.morph__layers {
+  position: absolute;
+  right: var(--pad);
+  top: 252px;
+  width: 218px;
+  z-index: 3;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease), visibility 0.5s;
+}
+
+.morph.is-bim .morph__layers {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.layers__head {
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(242, 238, 230, 0.45);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-light);
+}
+
+.layer {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 7px 0;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line-light);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(242, 238, 230, 0.6);
+  cursor: pointer;
+  transition: color 0.25s;
+}
+
+.layer span {
+  flex: 1;
+  text-align: left;
+}
+
+.layer b {
+  font-weight: 500;
+  font-size: 8px;
+  color: var(--bim);
+}
+
+.layer__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--c, var(--bim));
+  box-shadow: 0 0 6px var(--c, var(--bim));
+  transition: background 0.25s, box-shadow 0.25s;
+}
+
+.layer__dot--ar { --c: #8fe7ff; }
+.layer__dot--kr { --c: #ffffff; }
+.layer__dot--vk { --c: #38bdf8; }
+.layer__dot--ov { --c: #fb7185; }
+.layer__dot--eo { --c: #facc15; }
+.layer__dot--sm { --c: #f59e0b; }
+
+.layer:hover {
+  color: rgba(242, 238, 230, 0.95);
+}
+
+.layer:not(.is-on) {
+  color: rgba(242, 238, 230, 0.3);
+}
+
+.layer:not(.is-on) .layer__dot {
+  background: transparent;
+  box-shadow: none;
+  border: 1px solid rgba(242, 238, 230, 0.32);
+}
+
+.layer:not(.is-on) b {
+  color: rgba(242, 238, 230, 0.3);
+}
+
 .morph__progress {
   position: absolute;
   left: var(--pad);
@@ -2442,6 +2537,7 @@ body.is-ready .hero__footer {
 
   .morph__hud,
   .morph__legend,
+  .morph__layers,
   .morph__scroll {
     display: none;
   }

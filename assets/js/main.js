@@ -73,6 +73,7 @@ const hudElements = document.getElementById("hudElements");
 const morphTexts = [...document.querySelectorAll("[data-morph-text]")];
 const legendRender = document.querySelector(".legend--render");
 const legendBim = document.querySelector(".legend--bim");
+const layerButtons = [...document.querySelectorAll(".layer[data-layer]")];
 const heroCopy = document.querySelector(".hero__copy");
 const heroTopline = document.querySelector(".hero__topline");
 const stageShade = document.querySelector(".stage-shade");
@@ -229,6 +230,21 @@ if (isFinePointer && !reduceMotion) {
     });
   });
 }
+
+/* ------------------------------------------------------------------
+   BIM discipline layer switch
+------------------------------------------------------------------- */
+
+layerButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const id = button.dataset.layer;
+    const on = !button.classList.contains("is-on");
+    button.classList.toggle("is-on", on);
+    const state = button.querySelector("b");
+    if (state) state.textContent = on ? "on" : "off";
+    stage?.setLayer(id, on);
+  });
+});
 
 /* ------------------------------------------------------------------
    Reveal + counters
