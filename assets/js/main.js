@@ -382,16 +382,17 @@ form?.addEventListener("submit", (event) => {
     message || "Без комментария",
   ].join("\n");
 
-  const mailto = `mailto:hello@twin.kz?subject=${encodeURIComponent(
-    subject
-  )}&body=${encodeURIComponent(body)}`;
+  const waText = `${subject}\n\n${body}`;
+  const waUrl = `https://wa.me/77775556789?text=${encodeURIComponent(
+    waText
+  )}`;
 
-  formHint.textContent = "Запрос сформирован. Открываем почтовый клиент — или напишите на hello@twin.kz.";
+  formHint.textContent = "Запрос сформирован. Открываем WhatsApp — или позвоните нам.";
   formHint.style.color = "";
   formHint.classList.add("is-ok");
 
   window.setTimeout(() => {
-    window.location.href = mailto;
+    window.location.href = waUrl;
   }, 320);
 });
 
