@@ -77,6 +77,7 @@ const layerButtons = [...document.querySelectorAll(".layer[data-layer]")];
 const heroCopy = document.querySelector(".hero__copy");
 const heroTopline = document.querySelector(".hero__topline");
 const stageShade = document.querySelector(".stage-shade");
+const waFab = document.getElementById("waFab");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const isFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -92,6 +93,7 @@ let menuOpen = false;
 function updateScrollUI() {
   const y = window.scrollY;
   header.classList.toggle("is-scrolled", y > 36);
+  waFab?.classList.toggle("is-on", y > 300);
 
   if (heroCopy) {
     const heroShift = Math.min(y, window.innerHeight) * 0.055;
