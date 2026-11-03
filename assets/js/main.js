@@ -352,23 +352,24 @@ function updateCalculator() {
 
   const { dwg, sec, urgency } = calcState;
 
-  if (dwg === "no") {
-    calcTimeOut.textContent = "НЕ БЕРЕМ";
-    if (calcStatusOut) calcStatusOut.textContent = "Исходные данные отсутствуют";
-    if (calcWhyOut) calcWhyOut.textContent = "Без чертежей (DWG/PDF) поднять модель невозможно. Рекомендуем сначала заказать проектирование РД, иначе это будет выдумка, а не BIM.";
-    if (calcCtaBtn) {
-      calcCtaBtn.querySelector("span").textContent = "Обсудить подготовку чертежей";
-      calcCtaBtn.href = "https://wa.me/77775556789?text=" + encodeURIComponent("Здравствуйте, у нас пока нет чертежей, но нужна консультация");
-    }
-    return;
-  }
-
   let timeText = "3–5 ДНЕЙ";
   let whyText = "";
-  let ctaText = "Отправить чертежи на согласование срока";
+  let ctaText = "Отправить исходники на оценку в WhatsApp";
   let statusText = "Формат: Autodesk Revit (.rvt) + IFC";
 
-  if (sec === "arkr") {
+  if (dwg === "sketch") {
+    if (urgency === "fire") {
+      timeText = "3–5 ДНЕЙ (ФОРСАЖ)";
+      whyText = "Сроки горят — берем в работу даже по эскизам и наброскам! Архитекторы садятся на параллельное допроектирование каркаса прямо в Revit, связываясь с вами по WhatsApp.";
+      statusText = "Экспресс-моделирование по эскизам";
+      ctaText = "Сбросить эскизы архитектору в WhatsApp";
+    } else {
+      timeText = "5–7 ДНЕЙ";
+      whyText = "Поднимаем базовую 3D-модель по эскизам/ПД, уточняя габариты и высоты в процессе сборки.";
+      statusText = "Концептуальный подъем в Revit";
+      ctaText = "Отправить эскизы на согласование";
+    }
+  } else if (sec === "arkr") {
     if (urgency === "fire") {
       timeText = "3–5 ДНЕЙ";
       whyText = "Запускаем 2–3 моделлеров параллельно. Первый фрагмент (типовой этаж) отдаем через 48 часов, всю коробку с фасадами закрываем за 5 дней.";

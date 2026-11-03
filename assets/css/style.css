@@ -723,18 +723,18 @@ main {
 }
 
 .hero__title {
-  margin: clamp(18px, 2.5vh, 34px) 0 clamp(18px, 2.5vh, 30px);
+  margin: clamp(14px, 2vh, 26px) 0 clamp(14px, 2vh, 22px);
   font-family: var(--font-display);
-  font-size: clamp(62px, 10.4vw, 174px);
+  font-size: clamp(52px, 8.4vw, 138px);
   font-weight: 300;
-  line-height: 0.79;
-  letter-spacing: -0.055em;
+  line-height: 0.88;
+  letter-spacing: -0.05em;
 }
 
 .hero__title .line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.04em;
+  padding-bottom: 0.08em;
 }
 
 .hero__title .line > span {
@@ -757,7 +757,11 @@ main {
 
 .hero__title em {
   color: var(--accent);
-  padding-right: 0.06em;
+  padding-right: 0.08em;
+  font-style: italic;
+  text-shadow: 
+    0 0 20px rgba(242, 238, 230, 0.95),
+    0 0 40px rgba(242, 238, 230, 0.9);
 }
 
 .hero__lede {
@@ -2434,7 +2438,8 @@ body.is-ready .hero__footer {
   }
 
   .hero__title {
-    font-size: clamp(62px, 11vw, 150px);
+    font-size: clamp(52px, 9.6vw, 120px);
+    line-height: 0.88;
   }
 
   .section__head {
