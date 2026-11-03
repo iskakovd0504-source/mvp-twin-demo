@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#f2eee6" />
   <title>BIM TWIN — Срочное BIM-производство из 2D в Revit за 3–14 дней | Казахстан</title>
-  <meta name="description" content="Экстренный подъем BIM-моделей в Autodesk Revit и IFC из чертежей DWG/PDF. Для генподрядчиков и девелоперов, у кого горят сроки, получены авансы или экспертиза требует модель прямо сейчас." />
+  <meta name="description" content="Экстренный подъем BIM-моделей в Autodesk Revit и IFC из чертежей DWG/PDF. Для генподрядчиков и девелоперов Казахстана, у кого горят сроки сдачи, получены авансы или экспертиза требует модель прямо сейчас." />
   <link rel="canonical" href="https://bimtwin.kz/" />
 
   <meta property="og:type" content="website" />
@@ -21,6 +21,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111214'/%3E%3Cpath d='M7 8h18M16 8v17M7 24h18' stroke='%23f2eee6' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23b85c38'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="assets/css/emergency.css" />
+  <link rel="stylesheet" href="assets/css/scroll-story.css" />
 
   <script type="importmap">
     {
@@ -57,10 +58,11 @@
 
     <nav class="nav" aria-label="Основная навигация">
       <a href="#qualifier" data-cursor="link">Для кого</a>
+      <a href="#morph" data-cursor="link">Модель</a>
       <a href="#calc" data-cursor="link">Оценка сроков</a>
-      <a href="#services" data-cursor="link">Форматы и Revit</a>
-      <a href="#guarantee" data-cursor="link">Без предоплаты</a>
-      <a href="#contact" data-cursor="link">Связаться</a>
+      <a href="#conveyor" data-cursor="link">Конвейер 48 ч</a>
+      <a href="#deal" data-cursor="link">NDA / Пилот</a>
+      <a href="#contact" data-cursor="link">Контакты</a>
     </nav>
 
     <a class="header__cta" href="https://wa.me/77775556789?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D1%81%D1%80%D0%BE%D1%87%D0%BD%D0%BE%20%D0%BD%D1%83%D0%B6%D0%BD%D0%B0%20BIM-%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%2C%20%D0%B3%D0%BE%D1%80%D1%8F%D1%82%20%D1%81%D1%80%D0%BE%D0%BA%D0%B8" target="_blank" rel="noopener" data-cursor="link">
@@ -76,10 +78,11 @@
     <div class="mobile-menu__inner">
       <nav aria-label="Мобильная навигация">
         <a href="#qualifier" data-cursor="link"><span>01</span>Для кого</a>
-        <a href="#calc" data-cursor="link"><span>02</span>Оценка сроков</a>
-        <a href="#services" data-cursor="link"><span>03</span>Форматы и Revit</a>
-        <a href="#guarantee" data-cursor="link"><span>04</span>Без предоплаты</a>
-        <a href="#contact" data-cursor="link"><span>05</span>Контакты</a>
+        <a href="#morph" data-cursor="link"><span>02</span>Модель</a>
+        <a href="#calc" data-cursor="link"><span>03</span>Оценка сроков</a>
+        <a href="#conveyor" data-cursor="link"><span>04</span>Конвейер 48 ч</a>
+        <a href="#deal" data-cursor="link"><span>05</span>NDA / Пилот</a>
+        <a href="#contact" data-cursor="link"><span>06</span>Контакты</a>
       </nav>
       <div class="mobile-menu__foot">
         <a href="tel:+77775556789">+7 777 555 67 89</a>
@@ -91,7 +94,7 @@
 
   <main id="main">
 
-    <!-- HERO SECTION -->
+    <!-- 1. HERO SECTION -->
     <section class="hero" id="top">
       <div class="hero__topline mono">
         <span>Экстренное BIM-производство</span>
@@ -114,9 +117,9 @@
             Для генподрядчиков и застройщиков, у которых есть обязательства, получены деньги, а модель требуют прямо сейчас.
           </p>
 
-          <div class="hero__urgency">
-            <span>⚡</span>
-            <div><b>Не ждем месяцами:</b> пилотный фрагмент выдаем за 48 часов. Нет чертежей — не берем. Есть чертежи — включаемся сегодня.</div>
+          <div class="hero__blueprint-stamp">
+            <b>ШТАМП ЭКСТРЕННОЙ СДАЧИ</b>
+            <span>Чертежи есть? → Пилот через 48 часов</span>
           </div>
 
           <div class="hero__actions">
@@ -155,7 +158,7 @@
         </div>
 
         <a class="scroll-cue" href="#qualifier" data-cursor="link">
-          <span>Квалификация</span><i aria-hidden="true"></i>
+          <span>Скролл вниз</span><i aria-hidden="true"></i>
         </a>
       </div>
     </section>
@@ -168,57 +171,71 @@
       </div>
     </div>
 
-    <!-- QUALIFIER: WHO WE WORK WITH -->
-    <section class="qualifier" id="qualifier">
-      <div class="section__head">
-        <p class="eyebrow" data-reveal><span class="dot"></span>01 / Квалификация</p>
-        <h2 class="section__title" data-reveal style="--d:.06s">С кем работаем.<br /><em>А кому сразу откажем.</em></h2>
-        <p class="section__lede" data-reveal style="--d:.12s">
-          Мы не бюро академических исследований с циклом в 9 месяцев. Мы — производственный цех экстренного BIM. 
-          Если у вас нет исходных данных, мы не станем тратить ваше и свое время.
-        </p>
-      </div>
-
-      <div class="qualifier__grid">
-        <!-- NOT OUR CLIENT -->
-        <div class="qual-card qual-card--no" data-reveal style="--d:.04s">
-          <div>
-            <span class="qual-card__badge">✕ Не наш профиль</span>
-            <h3>«Чертежей пока нет, просто прицениваемся»</h3>
-            <p>У вас еще нет рабочей документации, концепция в голове или до старта стройки еще год. В запасе куча времени.</p>
-            <ul class="qual-card__list">
-              <li><span>—</span> Нет чертежей в DWG или PDF (только эскизы)</li>
-              <li><span>—</span> Сроки не горят, договор еще не подписан</li>
-              <li><span>—</span> «Давайте проведем 10 зумов и подумаем через полгода»</li>
-              <li><span>—</span> Финансирование не открыто</li>
-            </ul>
-          </div>
-          <div class="qual-card__verdict">
-            Вердикт: Вам не к нам. Не тратьте бюджет — приходите, когда будут чертежи.
-          </div>
+    <!-- 2. SCROLL QUALIFIER (Sticky Step 1 -> Step 2) -->
+    <section class="qualifier-scroll" id="qualifier" data-qualifier-scroll>
+      <div class="qualifier-scroll__sticky">
+        <div class="qualifier-scroll__head">
+          <p class="eyebrow"><span class="dot"></span>01 / Квалификация в один скролл</p>
+          <h2 class="display-title" style="font-size: clamp(32px, 4vw, 56px); margin-top: 8px;">Кому сразу откажем.<br /><em>А кого спасаем сегодня.</em></h2>
         </div>
 
-        <!-- OUR CLIENT -->
-        <div class="qual-card qual-card--yes" data-reveal style="--d:.10s">
-          <div>
-            <span class="qual-card__badge">✓ Наш клиент (берем в работу сегодня)</span>
-            <h3>«Есть обязательства, деньги получены, сроки горят»</h3>
-            <p>Контракт заключен, аванс на счете, технадзор, экспертиза или инвестор требует выдать BIM-модель в Revit немедленно.</p>
-            <ul class="qual-card__list">
-              <li><span>+</span> Есть чертежи (DWG, PDF, сканы РД) по АР, КР или сетям</li>
-              <li><span>+</span> Сроки просрочены либо до дедлайна меньше месяца</li>
-              <li><span>+</span> Готовы быстро принимать решения и согласовывать модель</li>
-              <li><span>+</span> Нужен результат в Revit / IFC без бюрократии</li>
-            </ul>
-          </div>
-          <div class="qual-card__verdict">
-            Вердикт: Включаем инженеров в течение 3 часов после получения исходников.
-          </div>
+        <div class="qualifier-stage">
+          <!-- Step 1: No DWG -->
+          <article class="q-panel q-panel--no" id="qPanelNo">
+            <div>
+              <span class="q-panel__badge">✕ Сценарий 1: Нет чертежей</span>
+              <h3>«Пока только идея, чертежей нет»</h3>
+              <p>У вас еще нет рабочей документации в DWG или PDF, проект на уровне эскиза, а до реальной стройки еще год.</p>
+              <ul class="q-panel__checklist">
+                <li><span>—</span> Чертежи отсутствуют (только картинки или эскизы)</li>
+                <li><span>—</span> Сроки не горят, договор генподряда не подписан</li>
+                <li><span>—</span> Авансы не получены, согласования тянутся месяцами</li>
+              </ul>
+            </div>
+            <div class="q-panel__side">
+              <div class="q-panel__status">
+                <span>Вердикт производства</span>
+                <b>НЕ БЕРЕМ</b>
+              </div>
+              <div class="q-panel__verdict-box">
+                Не тратьте бюджет. Приходите к нам, когда появится стадия РД.
+              </div>
+            </div>
+          </article>
+
+          <!-- Step 2: Yes DWG & Urgent -->
+          <article class="q-panel q-panel--yes" id="qPanelYes">
+            <div>
+              <span class="q-panel__badge">✓ Сценарий 2: Горят сроки</span>
+              <h3>«Обязательства есть, деньги на счете, модель нужна вчера»</h3>
+              <p>Контракт в силе, аванс получен. Заказчик, технадзор или госэкспертиза требует предоставить BIM-модель в Revit немедленно.</p>
+              <ul class="q-panel__checklist">
+                <li><span>+</span> Есть чертежи (DWG / PDF / сканы РД) по АР, КР или сетям</li>
+                <li><span>+</span> До дедлайна меньше месяца или сроки уже просрочены</li>
+                <li><span>+</span> Нужна рабочая модель в Revit (.RVT) + IFC под экспертизу</li>
+              </ul>
+            </div>
+            <div class="q-panel__side">
+              <div class="q-panel__status">
+                <span>Скорость мобилизации</span>
+                <b>3 ЧАСА</b>
+              </div>
+              <div class="q-panel__verdict-box">
+                Запускаем инженеров в день получения чертежей. Пилот отдаем через 48 ч.
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="qualifier-scroll__cue">
+          <span id="qualCueText">Крутите скролл: сравнение сценариев</span>
+          <div class="qualifier-scroll__bar"><span id="qualBar"></span></div>
+          <span class="mono" id="qualPct">01 / 02</span>
         </div>
       </div>
     </section>
 
-    <!-- 3D MORPH SECTION -->
+    <!-- 3. 3D MORPH SECTION (Flat to Revit) -->
     <section class="morph" id="morph" data-morph>
       <div class="morph__sticky">
         <div class="morph__head">
@@ -275,7 +292,7 @@
       </div>
     </section>
 
-    <!-- URGENT CALCULATOR SECTION -->
+    <!-- 4. URGENT CALCULATOR SECTION -->
     <section class="section deadline" id="calc">
       <div class="section__head">
         <p class="eyebrow" data-reveal><span class="dot"></span>03 / Экспресс-оценка</p>
@@ -340,41 +357,132 @@
       </div>
     </section>
 
-    <!-- GUARANTEE / NDA / PILOT SECTION -->
-    <section class="guarantee" id="guarantee">
-      <div class="section__head">
-        <p class="eyebrow" data-reveal><span class="dot dot--light"></span>04 / «А покажите, что вы делали?»</p>
-        <h2 class="section__title" data-reveal style="--d:.06s">Железный ответ<br /><em>на вопрос о портфолио.</em></h2>
-        <p class="section__lede" data-reveal style="--d:.12s">
-          Чужие объекты мы не сливаем в сеть — для крупных застройщиков это уголовная ответственность и срыв торгов. 
-          Поэтому мы предлагаем прозрачные правила игры.
-        </p>
-      </div>
-
-      <div class="guarantee__grid">
-        <div class="guarantee-box" data-reveal style="--d:.04s">
-          <h4>Вариант 1. Строгий NDA (Для тех, кто платит)</h4>
-          <p>
-            Мы подписываем соглашение о неразглашении до передачи файлов. Ваши модели, чертежи, спецификации и объемы 
-            <b>никогда не появятся в открытом доступе</b>, в рекламе или у ваших конкурентов. Это законная конфиденциальность.
-          </p>
+    <!-- 5. HORIZONTAL CONVEYOR SECTION (Sticky Progress Timeline) -->
+    <section class="conveyor-section" id="conveyor" data-conveyor-scroll>
+      <div class="conveyor-sticky">
+        <div class="conveyor-head">
+          <div>
+            <p class="eyebrow"><span class="dot dot--light"></span>04 / Конвейер производства</p>
+            <h2>От чертежей до сдачи:<br /><em>путь за 48 часов.</em></h2>
+          </div>
+          <div class="mono" style="font-size: 11px; color: var(--bim); text-align: right;">
+            РЕЖИМ ЭКСТРЕННОГО СПРИНТА
+          </div>
         </div>
 
-        <div class="guarantee-box" data-reveal style="--d:.10s">
-          <h4>Вариант 2. Экспериментальный пилот без предоплаты</h4>
-          <p>
-            Сомневаетесь в скорости или качестве? <b>Мы сделаем тестовый фрагмент вашего здания без предоплаты.</b> 
-            Но условие одно: мы имеем право открыто показывать эту модель в кейсах, соцсетях и на экранах как образец нашей работы. 
-            Если устраивает — оплачиваете и продолжаем весь объем.
+        <div class="conveyor-track-wrapper">
+          <div class="conveyor-track" id="conveyorTrack">
+            <!-- Stage 1 -->
+            <article class="conveyor-card is-active">
+              <div class="conveyor-card__num">
+                <span>01 // ВХОД ДАННЫХ</span>
+                <span class="conveyor-card__time">ЧАС 0–3</span>
+              </div>
+              <div>
+                <h3>Загрузка DWG / PDF</h3>
+                <p>Вы сбрасываете архив планов, фасадов и разрезов. Проверяем комплектность, привязываем сетку осей и нулевую отметку здания в Revit.</p>
+              </div>
+              <div class="conveyor-card__tech">
+                <span>AutoCAD</span><span>PDF</span><span>Сетка осей</span>
+              </div>
+            </article>
+
+            <!-- Stage 2 -->
+            <article class="conveyor-card">
+              <div class="conveyor-card__num">
+                <span>02 // КАРКАС И СТЕНЫ</span>
+                <span class="conveyor-card__time">ЧАС 3–24</span>
+              </div>
+              <div>
+                <h3>Сборка конструктива (КР)</h3>
+                <p>Моделлеры поднимают фундаментную плиту, колонны, пилоны, перекрытия и лестничные клетки. Толщины и отметки строго по РД.</p>
+              </div>
+              <div class="conveyor-card__tech">
+                <span>Revit Структура</span><span>Колонны</span><span>Перекрытия</span>
+              </div>
+            </article>
+
+            <!-- Stage 3 -->
+            <article class="conveyor-card">
+              <div class="conveyor-card__num">
+                <span>03 // ПИЛОТ И СЕТИ</span>
+                <span class="conveyor-card__time">ЧАС 24–48</span>
+              </div>
+              <div>
+                <h3>Пилотный блок + Инженерия</h3>
+                <p>Выдаем тестовую секцию на проверку заказчику. Параллельно прокладываем магистральные воздуховоды (ОВ) и трубопроводы (ВК).</p>
+              </div>
+              <div class="conveyor-card__tech">
+                <span>Пилот 48 ч</span><span>MEP</span><span>Семейства</span>
+              </div>
+            </article>
+
+            <!-- Stage 4 -->
+            <article class="conveyor-card">
+              <div class="conveyor-card__num">
+                <span>04 // КОЛЛИЗИИ И СДАЧА</span>
+                <span class="conveyor-card__time">ЧАС 48–72</span>
+              </div>
+              <div>
+                <h3>Сводная модель и экспертиза</h3>
+                <p>Прогоняем модель в Navisworks на пересечения. Формируем чистый файл .RVT и экспорт в IFC 4.3 под требования СП РК 1.02-117-2018.</p>
+              </div>
+              <div class="conveyor-card__tech">
+                <span>Navisworks</span><span>IFC 4.3</span><span>СП РК 1.02-117</span>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="conveyor-foot">
+          <span class="mono" style="font-size: 9px; letter-spacing: 0.1em; color: rgba(242, 238, 230, 0.5);">КРУТИТЕ ДЛЯ ДВИЖЕНИЯ ПО ЭТАПАМ</span>
+          <div class="conveyor-progress-bar"><span id="conveyorBar"></span></div>
+          <span class="mono" id="conveyorPct" style="font-size: 9px; color: var(--bim);">01 / 04</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. DEAL SECTION (Interactive NDA vs Pilot Switch) -->
+    <section class="deal-section" id="deal">
+      <div class="section__head">
+        <p class="eyebrow" data-reveal><span class="dot dot--light"></span>05 / «А покажите портфолио?»</p>
+        <h2 class="section__title" data-reveal style="--d:.06s">Честный ответ.<br /><em>Два прозрачных сценария.</em></h2>
+        <p class="section__lede" data-reveal style="--d:.12s">
+          Мы не публикуем чертежи и модели клиентов в открытом доступе — в девелопменте это коммерческая тайна и срыв тендеров. 
+          Выберите удобный для вас формат работы:
+        </p>
+
+        <div class="deal-toggle" role="group" aria-label="Формат сотрудничества">
+          <button class="deal-btn is-active" id="btnNda" type="button" data-cursor="link">Вариант 1: Строгий NDA (по договору)</button>
+          <button class="deal-btn" id="btnPilot" type="button" data-cursor="link">Вариант 2: Пилот без предоплаты (открытый)</button>
+        </div>
+      </div>
+
+      <div class="deal-content" id="dealBox" data-reveal style="--d:.14s">
+        <div>
+          <h3 id="dealTitle">Вариант 1. Железная конфиденциальность (NDA)</h3>
+          <p id="dealText">
+            Перед тем как вы передадите нам чертежи, мы подписываем соглашение о неразглашении (NDA). 
+            Ваш объект, планировки, ведомости объемов и сметные данные никогда не попадут в рекламу, соцсети или конкурентам. 
+            Все права и исходные файлы Revit остаются исключительно вашей собственностью.
+          </p>
+        </div>
+        <div class="deal-sidebar">
+          <div>
+            <span class="mono" style="font-size: 8.5px; color: var(--bim); text-transform: uppercase;">Условия формата</span>
+            <b id="dealBadge" style="display: block; font-size: 20px; font-family: var(--font-display); margin-top: 6px;">100% Защита данных</b>
+          </div>
+          <p id="dealNote" style="font-size: 12px; line-height: 1.5; color: rgba(242, 238, 230, 0.55); margin: 0;">
+            Оплата производится по этапам с договором на юридическое лицо в Казахстане.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- SERVICES / WHAT WE DELIVER -->
+    <!-- 7. SERVICES / FORMATS -->
     <section class="section services" id="services">
       <div class="section__head">
-        <p class="eyebrow" data-reveal><span class="dot"></span>05 / Форматы выдачи</p>
+        <p class="eyebrow" data-reveal><span class="dot"></span>06 / Форматы выдачи</p>
         <h2 class="section__title" data-reveal style="--d:.06s">Выдаем в Revit.<br /><em>Но можем в любом формате.</em></h2>
         <p class="section__lede" data-reveal style="--d:.12s">
           Основной рабочий стандарт Казахстана — Autodesk Revit (.RVT). 
@@ -417,58 +525,7 @@
       </div>
     </section>
 
-    <!-- PROCESS -->
-    <section class="section process" id="process">
-      <div class="process__sticky">
-        <p class="eyebrow" data-reveal><span class="dot"></span>06 / Процесс</p>
-        <h2 class="section__title" data-reveal style="--d:.06s">Как спасаем<br /><em>горящие проекты.</em></h2>
-        <p class="section__lede" data-reveal style="--d:.12s">
-          Без многомесячных согласований. Алгоритм отработан до автоматизма.
-        </p>
-        <div class="process__duration" data-reveal style="--d:.18s">
-          <span class="mono">Первый результат</span>
-          <b>48 часов</b>
-          <small>пилотный этаж или блок</small>
-        </div>
-      </div>
-
-      <div class="process__steps">
-        <article class="step" data-reveal style="--d:.02s">
-          <span class="step__num mono">01</span>
-          <div class="step__body">
-            <h3>Сброс чертежей (Час 1–3)</h3>
-            <p>Вы присылаете DWG / PDF в WhatsApp или облако. Мы за 2 часа оцениваем объем, выставляем точный дедлайн и стоимость.</p>
-          </div>
-          <span class="step__time mono">2 часа</span>
-        </article>
-        <article class="step" data-reveal style="--d:.06s">
-          <span class="step__num mono">02</span>
-          <div class="step__body">
-            <h3>Пилотный блок (День 1–2)</h3>
-            <p>Поднимаем тестовую часть (типовой этаж или секцию). Вы видите реальный Revit-файл, качество проработки и соответствие вашим чертежам.</p>
-          </div>
-          <span class="step__time mono">48 часов</span>
-        </article>
-        <article class="step" data-reveal style="--d:.10s">
-          <span class="step__num mono">03</span>
-          <div class="step__body">
-            <h3>Сборка полного объема (День 3–10)</h3>
-            <p>Команда моделлеров параллельно поднимает АР, КР и инженерные сети. Сводим здание в единую модель, устраняем коллизии.</p>
-          </div>
-          <span class="step__time mono">от 3 дней</span>
-        </article>
-        <article class="step" data-reveal style="--d:.14s">
-          <span class="step__num mono">04</span>
-          <div class="step__body">
-            <h3>Сдача в экспертизу / технадзор</h3>
-            <p>Передаем файлы RVT, IFC, NWD и выгрузки спецификаций. При необходимости сопровождаем замечания экспертов до полного закрытия.</p>
-          </div>
-          <span class="step__time mono">итог</span>
-        </article>
-      </div>
-    </section>
-
-    <!-- NUMBERS -->
+    <!-- 8. NUMBERS -->
     <section class="numbers">
       <div class="numbers__grid">
         <div class="number" data-reveal>
@@ -490,63 +547,10 @@
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section class="section faq" id="faq">
-      <div class="section__head">
-        <p class="eyebrow" data-reveal><span class="dot"></span>07 / Частые вопросы</p>
-        <h2 class="section__title" data-reveal style="--d:.06s">Ответы без воды<br /><em>перед стартом.</em></h2>
-        <p class="section__lede" data-reveal style="--d:.12s">
-          То, что важно знать генподрядчику и девелоперу прямо сейчас.
-        </p>
-      </div>
-
-      <div class="faq__list">
-        <details class="faq__item" data-reveal style="--d:.02s">
-          <summary>
-            <span class="faq__q">В какой версии Revit вы отдаете исходники?</span>
-            <i class="faq__mark" aria-hidden="true"></i>
-          </summary>
-          <div class="faq__a">
-            <p>В любой, которая требуется вашему заказчику или генпроектировщику — от Revit 2020 до Revit 2025. Все семейства аккуратно параметризированы, без мусора и битых связей.</p>
-          </div>
-        </details>
-
-        <details class="faq__item" data-reveal style="--d:.06s">
-          <summary>
-            <span class="faq__q">А если у нас в чертежах ошибки и нестыковки?</span>
-            <i class="faq__mark" aria-hidden="true"></i>
-          </summary>
-          <div class="faq__a">
-            <p>Это стандартная ситуация. В процессе подъема 3D-модели мы сразу выявляем нестыковки отметок, несовпадение осей между АР и КР и пересечения труб с балками. Составляем журнал замечаний и оперативно согласуем решения с вашим ГИПом или технадзором.</p>
-          </div>
-        </details>
-
-        <details class="faq__item" data-reveal style="--d:.10s">
-          <summary>
-            <span class="faq__q">Как работает вариант «без предоплаты»?</span>
-            <i class="faq__mark" aria-hidden="true"></i>
-          </summary>
-          <div class="faq__a">
-            <p>Мы берем типовую секцию или фрагмент вашего объекта и моделируем его бесплатно. Если качество и скорость вас устраивают — мы подписываем договор на весь объем и вы оплачиваете работу. Если вы хотите сохранить полную секретность объекта, мы работаем с предоплатой по стандартному договору с жестким NDA.</p>
-          </div>
-        </details>
-
-        <details class="faq__item" data-reveal style="--d:.14s">
-          <summary>
-            <span class="faq__q">Вы работаете только по Костанаю или по всей стране?</span>
-            <i class="faq__mark" aria-hidden="true"></i>
-          </summary>
-          <div class="faq__a">
-            <p>По всему Казахстану. Основной пул объектов — Астана, Алматы, Шымкент, Атырау, Караганда и Костанай. Передача файлов и оперативные согласования происходят через облачную среду (Autodesk Construction Cloud / Google Drive / Telegram), поэтому географических ограничений нет.</p>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- CONTACT SECTION -->
+    <!-- 9. CONTACT SECTION -->
     <section class="contact" id="contact">
       <div class="contact__head">
-        <p class="eyebrow" data-reveal><span class="dot dot--light"></span>08 / Срочный контакт</p>
+        <p class="eyebrow" data-reveal><span class="dot dot--light"></span>07 / Срочный контакт</p>
         <h2 class="contact__title" data-reveal style="--d:.06s">Горят сроки?<br /><em>Сбросьте чертежи.</em></h2>
         <p class="contact__lede" data-reveal style="--d:.12s">
           Прикрепите ссылку на чертежи (Яндекс.Диск, Google Drive, облако) или напишите прямо в WhatsApp. 
@@ -603,7 +607,7 @@
         <aside class="contact__aside">
           <div class="contact__block">
             <span class="mono">Самый быстрый способ</span>
-            <a href="https://wa.me/77775556789?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D1%81%D1%80%D0%BE%D1%87%D0%BD%D0%BE%20%D0%BD%D1%83%D0%B6%D0%BD%D0%B0%20BIM-%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%2C%20%D0%B3%D0%BE%D1%80%D1%8F%D1%82%20%D1%81%D1%80%D0%BE%D0%BA%D0%B8" target="_blank" rel="noopener" data-cursor="link" style="color: var(--bim);">WhatsApp: +7 777 555 67 89</a>
+            <a href="https://wa.me/77775556789?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D1%83%20%D0%BD%D0%B0%D1%81%20%D0%B3%D0%BE%D1%80%D1%8F%D1%82%20%D1%81%D1%80%D0%BE%D0%BA%D0%B8%2C%20%D1%81%D1%80%D0%BE%D1%87%D0%BD%D0%BE%20%D0%BD%D1%83%D0%B6%D0%BD%D0%B0%20BIM-%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C" target="_blank" rel="noopener" data-cursor="link" style="color: var(--bim);">WhatsApp: +7 777 555 67 89</a>
             <p>Отвечаем даже вечером, если проект горит.</p>
           </div>
           <div class="contact__block">
@@ -637,9 +641,10 @@
       </a>
       <nav aria-label="Футер">
         <a href="#qualifier" data-cursor="link">Для кого</a>
+        <a href="#morph" data-cursor="link">Модель</a>
         <a href="#calc" data-cursor="link">Оценка сроков</a>
-        <a href="#services" data-cursor="link">Форматы</a>
-        <a href="#guarantee" data-cursor="link">Без предоплаты</a>
+        <a href="#conveyor" data-cursor="link">Конвейер 48 ч</a>
+        <a href="#deal" data-cursor="link">NDA / Пилот</a>
         <a href="#contact" data-cursor="link">Контакты</a>
       </nav>
       <a class="footer__up" href="#top" data-cursor="link">Наверх ↑</a>

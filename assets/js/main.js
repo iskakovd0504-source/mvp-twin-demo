@@ -706,3 +706,113 @@ calcTimeBtns.forEach(btn => {
 });
 
 updateCalculator();
+
+/* ------------------------------------------------------------------
+   Scroll Storyline Engine: Qualifier Sticky & Horizontal Conveyor
+------------------------------------------------------------------- */
+
+const qualScrollSection = document.querySelector("[data-qualifier-scroll]");
+const qPanelNo = document.getElementById("qPanelNo");
+const qPanelYes = document.getElementById("qPanelYes");
+const qualBar = document.getElementById("qualBar");
+const qualPct = document.getElementById("qualPct");
+const qualCueText = document.getElementById("qualCueText");
+
+const conveyorSection = document.querySelector("[data-conveyor-scroll]");
+const conveyorTrack = document.getElementById("conveyorTrack");
+const conveyorBar = document.getElementById("conveyorBar");
+const conveyorPct = document.getElementById("conveyorPct");
+const conveyorCards = document.querySelectorAll(".conveyor-card");
+
+function updateScrollStory() {
+  const y = window.scrollY;
+
+  // 1. Qualifier Sticky Scene (0..1)
+  if (qualScrollSection && qPanelNo && qPanelYes) {
+    const total = Math.max(1, qualScrollSection.offsetHeight - window.innerHeight);
+    const rect = qualScrollSection.getBoundingClientRect();
+    const p = clamp(-rect.top / total, 0, 1);
+
+    if (qualBar) qualBar.style.width = `${p * 100}%`;
+
+    if (p < 0.45) {
+      // Step 1: No DWG visible, Yes DWG hidden below
+      qPanelNo.style.opacity = String(1 - p * 1.5);
+      qPanelNo.style.transform = `scale(${1 - p * 0.08}) translateY(${-p * 40}px)`;
+      qPanelYes.style.opacity = "0";
+      qPanelYes.style.transform = "translateY(60px) scale(0.95)";
+      qPanelYes.style.pointerEvents = "none";
+      qPanelNo.style.pointerEvents = "auto";
+      if (qualPct) qualPct.textContent = "01 / 02";
+      if (qualCueText) qualCueText.textContent = "Сценарий 1: Нет чертежей (крутите дальше)";
+    } else {
+      // Step 2: Yes DWG emerges prominently
+      const p2 = clamp((p - 0.45) / 0.55, 0, 1);
+      qPanelNo.style.opacity = "0";
+      qPanelNo.style.pointerEvents = "none";
+      qPanelYes.style.opacity = String(p2);
+      qPanelYes.style.transform = `translateY(${(1 - p2) * 40}px) scale(${0.96 + p2 * 0.04})`;
+      qPanelYes.style.pointerEvents = "auto";
+      if (qualPct) qualPct.textContent = "02 / 02";
+      if (qualCueText) qualCueText.textContent = "Сценарий 2: Горят сроки — берем в работу";
+    }
+  }
+
+  // 2. Horizontal Conveyor Scene (0..1)
+  if (conveyorSection && conveyorTrack && window.innerWidth > 900) {
+    const totalC = Math.max(1, conveyorSection.offsetHeight - window.innerHeight);
+    const rectC = conveyorSection.getBoundingClientRect();
+    const pC = clamp(-rectC.top / totalC, 0, 1);
+
+    const maxShift = conveyorTrack.scrollWidth - conveyorTrack.parentElement.clientWidth;
+    const shift = pC * maxShift;
+    conveyorTrack.style.transform = `translate3d(${-shift}px, 0, 0)`;
+
+    if (conveyorBar) conveyorBar.style.width = `${pC * 100}%`;
+
+    const activeIndex = Math.min(3, Math.floor(pC * 4));
+    conveyorCards.forEach((card, idx) => {
+      card.classList.toggle("is-active", idx === activeIndex);
+    });
+
+    if (conveyorPct) {
+      conveyorPct.textContent = `0${activeIndex + 1} / 04`;
+    }
+  }
+}
+
+// Hook into the main rAF scroll listener
+window.addEventListener("scroll", () => {
+  requestAnimationFrame(updateScrollStory);
+}, { passive: true });
+
+/* ------------------------------------------------------------------
+   Interactive NDA vs Pilot Switch
+------------------------------------------------------------------- */
+
+const btnNda = document.getElementById("btnNda");
+const btnPilot = document.getElementById("btnPilot");
+const dealTitle = document.getElementById("dealTitle");
+const dealText = document.getElementById("dealText");
+const dealBadge = document.getElementById("dealBadge");
+const dealNote = document.getElementById("dealNote");
+
+if (btnNda && btnPilot) {
+  btnNda.addEventListener("click", () => {
+    btnNda.classList.add("is-active");
+    btnPilot.classList.remove("is-active");
+    dealTitle.textContent = "Вариант 1. Железная конфиденциальность (NDA)";
+    dealText.textContent = "Перед тем как вы передадите нам чертежи, мы подписываем соглашение о неразглашении (NDA). Ваш объект, планировки, ведомости объемов и сметные данные никогда не попадут в рекламу, соцсети или конкурентам. Все права и исходные файлы Revit остаются исключительно вашей собственностью.";
+    dealBadge.textContent = "100% Защита данных";
+    dealNote.textContent = "Оплата производится по этапам с договором на юридическое лицо в Казахстане.";
+  });
+
+  btnPilot.addEventListener("click", () => {
+    btnPilot.classList.add("is-active");
+    btnNda.classList.remove("is-active");
+    dealTitle.textContent = "Вариант 2. Экспериментальный пилот без предоплаты";
+    dealText.textContent = "Сомневаетесь в нашей скорости или точности? Мы бесплатно сделаем пилотный блок или типовой этаж вашего объекта за 48 часов. Единственное условие: мы получаем право открыто транслировать эту модель в наших кейсах и соцсетях. Вы проверяете качество модели без риска и копейки вложений.";
+    dealBadge.textContent = "0 ₸ Предоплаты";
+    dealNote.textContent = "Идеально для тех, кому нужно срочно убедиться в результате перед оплатой.";
+  });
+}

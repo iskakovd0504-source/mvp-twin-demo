@@ -1,0 +1,508 @@
+/* ------------------------------------------------------------------
+   SCROLL-DRIVEN STORYLINE STYLES (bimtwin.kz)
+   Pure CSS transform / opacity based on --p (0..1)
+------------------------------------------------------------------- */
+
+/* 1. Hero blueprint overlay */
+.hero__blueprint-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: rgba(184, 92, 56, 0.12);
+  border: 1px dashed var(--accent);
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero__blueprint-stamp b {
+  color: #991b1b;
+  background: rgba(153, 27, 27, 0.15);
+  padding: 3px 6px;
+  border-radius: 2px;
+}
+
+/* 2. Interactive Sticky Qualifier */
+.qualifier-scroll {
+  position: relative;
+  height: 250vh;
+  background: var(--paper);
+}
+
+.qualifier-scroll__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 var(--pad);
+  overflow: hidden;
+}
+
+.qualifier-scroll__head {
+  margin-bottom: 24px;
+}
+
+.qualifier-stage {
+  position: relative;
+  width: 100%;
+  max-width: 1050px;
+  min-height: 440px;
+  margin: 0 auto;
+}
+
+.q-panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: clamp(24px, 4vw, 56px);
+  padding: clamp(26px, 4vw, 48px);
+  background: #ffffff;
+  border: 1px solid var(--line);
+  box-shadow: 0 20px 50px rgba(17, 18, 20, 0.06);
+  transition: transform 0.1s linear, opacity 0.1s linear;
+}
+
+.q-panel--no {
+  background: #faf8f5;
+  border-style: dashed;
+  border-color: rgba(153, 27, 27, 0.4);
+}
+
+.q-panel--yes {
+  background: #0e1013;
+  color: var(--paper);
+  border-color: var(--bim);
+  box-shadow: 0 24px 60px rgba(7, 11, 16, 0.35);
+}
+
+.q-panel__badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.q-panel--no .q-panel__badge {
+  color: #991b1b;
+}
+
+.q-panel--yes .q-panel__badge {
+  color: var(--bim);
+}
+
+.q-panel h3 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.2vw, 44px);
+  font-weight: 400;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+
+.q-panel--yes h3 em {
+  color: var(--bim);
+}
+
+.q-panel p {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.q-panel--yes p {
+  color: rgba(242, 238, 230, 0.75);
+}
+
+.q-panel__checklist {
+  list-style: none;
+  padding: 0;
+  margin: 22px 0 0;
+  display: grid;
+  gap: 12px;
+}
+
+.q-panel__checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.q-panel--no .q-panel__checklist li span {
+  color: #991b1b;
+  font-weight: bold;
+}
+
+.q-panel--yes .q-panel__checklist li span {
+  color: var(--bim);
+  font-weight: bold;
+}
+
+.q-panel__side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-left: clamp(20px, 3vw, 40px);
+  border-left: 1px solid var(--line);
+}
+
+.q-panel--yes .q-panel__side {
+  border-left-color: var(--line-light);
+}
+
+.q-panel__status {
+  display: grid;
+  gap: 8px;
+}
+
+.q-panel__status span {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.q-panel--yes .q-panel__status span {
+  color: rgba(242, 238, 230, 0.45);
+}
+
+.q-panel__status b {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 300;
+  line-height: 0.9;
+}
+
+.q-panel--no .q-panel__status b {
+  color: #991b1b;
+}
+
+.q-panel--yes .q-panel__status b {
+  color: var(--bim);
+}
+
+.q-panel__verdict-box {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.q-panel--yes .q-panel__verdict-box {
+  border-top-color: var(--line-light);
+  color: var(--bim);
+}
+
+.qualifier-scroll__cue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1050px;
+  margin: 18px auto 0;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.qualifier-scroll__bar {
+  width: 140px;
+  height: 2px;
+  background: var(--line-strong);
+  position: relative;
+  overflow: hidden;
+}
+
+.qualifier-scroll__bar span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.08s linear;
+}
+
+/* 3. Horizontal Conveyor (Process) */
+.conveyor-section {
+  position: relative;
+  height: 380vh;
+  background: #0e1013;
+  color: var(--paper);
+  border-top: 1px solid var(--line-light);
+}
+
+.conveyor-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 80px var(--pad) 40px;
+  overflow: hidden;
+}
+
+.conveyor-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.conveyor-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4.4vw, 68px);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.conveyor-head h2 em {
+  color: var(--bim);
+}
+
+.conveyor-track-wrapper {
+  position: relative;
+  width: 100%;
+  margin: auto 0;
+}
+
+.conveyor-track {
+  display: flex;
+  gap: clamp(24px, 4vw, 60px);
+  will-change: transform;
+}
+
+.conveyor-card {
+  flex: 0 0 clamp(320px, 34vw, 540px);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line-light);
+  padding: clamp(24px, 3.2vw, 42px);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 360px;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.conveyor-card.is-active {
+  border-color: var(--bim);
+  background: rgba(143, 231, 255, 0.04);
+}
+
+.conveyor-card__num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--bim);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.conveyor-card__time {
+  padding: 3px 8px;
+  border: 1px solid var(--line-light);
+  font-size: 9px;
+  color: var(--paper);
+}
+
+.conveyor-card h3 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 2.4vw, 38px);
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 18px 0 12px;
+}
+
+.conveyor-card p {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: rgba(242, 238, 230, 0.7);
+}
+
+.conveyor-card__tech {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-light);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.conveyor-card__tech span {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bim);
+  padding: 4px 7px;
+  background: rgba(143, 231, 255, 0.08);
+}
+
+.conveyor-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-light);
+}
+
+.conveyor-progress-bar {
+  flex: 1;
+  max-width: 400px;
+  height: 2px;
+  background: var(--line-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.conveyor-progress-bar span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0%;
+  background: var(--bim);
+}
+
+/* 4. Interactive NDA vs Pilot Switch */
+.deal-section {
+  padding: clamp(80px, 9vw, 130px) var(--pad);
+  background: #111418;
+  color: var(--paper);
+  border-top: 1px solid var(--line-light);
+}
+
+.deal-toggle {
+  display: inline-flex;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-light);
+  margin-top: 28px;
+}
+
+.deal-btn {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  color: rgba(242, 238, 230, 0.6);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.deal-btn.is-active {
+  background: var(--bim);
+  color: #0e1013;
+  font-weight: 600;
+}
+
+.deal-content {
+  margin-top: 36px;
+  min-height: 260px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: clamp(24px, 4vw, 60px);
+  padding: clamp(28px, 4vw, 50px);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--line-light);
+}
+
+.deal-content h3 {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.deal-content p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(242, 238, 230, 0.74);
+}
+
+.deal-sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-left: clamp(20px, 3vw, 40px);
+  border-left: 1px solid var(--line-light);
+}
+
+@media (max-width: 900px) {
+  .qualifier-scroll {
+    height: auto;
+  }
+  .qualifier-scroll__sticky {
+    position: static;
+    height: auto;
+    padding: 60px var(--pad);
+  }
+  .qualifier-stage {
+    min-height: auto;
+    display: grid;
+    gap: 24px;
+  }
+  .q-panel {
+    position: static;
+    grid-template-columns: 1fr;
+  }
+  .q-panel__side {
+    padding-left: 0;
+    padding-top: 20px;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .qualifier-scroll__cue {
+    display: none;
+  }
+
+  .conveyor-section {
+    height: auto;
+  }
+  .conveyor-sticky {
+    position: static;
+    height: auto;
+    padding: 60px var(--pad);
+  }
+  .conveyor-track {
+    flex-direction: column;
+    transform: none !important;
+  }
+  .conveyor-card {
+    flex: 1 1 auto;
+    min-height: auto;
+  }
+  .conveyor-progress-bar {
+    display: none;
+  }
+
+  .deal-content {
+    grid-template-columns: 1fr;
+  }
+  .deal-sidebar {
+    padding-left: 0;
+    padding-top: 20px;
+    border-left: 0;
+    border-top: 1px solid var(--line-light);
+  }
+}
