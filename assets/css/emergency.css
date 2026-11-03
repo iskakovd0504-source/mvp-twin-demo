@@ -1,0 +1,212 @@
+/* ------------------------------------------------------------------
+   Emergency BIM Styles: Qualifier, Urgent Estimator, Pilot Guarantee
+------------------------------------------------------------------- */
+
+.hero__urgency {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  margin-top: 18px;
+  background: rgba(184, 92, 56, 0.1);
+  border: 1px solid var(--accent);
+  border-left-width: 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.hero__urgency b {
+  color: var(--accent);
+}
+
+.qualifier {
+  border-top: 1px solid var(--line);
+  padding: clamp(60px, 8vw, 110px) var(--pad);
+  background: var(--paper);
+}
+
+.qualifier__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(20px, 3vw, 40px);
+  margin-top: clamp(32px, 4vw, 54px);
+}
+
+.qual-card {
+  padding: clamp(24px, 3vw, 42px);
+  border: 1px solid var(--line);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s;
+}
+
+.qual-card--no {
+  background: rgba(17, 18, 20, 0.02);
+  border-style: dashed;
+}
+
+.qual-card--yes {
+  background: #0e1013;
+  color: var(--paper);
+  border-color: var(--bim);
+  box-shadow: 0 16px 40px rgba(7, 11, 16, 0.18);
+}
+
+.qual-card__badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.qual-card--no .qual-card__badge {
+  color: #991b1b;
+}
+
+.qual-card--yes .qual-card__badge {
+  color: var(--bim);
+}
+
+.qual-card h3 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 2.6vw, 40px);
+  font-weight: 400;
+  line-height: 1.05;
+  margin-bottom: 18px;
+}
+
+.qual-card--yes h3 em {
+  color: var(--bim);
+}
+
+.qual-card p {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+.qual-card--yes p {
+  color: rgba(242, 238, 230, 0.72);
+}
+
+.qual-card__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: grid;
+  gap: 12px;
+}
+
+.qual-card__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.qual-card--no .qual-card__list li span {
+  color: #991b1b;
+  font-weight: bold;
+}
+
+.qual-card--yes .qual-card__list li span {
+  color: var(--bim);
+  font-weight: bold;
+}
+
+.qual-card__verdict {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.qual-card--yes .qual-card__verdict {
+  border-top-color: var(--line-light);
+  color: var(--bim);
+}
+
+/* Guarantee / NDA banner */
+.guarantee {
+  padding: clamp(60px, 8vw, 100px) var(--pad);
+  background: #14171c;
+  color: var(--paper);
+  border-top: 1px solid var(--line-light);
+}
+
+.guarantee__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 4vw, 54px);
+  margin-top: 36px;
+}
+
+.guarantee-box {
+  padding: clamp(22px, 3vw, 36px);
+  border: 1px solid var(--line-light);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.guarantee-box h4 {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2vw, 30px);
+  font-weight: 400;
+  color: var(--bim);
+}
+
+.guarantee-box p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(242, 238, 230, 0.68);
+}
+
+.guarantee-box b {
+  color: var(--paper);
+}
+
+/* Fast calculator styles */
+.calc-card {
+  background: #0e1013;
+  color: var(--paper);
+  padding: clamp(24px, 4vw, 48px);
+  border: 1px solid var(--line-light);
+  margin-top: clamp(32px, 4vw, 56px);
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.calc-step-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bim);
+  margin-bottom: 12px;
+}
+
+@media (max-width: 900px) {
+  .qualifier__grid,
+  .guarantee__grid,
+  .calc-grid {
+    grid-template-columns: 1fr;
+  }
+}

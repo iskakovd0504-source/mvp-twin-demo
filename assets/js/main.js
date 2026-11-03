@@ -590,3 +590,119 @@ try {
 ------------------------------------------------------------------- */
 
 updateScrollUI();
+
+/* ------------------------------------------------------------------
+   Urgent BIM Estimator Calculator
+------------------------------------------------------------------- */
+
+const calcState = {
+  dwg: "yes",
+  sec: "arkr",
+  urgency: "fire"
+};
+
+const calcDwgBtns = document.querySelectorAll("#calcDwgGroup button");
+const calcSecBtns = document.querySelectorAll("#calcSectionGroup button");
+const calcTimeBtns = document.querySelectorAll("#calcTimeGroup button");
+const calcTimeOut = document.getElementById("calcTimeOut");
+const calcStatusOut = document.getElementById("calcStatusOut");
+const calcWhyOut = document.getElementById("calcWhyOut");
+const calcCtaBtn = document.getElementById("calcCtaBtn");
+
+function updateCalculator() {
+  if (!calcTimeOut) return;
+
+  const { dwg, sec, urgency } = calcState;
+
+  if (dwg === "no") {
+    calcTimeOut.textContent = "НЕ БЕРЕМ";
+    calcStatusOut.textContent = "Исходные данные отсутствуют";
+    calcWhyOut.textContent = "Без чертежей (DWG/PDF) поднять модель невозможно. Рекомендуем сначала заказать проектирование РД, иначе это будет выдумка, а не BIM.";
+    if (calcCtaBtn) {
+      calcCtaBtn.querySelector("span").textContent = "Обсудить подготовку чертежей";
+      calcCtaBtn.href = "https://wa.me/77775556789?text=" + encodeURIComponent("Здравствуйте, у нас пока нет чертежей, но нужна консультация");
+    }
+    return;
+  }
+
+  let timeText = "3–5 ДНЕЙ";
+  let whyText = "";
+  let ctaText = "Отправить чертежи на согласование срока";
+  let statusText = "Формат: Autodesk Revit (.rvt) + IFC";
+
+  if (sec === "arkr") {
+    if (urgency === "fire") {
+      timeText = "3–5 ДНЕЙ";
+      whyText = "Запускаем 2–3 моделлеров параллельно. Первый фрагмент (типовой этаж) отдаем через 48 часов, всю коробку с фасадами закрываем за 5 дней.";
+    } else if (urgency === "urgent") {
+      timeText = "5–8 ДНЕЙ";
+      whyText = "Стандартный форсированный темп: детальная проработка АР + КР, спецификации элементов, экспорт в чистый IFC 4.3.";
+    } else {
+      timeText = "8–12 ДНЕЙ";
+      whyText = "Размеренный график: АР, КР, ведомости объемов, оформление листов рабочей документации.";
+    }
+  } else if (sec === "full") {
+    if (urgency === "fire") {
+      timeText = "7–10 ДНЕЙ";
+      whyText = "Экстренная мобилизация: архитекторы поднимают каркас, инженеры параллельно трассируют ОВ/ВК/ЭО, координатор ежедневно сводит коллизии в Navisworks.";
+    } else if (urgency === "urgent") {
+      timeText = "10–14 ДНЕЙ";
+      whyText = "Полный комплекс АР + КР + сети с отчетом об устранении пересечений и таблицами объемов материалов.";
+    } else {
+      timeText = "14–20 ДНЕЙ";
+      whyText = "Комплексная модель со всеми инженерными разделами, ведомостями и подготовкой под экспертизу.";
+    }
+  } else if (sec === "mep") {
+    if (urgency === "fire") {
+      timeText = "4–6 ДНЕЙ";
+      whyText = "Разводка сетей по вашей готовой подоснове или чертежам. Ловим пересечения вентиляции с трубами и несущими конструкциями.";
+    } else {
+      timeText = "6–10 ДНЕЙ";
+      whyText = "Инженерные системы ОВ, ВК, ЭО с семействами оборудования и спецификациями.";
+    }
+  }
+
+  if (dwg === "partial") {
+    timeText += " (+1-2 дня на уточнения)";
+    whyText += " Так как чертежи частичные, потребуется быстрая стыковка с вашим ГИПом для снятия вопросов.";
+  }
+
+  calcTimeOut.textContent = timeText;
+  calcStatusOut.textContent = statusText;
+  calcWhyOut.textContent = whyText;
+
+  const waMsg = `Здравствуйте! По калькулятору: чертежи: ${dwg}, разделы: ${sec}, срок: ${urgency} (${timeText}). Хотим отправить чертежи на экспресс-оценку.`;
+  if (calcCtaBtn) {
+    calcCtaBtn.querySelector("span").textContent = ctaText;
+    calcCtaBtn.href = `https://wa.me/77775556789?text=${encodeURIComponent(waMsg)}`;
+  }
+}
+
+calcDwgBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    calcDwgBtns.forEach(b => b.classList.remove("is-on"));
+    btn.classList.add("is-on");
+    calcState.dwg = btn.dataset.dwg;
+    updateCalculator();
+  });
+});
+
+calcSecBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    calcSecBtns.forEach(b => b.classList.remove("is-on"));
+    btn.classList.add("is-on");
+    calcState.sec = btn.dataset.sec;
+    updateCalculator();
+  });
+});
+
+calcTimeBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    calcTimeBtns.forEach(b => b.classList.remove("is-on"));
+    btn.classList.add("is-on");
+    calcState.urgency = btn.dataset.urgency;
+    updateCalculator();
+  });
+});
+
+updateCalculator();

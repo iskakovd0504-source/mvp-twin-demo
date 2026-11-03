@@ -4,14 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#f2eee6" />
-  <title>BIM TWIN — модели для застройщиков Казахстана | ТИМСО и госэкспертиза</title>
-  <meta name="description" content="BIM TWIN — BIM-производство для девелоперов: экспресс-аудит на соответствие приказу № 114, модели LOD 200–500, коллизии, 5D-сметы и подготовка к госэкспертизе по СП РК 1.02-117-2018." />
+  <title>BIM TWIN — Срочное BIM-производство из 2D в Revit за 3–14 дней | Казахстан</title>
+  <meta name="description" content="Экстренный подъем BIM-моделей в Autodesk Revit и IFC из чертежей DWG/PDF. Для генподрядчиков и девелоперов, у кого горят сроки, получены авансы или экспертиза требует модель прямо сейчас." />
   <link rel="canonical" href="https://bimtwin.kz/" />
 
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://bimtwin.kz/" />
-  <meta property="og:title" content="BIM TWIN — модели для застройщиков Казахстана" />
-  <meta property="og:description" content="С 2028 года BIM обязателен для жилья от 6 этажей. Экспресс-аудит, модели, коллизии и подготовка к госэкспертизе по СП РК 1.02-117-2018." />
+  <meta property="og:title" content="BIM TWIN — Срочное BIM-производство из 2D в Revit от 3 дней" />
+  <meta property="og:description" content="Горят сроки сдачи или экспертизы? Поднимаем рабочие BIM-модели в Revit и IFC из ваших чертежей DWG/PDF. Без предоплаты на пилотный фрагмент. Весь Казахстан." />
   <meta property="og:image" content="https://bimtwin.kz/assets/og.jpg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,6 +20,7 @@
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111214'/%3E%3Cpath d='M7 8h18M16 8v17M7 24h18' stroke='%23f2eee6' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23b85c38'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/emergency.css" />
 
   <script type="importmap">
     {
@@ -36,7 +37,7 @@
     <div class="preloader__inner">
       <div class="preloader__brand">BIM TWIN<span>KZ</span></div>
       <div class="preloader__bar"><span id="loadbar"></span></div>
-      <div class="preloader__meta"><span>ТИМСО · Госэкспертиза · 2026</span><span id="loadpct">00</span></div>
+      <div class="preloader__meta"><span>Срочное BIM-производство · Revit · 2026</span><span id="loadpct">00</span></div>
     </div>
   </div>
 
@@ -55,14 +56,15 @@
     </a>
 
     <nav class="nav" aria-label="Основная навигация">
-      <a href="#deadline" data-cursor="link">Сроки</a>
-      <a href="#services" data-cursor="link">Услуги</a>
-      <a href="#process" data-cursor="link">Процесс</a>
-      <a href="#contact" data-cursor="link">Контакты</a>
+      <a href="#qualifier" data-cursor="link">Для кого</a>
+      <a href="#calc" data-cursor="link">Оценка сроков</a>
+      <a href="#services" data-cursor="link">Форматы и Revit</a>
+      <a href="#guarantee" data-cursor="link">Без предоплаты</a>
+      <a href="#contact" data-cursor="link">Связаться</a>
     </nav>
 
-    <a class="header__cta" href="#deadline" data-cursor="link">
-      <span>Проверить объект</span><i aria-hidden="true">↗</i>
+    <a class="header__cta" href="https://wa.me/77775556789?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D1%81%D1%80%D0%BE%D1%87%D0%BD%D0%BE%20%D0%BD%D1%83%D0%B6%D0%BD%D0%B0%20BIM-%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%2C%20%D0%B3%D0%BE%D1%80%D1%8F%D1%82%20%D1%81%D1%80%D0%BE%D0%BA%D0%B8" target="_blank" rel="noopener" data-cursor="link">
+      <span>Сбросить чертежи в WA</span><i aria-hidden="true">↗</i>
     </a>
 
     <button class="burger" id="burger" aria-label="Открыть меню" aria-expanded="false">
@@ -73,14 +75,15 @@
   <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
     <div class="mobile-menu__inner">
       <nav aria-label="Мобильная навигация">
-        <a href="#deadline" data-cursor="link"><span>01</span>Сроки</a>
-        <a href="#services" data-cursor="link"><span>02</span>Услуги</a>
-        <a href="#process" data-cursor="link"><span>03</span>Процесс</a>
-        <a href="#contact" data-cursor="link"><span>04</span>Контакты</a>
+        <a href="#qualifier" data-cursor="link"><span>01</span>Для кого</a>
+        <a href="#calc" data-cursor="link"><span>02</span>Оценка сроков</a>
+        <a href="#services" data-cursor="link"><span>03</span>Форматы и Revit</a>
+        <a href="#guarantee" data-cursor="link"><span>04</span>Без предоплаты</a>
+        <a href="#contact" data-cursor="link"><span>05</span>Контакты</a>
       </nav>
       <div class="mobile-menu__foot">
         <a href="tel:+77775556789">+7 777 555 67 89</a>
-        <a href="https://wa.me/77775556789" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://wa.me/77775556789" target="_blank" rel="noopener">WhatsApp (срочно)</a>
         <a href="mailto:zolotomoskvy@yandex.ru">zolotomoskvy@yandex.ru</a>
       </div>
     </div>
@@ -88,104 +91,157 @@
 
   <main id="main">
 
+    <!-- HERO SECTION -->
     <section class="hero" id="top">
       <div class="hero__topline mono">
-        <span>BIM-производство · ТИМСО</span>
-        <span>Костанай · весь Казахстан</span>
-        <span>Приказ № 114 · СП РК 1.02-117</span>
+        <span>Экстренное BIM-производство</span>
+        <span>Revit · IFC · Весь Казахстан</span>
+        <span>Запуск в день обращения</span>
       </div>
 
       <div class="hero__grid">
         <div class="hero__copy">
-          <p class="eyebrow hero__eyebrow"><span class="dot"></span>Для застройщиков, которым нужна модель, а не картинка</p>
+          <p class="eyebrow hero__eyebrow"><span class="dot"></span>Горят сроки по договору или экспертизе?</p>
 
           <h1 class="hero__title">
-            <span class="line"><span>Мы строим</span></span>
-            <span class="line"><span>здание</span></span>
-            <span class="line"><span><em>дважды.</em></span></span>
+            <span class="line"><span>Срочная</span></span>
+            <span class="line"><span>BIM-модель</span></span>
+            <span class="line"><span><em>от 3 дней.</em></span></span>
           </h1>
 
           <p class="hero__lede">
-            Сначала — в BIM. Потом — в бетоне. Собираем модели, которые проходят
-            госэкспертизу по СП&nbsp;РК&nbsp;1.02-117-2018, считают смету и живут после сдачи.
+            Поднимаем из ваших 2D-чертежей (DWG / PDF) полноценные рабочие модели в <b>Autodesk Revit</b> и <b>IFC</b>. 
+            Для генподрядчиков и застройщиков, у которых есть обязательства, получены деньги, а модель требуют прямо сейчас.
           </p>
 
-          <div class="hero__deadline">
-            <span class="hero__deadline-dot" aria-hidden="true"></span>
-            <p><b>01.01.2028</b> — обязательный ТИМСО для жилых домов от 6&nbsp;этажей и общественных зданий от 3&nbsp;этажей</p>
+          <div class="hero__urgency">
+            <span>⚡</span>
+            <div><b>Не ждем месяцами:</b> пилотный фрагмент выдаем за 48 часов. Нет чертежей — не берем. Есть чертежи — включаемся сегодня.</div>
           </div>
 
           <div class="hero__actions">
-            <a class="btn btn--solid" href="#deadline" data-cursor="link">
-              <span>Проверить объект</span><i aria-hidden="true">↗</i>
+            <a class="btn btn--solid" href="https://wa.me/77775556789?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D1%83%20%D0%BD%D0%B0%D1%81%20%D0%B3%D0%BE%D1%80%D1%8F%D1%82%20%D1%81%D1%80%D0%BE%D0%BA%D0%B8%2C%20%D0%B5%D1%81%D1%82%D1%8C%20%D1%87%D0%B5%D1%80%D1%82%D0%B5%D0%B6%D0%B8%20%D0%BE%D0%B1%D1%8A%D0%B5%D0%BA%D1%82%D0%B0" target="_blank" rel="noopener" data-cursor="link">
+              <span>Сбросить чертежи на оценку</span><i aria-hidden="true">↗</i>
             </a>
-            <a class="btn btn--ghost" href="#contact" data-cursor="link">
-              <span>Обсудить задачу</span><i aria-hidden="true">↗</i>
+            <a class="btn btn--ghost" href="#calc" data-cursor="link">
+              <span>Рассчитать срок и формат</span><i aria-hidden="true">↗</i>
             </a>
           </div>
         </div>
 
         <div class="hero__side">
-          <div class="hero__vertical mono">BIM / IFC / LOD / 5D</div>
-          <div class="hero__coords mono">LAT 53.2194<br>LON 63.6306<br>ALT 150 M</div>
+          <div class="hero__vertical mono">REVIT / IFC / CLASH / 5D</div>
+          <div class="hero__coords mono">LAT 53.2194<br>LON 63.6306<br>КОСТАНАЙ · АСТАНА · АЛМАТЫ</div>
         </div>
       </div>
 
       <div class="hero__footer">
         <div class="hero__specs">
           <div>
-            <span class="mono">01</span>
-            <b>ТИМСО с 2028</b>
-            <small>жильё от 6 этажей — обязательно</small>
+            <span class="mono">01 / СКОРОСТЬ</span>
+            <b>От 3 до 14 дней</b>
+            <small>от первых планов до готовой модели</small>
           </div>
           <div>
-            <span class="mono">02</span>
-            <b>LOD 200–500</b>
-            <small>IFC + CDE, от концепции до УК</small>
+            <span class="mono">02 / ФОРМАТ</span>
+            <b>Autodesk Revit (RVT)</b>
+            <small>+ IFC 4.3, Navisworks, ведомости</small>
           </div>
           <div>
-            <span class="mono">03</span>
-            <b>Экспресс-аудит</b>
-            <small>5 дней до вердикта</small>
+            <span class="mono">03 / ТЕСТ</span>
+            <b>Без предоплаты</b>
+            <small>на пилотный блок по условиям оферты</small>
           </div>
         </div>
 
-        <a class="scroll-cue" href="#morph" data-cursor="link">
-          <span>Листайте</span><i aria-hidden="true"></i>
+        <a class="scroll-cue" href="#qualifier" data-cursor="link">
+          <span>Квалификация</span><i aria-hidden="true"></i>
         </a>
       </div>
     </section>
 
+    <!-- TICKER -->
     <div class="ticker" aria-hidden="true">
       <div class="ticker__track">
-        <span>BIM</span><i></i><span>ТИМСО</span><i></i><span>IFC 4.3</span><i></i><span>LOD 400</span><i></i><span>КОЛЛИЗИИ</span><i></i><span>5D</span><i></i><span>CDE</span><i></i><span>ЭКСПЕРТИЗА</span><i></i><span>ЭКСПЛУАТАЦИЯ</span><i></i>
-        <span>BIM</span><i></i><span>ТИМСО</span><i></i><span>IFC 4.3</span><i></i><span>LOD 400</span><i></i><span>КОЛЛИЗИИ</span><i></i><span>5D</span><i></i><span>CDE</span><i></i><span>ЭКСПЕРТИЗА</span><i></i><span>ЭКСПЛУАТАЦИЯ</span><i></i>
+        <span>ПОДЪЕМ ИЗ 2D</span><i></i><span>REVIT (.RVT)</span><i></i><span>IFC 4.3</span><i></i><span>КОЛЛИЗИИ В NAVISWORKS</span><i></i><span>ОТ 3 ДНЕЙ</span><i></i><span>БЕЗ ПРЕДОПЛАТЫ НА ПИЛОТ</span><i></i><span>ГОСЭКСПЕРТИЗА</span><i></i><span>ВЕСЬ КАЗАХСТАН</span><i></i>
+        <span>ПОДЪЕМ ИЗ 2D</span><i></i><span>REVIT (.RVT)</span><i></i><span>IFC 4.3</span><i></i><span>КОЛЛИЗИИ В NAVISWORKS</span><i></i><span>ОТ 3 ДНЕЙ</span><i></i><span>БЕЗ ПРЕДОПЛАТЫ НА ПИЛОТ</span><i></i><span>ГОСЭКСПЕРТИЗА</span><i></i><span>ВЕСЬ КАЗАХСТАН</span><i></i>
       </div>
     </div>
 
+    <!-- QUALIFIER: WHO WE WORK WITH -->
+    <section class="qualifier" id="qualifier">
+      <div class="section__head">
+        <p class="eyebrow" data-reveal><span class="dot"></span>01 / Квалификация</p>
+        <h2 class="section__title" data-reveal style="--d:.06s">С кем работаем.<br /><em>А кому сразу откажем.</em></h2>
+        <p class="section__lede" data-reveal style="--d:.12s">
+          Мы не бюро академических исследований с циклом в 9 месяцев. Мы — производственный цех экстренного BIM. 
+          Если у вас нет исходных данных, мы не станем тратить ваше и свое время.
+        </p>
+      </div>
+
+      <div class="qualifier__grid">
+        <!-- NOT OUR CLIENT -->
+        <div class="qual-card qual-card--no" data-reveal style="--d:.04s">
+          <div>
+            <span class="qual-card__badge">✕ Не наш профиль</span>
+            <h3>«Чертежей пока нет, просто прицениваемся»</h3>
+            <p>У вас еще нет рабочей документации, концепция в голове или до старта стройки еще год. В запасе куча времени.</p>
+            <ul class="qual-card__list">
+              <li><span>—</span> Нет чертежей в DWG или PDF (только эскизы)</li>
+              <li><span>—</span> Сроки не горят, договор еще не подписан</li>
+              <li><span>—</span> «Давайте проведем 10 зумов и подумаем через полгода»</li>
+              <li><span>—</span> Финансирование не открыто</li>
+            </ul>
+          </div>
+          <div class="qual-card__verdict">
+            Вердикт: Вам не к нам. Не тратьте бюджет — приходите, когда будут чертежи.
+          </div>
+        </div>
+
+        <!-- OUR CLIENT -->
+        <div class="qual-card qual-card--yes" data-reveal style="--d:.10s">
+          <div>
+            <span class="qual-card__badge">✓ Наш клиент (берем в работу сегодня)</span>
+            <h3>«Есть обязательства, деньги получены, сроки горят»</h3>
+            <p>Контракт заключен, аванс на счете, технадзор, экспертиза или инвестор требует выдать BIM-модель в Revit немедленно.</p>
+            <ul class="qual-card__list">
+              <li><span>+</span> Есть чертежи (DWG, PDF, сканы РД) по АР, КР или сетям</li>
+              <li><span>+</span> Сроки просрочены либо до дедлайна меньше месяца</li>
+              <li><span>+</span> Готовы быстро принимать решения и согласовывать модель</li>
+              <li><span>+</span> Нужен результат в Revit / IFC без бюрократии</li>
+            </ul>
+          </div>
+          <div class="qual-card__verdict">
+            Вердикт: Включаем инженеров в течение 3 часов после получения исходников.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3D MORPH SECTION -->
     <section class="morph" id="morph" data-morph>
       <div class="morph__sticky">
         <div class="morph__head">
-          <p class="eyebrow"><span class="dot"></span>01 / Модель</p>
-          <h2 class="display-title">Один объект.<br /><em>Два состояния.</em></h2>
+          <p class="eyebrow"><span class="dot"></span>02 / Моделирование</p>
+          <h2 class="display-title">Из плоского чертежа —<br /><em>в рабочий BIM.</em></h2>
         </div>
 
         <div class="morph__copy">
-          <p class="morph__text is-active" data-morph-text="0">Фасад, стекло, свет. Так объект выглядит для города и покупателя.</p>
-          <p class="morph__text" data-morph-text="1">Плиты, колонны, ядро, инженерные системы. Так он выглядит для стройки.</p>
-          <p class="morph__text" data-morph-text="2">Каждый элемент с объёмом, ценой и статусом. Это уже не рендер — это BIM.</p>
+          <p class="morph__text is-active" data-morph-text="0">1. Ваши 2D-чертежи DWG и планы: привязываем оси, высоты, отметки перекрытий.</p>
+          <p class="morph__text" data-morph-text="1">2. Поднимаем несущий каркас, стены, ядро и проемы с проверкой геометрии.</p>
+          <p class="morph__text" data-morph-text="2">3. Интегрируем инженерию (ВК, ОВ, ЭО), ловим пересечения и выдаем чистый Revit-файл.</p>
         </div>
 
         <div class="morph__legend" aria-hidden="true">
-          <span class="legend legend--render"><i></i>Render</span>
-          <span class="legend legend--bim"><i></i>BIM</span>
+          <span class="legend legend--render"><i></i>2D Чертеж</span>
+          <span class="legend legend--bim"><i></i>Revit BIM</span>
         </div>
 
         <div class="morph__hud" aria-hidden="true">
-          <div class="hud__row"><span>Объект</span><b>Демо-модель</b></div>
+          <div class="hud__row"><span>Статус</span><b>В сборке</b></div>
           <div class="hud__row"><span>LOD</span><b id="hudLod">200</b></div>
           <div class="hud__row"><span>Элементов</span><b id="hudElements">0</b></div>
-          <div class="hud__row"><span>Коллизий</span><b>0</b></div>
+          <div class="hud__row"><span>Формат</span><b>Autodesk Revit</b></div>
         </div>
 
         <div class="morph__layers">
@@ -211,239 +267,168 @@
         </div>
 
         <div class="morph__progress">
-          <div class="morph__progress-meta mono"><span>Render → BIM</span><span id="morphPct">00%</span></div>
+          <div class="morph__progress-meta mono"><span>Сборка модели</span><span id="morphPct">00%</span></div>
           <div class="morph__progress-track"><span id="morphBar"></span></div>
         </div>
 
-        <div class="morph__scroll mono" aria-hidden="true">Scroll to transform <i></i></div>
+        <div class="morph__scroll mono" aria-hidden="true">Крутите вниз для сборки <i></i></div>
       </div>
     </section>
 
-    <section class="section deadline" id="deadline">
+    <!-- URGENT CALCULATOR SECTION -->
+    <section class="section deadline" id="calc">
       <div class="section__head">
-        <p class="eyebrow" data-reveal><span class="dot"></span>02 / Сроки</p>
-        <h2 class="section__title" data-reveal style="--d:.06s">Когда вашему объекту<br /><em>понадобится BIM.</em></h2>
+        <p class="eyebrow" data-reveal><span class="dot"></span>03 / Экспресс-оценка</p>
+        <h2 class="section__title" data-reveal style="--d:.06s">Сколько дней займет<br /><em>подъем вашей модели?</em></h2>
         <p class="section__lede" data-reveal style="--d:.12s">
-          Приказ № 114 от 19.03.2026 вводит обязательный ТИМСО тремя волнами.
-          Сначала — инфраструктура и социальные объекты. Потом — почти весь
-          жилой и коммерческий девелопмент.
+          Выберите ваши вводные данные. Мы сразу покажем примерный срок готовности модели и сформируем заявку на моментальный расчет в WhatsApp.
         </p>
       </div>
 
-      <ol class="waves">
-        <li class="wave" data-reveal style="--d:.02s">
-          <span class="wave__date mono">01.08.2026</span>
-          <div class="wave__body">
-            <h3>Инфраструктура</h3>
-            <p>Школы от 600 учащихся, аэропорты и авиационная инфраструктура, тоннели и метро, мосты от 100 м, уникальные объекты.</p>
-            <span class="wave__state mono">Уже действует</span>
-          </div>
-        </li>
-
-        <li class="wave wave--key" data-reveal style="--d:.08s">
-          <span class="wave__date mono">01.01.2028</span>
-          <div class="wave__body">
-            <h3>Девелопмент и социалка</h3>
-            <p>Жилые и многофункциональные здания от 6 этажей, общественные и административно-бытовые от 3 этажей, здравоохранение, энергетика, нефтегаз, магистральные сети, вокзалы, объекты культуры и спорта.</p>
-            <span class="wave__state mono">Основная волна — 27 категорий</span>
-          </div>
-        </li>
-
-        <li class="wave" data-reveal style="--d:.14s">
-          <span class="wave__date mono">01.01.2030</span>
-          <div class="wave__body">
-            <h3>Всё остальное</h3>
-            <p>Все виды строительных объектов, за исключением объектов третьего (пониженного) уровня ответственности.</p>
-            <span class="wave__state mono">Универсальное требование</span>
-          </div>
-        </li>
-      </ol>
-
-      <p class="deadline__source mono" data-reveal>
-        Источник: приказ Министра промышленности и строительства РК № 114 от 19.03.2026 · Строительный кодекс РК, ст. 62
-      </p>
-
       <div class="checker" data-reveal>
         <div class="checker__head">
-          <p class="eyebrow"><span class="dot"></span>Проверка за 10 секунд</p>
-          <h3>Попадает ли ваш объект<br />под обязательный ТИМСО?</h3>
+          <p class="eyebrow"><span class="dot"></span>Экспресс-калькулятор срока</p>
+          <h3>Параметры вашего объекта</h3>
         </div>
 
         <div class="checker__controls">
           <div class="checker__group">
-            <span class="checker__label mono">Тип объекта</span>
-            <div class="checker__opts" role="group" aria-label="Тип объекта">
-              <button type="button" class="chip is-on" data-kind="res" data-cursor="link">Жильё / МФК</button>
-              <button type="button" class="chip" data-kind="pub" data-cursor="link">Офис / ТРЦ / гостиница</button>
-              <button type="button" class="chip" data-kind="soc" data-cursor="link">Школа / больница / кампус</button>
-              <button type="button" class="chip" data-kind="ind" data-cursor="link">Промышленное / энергетика</button>
-              <button type="button" class="chip" data-kind="inf" data-cursor="link">Мост / аэропорт / тоннель</button>
+            <span class="checker__label mono">1. Есть ли исходные чертежи (DWG / PDF)?</span>
+            <div class="checker__opts" id="calcDwgGroup" role="group">
+              <button type="button" class="chip is-on" data-dwg="yes" data-cursor="link">Да, есть полные чертежи (DWG/PDF)</button>
+              <button type="button" class="chip" data-dwg="partial" data-cursor="link">Частично (только планы / АР)</button>
+              <button type="button" class="chip" data-dwg="no" data-cursor="link">Чертежей нет (только эскизы)</button>
             </div>
           </div>
 
-          <div class="checker__group" id="chkAttr">
-            <span class="checker__label mono" id="chkAttrLabel">Этажность</span>
-            <div class="checker__opts" id="chkFloors" role="group" aria-label="Этажность">
-              <button type="button" class="chip" data-floors="low" data-cursor="link">до 5</button>
-              <button type="button" class="chip is-on" data-floors="mid" data-cursor="link">6–10</button>
-              <button type="button" class="chip" data-floors="high" data-cursor="link">11+</button>
+          <div class="checker__group">
+            <span class="checker__label mono">2. Какие разделы необходимо поднять в BIM?</span>
+            <div class="checker__opts" id="calcSectionGroup" role="group">
+              <button type="button" class="chip is-on" data-sec="arkr" data-cursor="link">АР + КР (Архитектура и каркас)</button>
+              <button type="button" class="chip" data-sec="full" data-cursor="link">Полный комплекс (АР + КР + Инженерия MEP)</button>
+              <button type="button" class="chip" data-sec="mep" data-cursor="link">Только сети (ОВ / ВК / ЭО)</button>
             </div>
-            <input class="checker__input" id="chkCap" type="number" min="0" step="10" placeholder="Вместимость, мест — например 600" hidden />
-            <p class="checker__hint" id="chkHint" hidden></p>
+          </div>
+
+          <div class="checker__group">
+            <span class="checker__label mono">3. Сколько времени до дедлайна?</span>
+            <div class="checker__opts" id="calcTimeGroup" role="group">
+              <button type="button" class="chip is-on" data-urgency="fire" data-cursor="link">🔥 Горит (до 7 дней)</button>
+              <button type="button" class="chip" data-urgency="urgent" data-cursor="link">Срочно (7–14 дней)</button>
+              <button type="button" class="chip" data-urgency="norm" data-cursor="link">Стандарт (до 30 дней)</button>
+            </div>
           </div>
         </div>
 
         <div class="checker__out" aria-live="polite">
           <div class="checker__result">
-            <span class="checker__label mono">Ваша дата</span>
-            <b id="chkDate">01.01.2028</b>
-            <span class="checker__left mono" id="chkLeft">осталось 427 дней</span>
+            <span class="checker__label mono">Ориентировочный срок</span>
+            <b id="calcTimeOut">3–5 ДНЕЙ</b>
+            <span class="checker__left mono" id="calcStatusOut">Формат: Autodesk Revit (.rvt) + IFC</span>
           </div>
 
           <div class="checker__why">
-            <span class="checker__label mono">Основание</span>
-            <p id="chkWhy">Жилые и многофункциональные здания от 6 этажей входят в перечень приказа № 114 и переходят на обязательный ТИМСО с 1 января 2028 года.</p>
-            <p class="checker__note" id="chkNote">Это предварительная оценка. Точный статус объекта зависит от назначения, уровня ответственности и параметров — его подтверждает экспресс-аудит.</p>
+            <span class="checker__label mono">Стратегия работы</span>
+            <p id="calcWhyOut">Запускаем команду сразу. Делим здание на захватки: выдаем первый фрагмент через 48 часов для проверки заказчиком, параллельно дособирая остальные этажи.</p>
+            <p class="checker__note" id="calcNoteOut">Для точного подтверждения срока отправьте чертежи в WhatsApp архитектору проекта.</p>
           </div>
 
-          <a class="btn btn--solid checker__cta" href="#contact" data-cursor="link">
-            <span>Точный вердикт — за 5 дней</span><i aria-hidden="true">↗</i>
+          <a class="btn btn--solid checker__cta" id="calcCtaBtn" href="https://wa.me/77775556789?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D1%83%20%D0%BD%D0%B0%D1%81%20%D0%B5%D1%81%D1%82%D1%8C%20%D1%87%D0%B5%D1%80%D1%82%D0%B5%D0%B6%D0%B8%2C%20%D0%BD%D1%83%D0%B6%D0%BD%D0%B0%20%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%20%D0%90%D0%A0%2B%D0%9A%D0%A0%2C%20%D1%81%D1%80%D0%BE%D0%BA%20%D0%B4%D0%BE%207%20%D0%B4%D0%BD%D0%B5%D0%B9" target="_blank" rel="noopener" data-cursor="link">
+            <span>Отправить чертежи на согласование срока</span><i aria-hidden="true">↗</i>
           </a>
         </div>
       </div>
     </section>
 
+    <!-- GUARANTEE / NDA / PILOT SECTION -->
+    <section class="guarantee" id="guarantee">
+      <div class="section__head">
+        <p class="eyebrow" data-reveal><span class="dot dot--light"></span>04 / «А покажите, что вы делали?»</p>
+        <h2 class="section__title" data-reveal style="--d:.06s">Железный ответ<br /><em>на вопрос о портфолио.</em></h2>
+        <p class="section__lede" data-reveal style="--d:.12s">
+          Чужие объекты мы не сливаем в сеть — для крупных застройщиков это уголовная ответственность и срыв торгов. 
+          Поэтому мы предлагаем прозрачные правила игры.
+        </p>
+      </div>
+
+      <div class="guarantee__grid">
+        <div class="guarantee-box" data-reveal style="--d:.04s">
+          <h4>Вариант 1. Строгий NDA (Для тех, кто платит)</h4>
+          <p>
+            Мы подписываем соглашение о неразглашении до передачи файлов. Ваши модели, чертежи, спецификации и объемы 
+            <b>никогда не появятся в открытом доступе</b>, в рекламе или у ваших конкурентов. Это законная конфиденциальность.
+          </p>
+        </div>
+
+        <div class="guarantee-box" data-reveal style="--d:.10s">
+          <h4>Вариант 2. Экспериментальный пилот без предоплаты</h4>
+          <p>
+            Сомневаетесь в скорости или качестве? <b>Мы сделаем тестовый фрагмент вашего здания без предоплаты.</b> 
+            Но условие одно: мы имеем право открыто показывать эту модель в кейсах, соцсетях и на экранах как образец нашей работы. 
+            Если устраивает — оплачиваете и продолжаем весь объем.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES / WHAT WE DELIVER -->
     <section class="section services" id="services">
       <div class="section__head">
-        <p class="eyebrow" data-reveal><span class="dot"></span>03 / Услуги</p>
-        <h2 class="section__title" data-reveal style="--d:.06s">Полный цикл.<br /><em>Без белых пятен.</em></h2>
+        <p class="eyebrow" data-reveal><span class="dot"></span>05 / Форматы выдачи</p>
+        <h2 class="section__title" data-reveal style="--d:.06s">Выдаем в Revit.<br /><em>Но можем в любом формате.</em></h2>
         <p class="section__lede" data-reveal style="--d:.12s">
-          Начинаем с аудита — он отвечает на вопрос, попадает ли объект под
-          приказ № 114 и что нужно исправить. Дальше — модель, координация,
-          смета и экспертиза.
+          Основной рабочий стандарт Казахстана — Autodesk Revit (.RVT). 
+          Также компилируем открытый IFC для госэкспертизы и Navisworks для проверки коллизий.
         </p>
       </div>
 
       <div class="services__list">
         <article class="service" data-reveal style="--d:.02s">
           <span class="service__num mono">01</span>
-          <h3>Экспресс-аудит ТИМСО</h3>
-          <p>За 5 дней: попадает ли объект под приказ № 114, до какой даты, что отсутствует в модели и что предъявит экспертиза. Отчёт и дорожная карта.</p>
-          <div class="service__tags"><span>5 дней</span><span>Вердикт</span><span>Дорожная карта</span></div>
+          <h3>Модель в Autodesk Revit (.RVT)</h3>
+          <p>Нативный файл в вашей версии Revit (2020–2025). Чистые семейства, параметры по стандарту, настроенные виды, спецификации и листы РД.</p>
+          <div class="service__tags"><span>Revit RVT</span><span>Семейства</span><span>Спецификации</span></div>
           <span class="service__arrow" aria-hidden="true">↗</span>
         </article>
 
         <article class="service" data-reveal style="--d:.06s">
           <span class="service__num mono">02</span>
-          <h3>BIM-моделирование</h3>
-          <p>АР, КР и инженерные разделы в единой модели. Планы, фасады, разрезы, спецификации и рабочая документация — из одного источника.</p>
-          <div class="service__tags"><span>LOD 200–500</span><span>IFC</span><span>РД</span></div>
+          <h3>Обменный формат IFC 2x3 / 4.3</h3>
+          <p>Эталонный экспорт для прохождения госэкспертизы по СП РК 1.02-117-2018 и ТИМСО. Модель открывается в любом бесплатном вьювере без потери данных.</p>
+          <div class="service__tags"><span>IFC 4.3</span><span>СП РК 1.02-117</span><span>ТИМСО</span></div>
           <span class="service__arrow" aria-hidden="true">↗</span>
         </article>
 
         <article class="service" data-reveal style="--d:.10s">
           <span class="service__num mono">03</span>
-          <h3>Коллизии и координация</h3>
-          <p>Пересечения, проходимость, зоны обслуживания и сборность — проверяем до стройки, а не после. Отчёт по коллизиям с каждым релизом.</p>
-          <div class="service__tags"><span>Clash</span><span>Отчёты</span><span>Координация</span></div>
+          <h3>Коллизии в Navisworks (.NWD)</h3>
+          <p>Сводная модель с отчетом о пересечениях труб, воздуховодов и несущих балок. Устраняем нестыковки до выхода на стройплощадку.</p>
+          <div class="service__tags"><span>Navisworks</span><span>Clash Report</span><span>Координация</span></div>
           <span class="service__arrow" aria-hidden="true">↗</span>
         </article>
 
         <article class="service" data-reveal style="--d:.14s">
           <span class="service__num mono">04</span>
-          <h3>Сметы и объёмы</h3>
-          <p>5D: ведомости, КС-2, динамика стоимости по модели. Считаем по элементам, а не «по картинке».</p>
-          <div class="service__tags"><span>5D</span><span>КС-2</span><span>Динамика</span></div>
-          <span class="service__arrow" aria-hidden="true">↗</span>
-        </article>
-
-        <article class="service" data-reveal style="--d:.18s">
-          <span class="service__num mono">05</span>
-          <h3>Подготовка к экспертизе</h3>
-          <p>Матрица соответствия модели требованиям СП РК 1.02-117-2018, комплект к подаче и сопровождение до заключения. Работаем и с чужой моделью.</p>
-          <div class="service__tags"><span>СП РК 1.02-117</span><span>Приказ 114</span><span>Комплект</span></div>
-          <span class="service__arrow" aria-hidden="true">↗</span>
-        </article>
-
-        <article class="service" data-reveal style="--d:.22s">
-          <span class="service__num mono">06</span>
-          <h3>Эксплуатация</h3>
-          <p>As-built модель, цифровой паспорт объекта, FM-сценарии и передача УК. Модель продолжает работать после ввода.</p>
-          <div class="service__tags"><span>As-built</span><span>Digital twin</span><span>УК</span></div>
+          <h3>Ведомости объемов (5D сметы)</h3>
+          <p>Точный расчет бетона, арматуры, площадей кладки и длины трасс прямо из элементов модели. Исключает приписки подрядчиков.</p>
+          <div class="service__tags"><span>Объемы</span><span>КС-2</span><span>Точный расчет</span></div>
           <span class="service__arrow" aria-hidden="true">↗</span>
         </article>
       </div>
     </section>
 
-    <section class="section projects" id="demo">
-      <div class="section__head projects__head">
-        <p class="eyebrow" data-reveal><span class="dot dot--light"></span>04 / Демо-модели</p>
-        <h2 class="section__title" data-reveal style="--d:.06s">Не портфолио.<br /><em>Доказательства.</em></h2>
-        <p class="section__lede" data-reveal style="--d:.12s">
-          Модель — это собственность заказчика, поэтому реальные объекты мы не
-          публикуем. Ниже — демо-модели по типовым сценариям: так выглядит
-          состав работы, который можно проверить до начала стройки.
-        </p>
-      </div>
-
-      <div class="projects__grid">
-        <article class="project" data-reveal style="--d:.04s">
-          <div class="project__scene">
-            <canvas data-mini="tower" aria-label="Демо-модель жилого комплекса"></canvas>
-            <span class="project__badge mono">LOD 400</span>
-            <span class="project__drag mono">Drag to rotate</span>
-          </div>
-          <div class="project__info">
-            <div class="project__name"><span class="mono">01 / Демо-модель</span><h3>Жилой комплекс</h3></div>
-            <div class="project__meta mono"><span>36 этажей</span><span>84 000 м²</span><span>АР + КР + ВК/ОВ/ЭО</span></div>
-          </div>
-          <p>Стилобат, подземный паркинг, башня на секции. Координация инженерных разделов, смета по элементам, модель под экспертизу.</p>
-        </article>
-
-        <article class="project" data-reveal style="--d:.10s">
-          <div class="project__scene">
-            <canvas data-mini="campus" aria-label="Демо-модель бизнес-центра"></canvas>
-            <span class="project__badge mono">LOD 350</span>
-            <span class="project__drag mono">Drag to rotate</span>
-          </div>
-          <div class="project__info">
-            <div class="project__name"><span class="mono">02 / Демо-модель</span><h3>Бизнес-центр</h3></div>
-            <div class="project__meta mono"><span>3 корпуса</span><span>42 000 м²</span><span>Аудит + нормализация</span></div>
-          </div>
-          <p>Атриум и общий стилобат. Принимаем чужую модель, чистим, доводим до нужного LOD и приводим к стандарту заказчика.</p>
-        </article>
-
-        <article class="project" data-reveal style="--d:.16s">
-          <div class="project__scene">
-            <canvas data-mini="school" aria-label="Демо-модель школы"></canvas>
-            <span class="project__badge mono">LOD 400</span>
-            <span class="project__drag mono">Drag to rotate</span>
-          </div>
-          <div class="project__info">
-            <div class="project__name"><span class="mono">03 / Демо-модель</span><h3>Школа на 1200 мест</h3></div>
-            <div class="project__meta mono"><span>2 блока</span><span>18 400 м²</span><span>Модель под ТИМСО</span></div>
-          </div>
-          <p>Спортивный и учебный блоки, двор-атриум. Объект попадает в первую волну приказа № 114 — модель собирается под требования СП РК 1.02-117.</p>
-        </article>
-      </div>
-
-      <p class="projects__note mono" data-reveal>
-        Реальные проекты показываем на встрече — под NDA. Потяните модель влево или вправо, она повернётся.
-      </p>
-    </section>
-
+    <!-- PROCESS -->
     <section class="section process" id="process">
       <div class="process__sticky">
-        <p class="eyebrow" data-reveal><span class="dot"></span>05 / Процесс</p>
-        <h2 class="section__title" data-reveal style="--d:.06s">От аудита<br /><em>до передачи.</em></h2>
+        <p class="eyebrow" data-reveal><span class="dot"></span>06 / Процесс</p>
+        <h2 class="section__title" data-reveal style="--d:.06s">Как спасаем<br /><em>горящие проекты.</em></h2>
         <p class="section__lede" data-reveal style="--d:.12s">
-          Прозрачный процесс без «мы ещё думаем». Первый результат вы получаете
-          до того, как соглашаетесь на большой проект.
+          Без многомесячных согласований. Алгоритм отработан до автоматизма.
         </p>
         <div class="process__duration" data-reveal style="--d:.18s">
           <span class="mono">Первый результат</span>
-          <b>5 дней</b>
-          <small>экспресс-аудит объекта</small>
+          <b>48 часов</b>
+          <small>пилотный этаж или блок</small>
         </div>
       </div>
 
@@ -451,208 +436,191 @@
         <article class="step" data-reveal style="--d:.02s">
           <span class="step__num mono">01</span>
           <div class="step__body">
-            <h3>Экспресс-аудит</h3>
-            <p>Тип объекта, этажность, стадия и есть ли модель. Проверяем перечень приказа № 114, состав модели и требования СП РК 1.02-117. На выходе — вердикт и дорожная карта.</p>
+            <h3>Сброс чертежей (Час 1–3)</h3>
+            <p>Вы присылаете DWG / PDF в WhatsApp или облако. Мы за 2 часа оцениваем объем, выставляем точный дедлайн и стоимость.</p>
           </div>
-          <span class="step__time mono">5 дней</span>
+          <span class="step__time mono">2 часа</span>
         </article>
         <article class="step" data-reveal style="--d:.06s">
           <span class="step__num mono">02</span>
           <div class="step__body">
-            <h3>BIM-стандарт</h3>
-            <p>Собираем шаблон: структура модели, классификатор, параметры, CDE и правила именования. Фиксируем scope, LOD и формат передачи.</p>
+            <h3>Пилотный блок (День 1–2)</h3>
+            <p>Поднимаем тестовую часть (типовой этаж или секцию). Вы видите реальный Revit-файл, качество проработки и соответствие вашим чертежам.</p>
           </div>
-          <span class="step__time mono">3 дня</span>
+          <span class="step__time mono">48 часов</span>
         </article>
         <article class="step" data-reveal style="--d:.10s">
           <span class="step__num mono">03</span>
           <div class="step__body">
-            <h3>Модель и координация</h3>
-            <p>Архитектура, конструкции, инженерия. Сводим разделы, ловим коллизии, держим единую среду данных.</p>
+            <h3>Сборка полного объема (День 3–10)</h3>
+            <p>Команда моделлеров параллельно поднимает АР, КР и инженерные сети. Сводим здание в единую модель, устраняем коллизии.</p>
           </div>
-          <span class="step__time mono">2–6 недель</span>
+          <span class="step__time mono">от 3 дней</span>
         </article>
         <article class="step" data-reveal style="--d:.14s">
           <span class="step__num mono">04</span>
           <div class="step__body">
-            <h3>Проверка и смета</h3>
-            <p>Контроль качества, ведомости, объёмы и стоимость. Отчёт по коллизиям и матрица соответствия требованиям.</p>
+            <h3>Сдача в экспертизу / технадзор</h3>
+            <p>Передаем файлы RVT, IFC, NWD и выгрузки спецификаций. При необходимости сопровождаем замечания экспертов до полного закрытия.</p>
           </div>
-          <span class="step__time mono">1 неделя</span>
-        </article>
-        <article class="step" data-reveal style="--d:.18s">
-          <span class="step__num mono">05</span>
-          <div class="step__body">
-            <h3>Экспертиза и передача</h3>
-            <p>Комплект под СП РК 1.02-117-2018, сопровождение до заключения. Дальше — IFC, нативная модель, as-built и обучение команды.</p>
-          </div>
-          <span class="step__time mono">далее</span>
+          <span class="step__time mono">итог</span>
         </article>
       </div>
     </section>
 
+    <!-- NUMBERS -->
     <section class="numbers">
       <div class="numbers__grid">
         <div class="number" data-reveal>
-          <b data-count="2028" data-nogroup>0</b>
-          <span>обязательный ТИМСО для жилья от 6 этажей</span>
+          <b data-count="3">0</b>
+          <span>дня — минимальный срок выдачи рабочей модели</span>
         </div>
         <div class="number" data-reveal style="--d:.06s">
-          <b data-count="27">0</b>
-          <span>категорий объектов в перечне приказа № 114</span>
+          <b data-count="48">0</b>
+          <span>часов до первого пилотного фрагмента</span>
         </div>
         <div class="number" data-reveal style="--d:.12s">
-          <b data-count="5">0</b>
-          <span>дней до вердикта по экспресс-аудиту</span>
+          <b data-count="100" data-suffix="%">0</b>
+          <span>готовность к экспертизе по СП РК 1.02-117</span>
         </div>
         <div class="number" data-reveal style="--d:.18s">
           <b data-count="0">0</b>
-          <span>критических коллизий — наш стандарт сдачи</span>
+          <span>тенге предоплаты на тестовый блок (по оферте)</span>
         </div>
       </div>
     </section>
 
+    <!-- FAQ -->
     <section class="section faq" id="faq">
       <div class="section__head">
-        <p class="eyebrow" data-reveal><span class="dot"></span>06 / Вопросы</p>
-        <h2 class="section__title" data-reveal style="--d:.06s">Что спрашивают<br /><em>до первого созвона.</em></h2>
+        <p class="eyebrow" data-reveal><span class="dot"></span>07 / Частые вопросы</p>
+        <h2 class="section__title" data-reveal style="--d:.06s">Ответы без воды<br /><em>перед стартом.</em></h2>
         <p class="section__lede" data-reveal style="--d:.12s">
-          Короткие ответы на то, что обычно выясняется на первой встрече.
+          То, что важно знать генподрядчику и девелоперу прямо сейчас.
         </p>
       </div>
 
       <div class="faq__list">
         <details class="faq__item" data-reveal style="--d:.02s">
           <summary>
-            <span class="faq__q">Обязателен ли BIM уже сейчас, с 2026 года?</span>
+            <span class="faq__q">В какой версии Revit вы отдаете исходники?</span>
             <i class="faq__mark" aria-hidden="true"></i>
           </summary>
           <div class="faq__a">
-            <p>Не для всех. Приказ № 114 вступил в силу 1 июля 2026 года, но применяется волнами. С 1 августа 2026 — школы от 600 учащихся, аэропорты, тоннели, метро, мосты от 100 м и уникальные объекты. Жильё от 6 этажей и общественные здания от 3 этажей — с 1 января 2028. Почти все остальные объекты — с 1 января 2030.</p>
+            <p>В любой, которая требуется вашему заказчику или генпроектировщику — от Revit 2020 до Revit 2025. Все семейства аккуратно параметризированы, без мусора и битых связей.</p>
           </div>
         </details>
 
         <details class="faq__item" data-reveal style="--d:.06s">
           <summary>
-            <span class="faq__q">Чем BIM отличается от цифрового двойника?</span>
+            <span class="faq__q">А если у нас в чертежах ошибки и нестыковки?</span>
             <i class="faq__mark" aria-hidden="true"></i>
           </summary>
           <div class="faq__a">
-            <p>ТИМСО/BIM — обязательное требование Строительного кодекса для объектов из перечня: модель, процессы и управление информацией на всём жизненном цикле. Цифровой двойник — следующий уровень: модель, связанная с данными эксплуатации. Отдельного закона, обязывающего его сделать, в Казахстане нет — это цель стратегии Digital Qazaqstan. Мы закладываем модель так, чтобы двойник из неё собирался без переделки.</p>
+            <p>Это стандартная ситуация. В процессе подъема 3D-модели мы сразу выявляем нестыковки отметок, несовпадение осей между АР и КР и пересечения труб с балками. Составляем журнал замечаний и оперативно согласуем решения с вашим ГИПом или технадзором.</p>
           </div>
         </details>
 
         <details class="faq__item" data-reveal style="--d:.10s">
           <summary>
-            <span class="faq__q">Портфолио под NDA — как понять качество?</span>
+            <span class="faq__q">Как работает вариант «без предоплаты»?</span>
             <i class="faq__mark" aria-hidden="true"></i>
           </summary>
           <div class="faq__a">
-            <p>Модель — собственность заказчика, поэтому мы её не публикуем. Вместо портфолио: демо-модели на этой странице, состав работ, матрица соответствия и отчёт по коллизиям в виде образца. А главное — начинаем с экспресс-аудита вашего объекта: за 5 дней вы получаете фиксированный результат и видите, как мы работаем, до крупного контракта.</p>
+            <p>Мы берем типовую секцию или фрагмент вашего объекта и моделируем его бесплатно. Если качество и скорость вас устраивают — мы подписываем договор на весь объем и вы оплачиваете работу. Если вы хотите сохранить полную секретность объекта, мы работаем с предоплатой по стандартному договору с жестким NDA.</p>
           </div>
         </details>
 
         <details class="faq__item" data-reveal style="--d:.14s">
           <summary>
-            <span class="faq__q">Что нужно, чтобы начать?</span>
+            <span class="faq__q">Вы работаете только по Костанаю или по всей стране?</span>
             <i class="faq__mark" aria-hidden="true"></i>
           </summary>
           <div class="faq__a">
-            <p>Тип объекта, этажность, площадь, стадия проекта и есть ли уже модель. Если модель есть — пришлите её или доступ. Всего этого достаточно, чтобы выдать вердикт по перечню и дорожную карту.</p>
-          </div>
-        </details>
-
-        <details class="faq__item" data-reveal style="--d:.18s">
-          <summary>
-            <span class="faq__q">Что вы отдаёте на выходе?</span>
-            <i class="faq__mark" aria-hidden="true"></i>
-          </summary>
-          <div class="faq__a">
-            <p>Нативную модель Revit, обменный IFC, рабочую документацию в DWG и PDF, ведомости и спецификации из модели, отчёт по коллизиям, комплект под СП РК 1.02-117-2018 и при необходимости as-built версию для эксплуатации.</p>
+            <p>По всему Казахстану. Основной пул объектов — Астана, Алматы, Шымкент, Атырау, Караганда и Костанай. Передача файлов и оперативные согласования происходят через облачную среду (Autodesk Construction Cloud / Google Drive / Telegram), поэтому географических ограничений нет.</p>
           </div>
         </details>
       </div>
     </section>
 
+    <!-- CONTACT SECTION -->
     <section class="contact" id="contact">
       <div class="contact__head">
-        <p class="eyebrow" data-reveal><span class="dot dot--light"></span>07 / Контакт</p>
-        <h2 class="contact__title" data-reveal style="--d:.06s">Покажите объект.<br /><em>Мы покажем модель.</em></h2>
+        <p class="eyebrow" data-reveal><span class="dot dot--light"></span>08 / Срочный контакт</p>
+        <h2 class="contact__title" data-reveal style="--d:.06s">Горят сроки?<br /><em>Сбросьте чертежи.</em></h2>
         <p class="contact__lede" data-reveal style="--d:.12s">
-          Опишите объект — вернёмся с вердиктом по перечню приказа № 114
-          и предложением по аудиту. Ответ в течение одного рабочего дня.
+          Прикрепите ссылку на чертежи (Яндекс.Диск, Google Drive, облако) или напишите прямо в WhatsApp. 
+          Инженер оценит трудоемкость и ответит за 30 минут.
         </p>
       </div>
 
       <div class="contact__body">
         <form class="form" id="contactForm" novalidate>
           <label class="form__field">
-            <span>Как вас зовут</span>
+            <span>Ваше имя</span>
             <input name="name" type="text" placeholder="Имя" required autocomplete="name" />
           </label>
           <label class="form__field">
-            <span>Компания</span>
-            <input name="company" type="text" placeholder="Название" autocomplete="organization" />
+            <span>Компания / Должность</span>
+            <input name="company" type="text" placeholder="ТОО / Генподрядчик / Застройщик" autocomplete="organization" />
           </label>
           <label class="form__field">
-            <span>E-mail или Telegram</span>
-            <input name="contact" type="text" placeholder="you@company.kz" required autocomplete="email" />
+            <span>Телефон (WhatsApp)</span>
+            <input name="contact" type="text" placeholder="+7 777 000 00 00" required autocomplete="tel" />
           </label>
           <label class="form__field">
-            <span>Тип объекта</span>
-            <select name="type">
-              <option value="">Выберите</option>
-              <option>Жильё / МФК</option>
-              <option>Офис / ТРЦ / гостиница</option>
-              <option>Школа / больница / кампус</option>
-              <option>Промышленное / энергетика</option>
-              <option>Мост / аэропорт / тоннель</option>
-              <option>Другое</option>
+            <span>Сколько дней до дедлайна?</span>
+            <select name="deadline">
+              <option value="Горит: до 7 дней">🔥 Горит: до 7 дней</option>
+              <option value="Срочно: 7–14 дней">Срочно: 7–14 дней</option>
+              <option value="До 1 месяца">До 1 месяца</option>
+              <option value="Больше месяца">Больше месяца</option>
             </select>
           </label>
           <label class="form__field">
             <span>Площадь объекта, м²</span>
-            <input name="area" type="text" inputmode="numeric" placeholder="24 000" />
+            <input name="area" type="text" inputmode="numeric" placeholder="например 15 000" />
           </label>
           <label class="form__field">
-            <span>Этажность</span>
-            <input name="floors" type="text" inputmode="numeric" placeholder="12" />
+            <span>Необходимый формат</span>
+            <select name="format">
+              <option value="Autodesk Revit (.RVT)">Autodesk Revit (.RVT)</option>
+              <option value="IFC 4.3 (Госэкспертиза)">IFC 4.3 (Госэкспертиза)</option>
+              <option value="Navisworks (Коллизии)">Navisworks (Коллизии)</option>
+              <option value="Все форматы под ключ">Все форматы под ключ</option>
+            </select>
           </label>
           <label class="form__field form__field--full">
-            <span>Что нужно сделать</span>
-            <textarea name="message" rows="3" placeholder="Коротко об объекте и задаче — есть ли модель, на какой стадии проект"></textarea>
+            <span>Ссылка на чертежи (DWG / PDF) или комментарий</span>
+            <textarea name="message" rows="3" placeholder="Вставьте ссылку на диск с чертежами или напишите состав разделов (АР, КР, сети)"></textarea>
           </label>
           <button class="btn btn--solid form__submit" type="submit" data-cursor="link">
-            <span>Отправить запрос</span><i aria-hidden="true">↗</i>
+            <span>Отправить чертежи на экспресс-расчет</span><i aria-hidden="true">↗</i>
           </button>
-          <p class="form__hint mono" id="formHint">Ответим в течение одного рабочего дня.</p>
+          <p class="form__hint mono" id="formHint">Заявка сразу уйдет дежурному BIM-координатору.</p>
         </form>
 
         <aside class="contact__aside">
           <div class="contact__block">
-            <span class="mono">Написать</span>
-            <a href="https://wa.me/77775556789" target="_blank" rel="noopener" data-cursor="link">WhatsApp</a>
-            <a href="mailto:zolotomoskvy@yandex.ru" data-cursor="link">zolotomoskvy@yandex.ru</a>
+            <span class="mono">Самый быстрый способ</span>
+            <a href="https://wa.me/77775556789?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D1%81%D1%80%D0%BE%D1%87%D0%BD%D0%BE%20%D0%BD%D1%83%D0%B6%D0%BD%D0%B0%20BIM-%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%2C%20%D0%B3%D0%BE%D1%80%D1%8F%D1%82%20%D1%81%D1%80%D0%BE%D0%BA%D0%B8" target="_blank" rel="noopener" data-cursor="link" style="color: var(--bim);">WhatsApp: +7 777 555 67 89</a>
+            <p>Отвечаем даже вечером, если проект горит.</p>
           </div>
           <div class="contact__block">
             <span class="mono">Позвонить</span>
             <a href="tel:+77775556789" data-cursor="link">+7 777 555 67 89</a>
           </div>
           <div class="contact__block">
-            <span class="mono">Офис</span>
-            <p>Костанай, ул. Абая, 28/1</p>
+            <span class="mono">Электронная почта</span>
+            <a href="mailto:zolotomoskvy@yandex.ru" data-cursor="link">zolotomoskvy@yandex.ru</a>
           </div>
           <div class="contact__block">
-            <span class="mono">Сайт</span>
-            <a href="https://bimtwin.kz" data-cursor="link">bimtwin.kz</a>
+            <span class="mono">Производство</span>
+            <p>Костанай, ул. Абая, 28/1 · Работаем с объектами по всему Казахстану</p>
           </div>
           <div class="contact__block">
-            <span class="mono">Стоимость</span>
-            <p>По запросу — считаем после описания объекта.</p>
-          </div>
-          <div class="contact__block">
-            <span class="mono">Работаем под NDA</span>
-            <p>Не публикуем модели и не называем заказчиков. Все материалы проекта остаются у вас.</p>
+            <span class="mono">Условия конфиденциальности</span>
+            <p>Все исходные чертежи защищены соглашением о неразглашении (NDA).</p>
           </div>
         </aside>
       </div>
@@ -668,10 +636,10 @@
         <span class="logo__tag">KZ</span>
       </a>
       <nav aria-label="Футер">
-        <a href="#deadline" data-cursor="link">Сроки</a>
-        <a href="#services" data-cursor="link">Услуги</a>
-        <a href="#process" data-cursor="link">Процесс</a>
-        <a href="#faq" data-cursor="link">Вопросы</a>
+        <a href="#qualifier" data-cursor="link">Для кого</a>
+        <a href="#calc" data-cursor="link">Оценка сроков</a>
+        <a href="#services" data-cursor="link">Форматы</a>
+        <a href="#guarantee" data-cursor="link">Без предоплаты</a>
         <a href="#contact" data-cursor="link">Контакты</a>
       </nav>
       <a class="footer__up" href="#top" data-cursor="link">Наверх ↑</a>
@@ -681,19 +649,14 @@
 
     <div class="footer__bottom mono">
       <span>© 2026 <a href="https://bimtwin.kz" data-cursor="link">bimtwin.kz</a></span>
-      <span>
-        Нормативы:
-        <a href="https://adilet.zan.kz/rus/docs/G26IS000114" target="_blank" rel="noopener">приказ № 114</a>
-        ·
-        <a href="https://adilet.zan.kz/rus/docs/K2600000253" target="_blank" rel="noopener">Строительный кодекс, ст. 62</a>
-      </span>
-      <span>Сделано в Казахстане</span>
+      <span>Срочное BIM-производство из 2D в Autodesk Revit и IFC</span>
+      <span>Костанай · Астана · Алматы · Казахстан</span>
     </div>
   </footer>
 
   <a class="wa-fab" id="waFab"
-     href="https://wa.me/77775556789?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%BE%D0%B1%D1%8A%D0%B5%D0%BA%D1%82"
-     target="_blank" rel="noopener" aria-label="Написать в WhatsApp" data-cursor="link">
+     href="https://wa.me/77775556789?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%2C%20%D1%83%20%D0%BD%D0%B0%D1%81%20%D0%B3%D0%BE%D1%80%D1%8F%D1%82%20%D1%81%D1%80%D0%BE%D0%BA%D0%B8%2C%20%D1%81%D1%80%D0%BE%D1%87%D0%BD%D0%BE%20%D0%BD%D1%83%D0%B6%D0%BD%D0%B0%20BIM-%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C"
+     target="_blank" rel="noopener" aria-label="Срочно написать в WhatsApp" data-cursor="link">
     <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.05 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
     </svg>
