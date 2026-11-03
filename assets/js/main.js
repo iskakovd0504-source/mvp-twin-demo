@@ -16,14 +16,14 @@ let loadDone = false;
 
 function setLoad(v) {
   loadValue = clamp(v, 0, 100);
-  loadbar.style.width = `${loadValue}%`;
-  loadpct.textContent = String(Math.round(loadValue)).padStart(2, "0");
+  if (loadbar) loadbar.style.width = `${loadValue}%`;
+  if (loadpct) loadpct.textContent = String(Math.round(loadValue)).padStart(2, "0");
 }
 
 const loadTimer = window.setInterval(() => {
   if (loadDone) return;
-  setLoad(loadValue + Math.random() * 9 + 2);
-}, 130);
+  setLoad(loadValue + Math.random() * 12 + 4);
+}, 100);
 
 function finishLoad() {
   if (loadDone) return;
@@ -31,18 +31,20 @@ function finishLoad() {
   window.clearInterval(loadTimer);
   setLoad(100);
   window.setTimeout(() => {
-    preloader.classList.add("is-hidden");
+    preloader?.classList.add("is-hidden");
     document.body.classList.remove("is-loading");
     document.body.classList.add("is-ready");
     window.setTimeout(() => {
-      preloader.setAttribute("aria-hidden", "true");
-      preloader.style.display = "none";
+      if (preloader) {
+        preloader.setAttribute("aria-hidden", "true");
+        preloader.style.display = "none";
+      }
     }, 1000);
-  }, 380);
+  }, 300);
 }
 
 window.addEventListener("load", finishLoad, { once: true });
-window.setTimeout(finishLoad, 3600);
+window.setTimeout(finishLoad, 2500);
 
 /* ------------------------------------------------------------------
    Three.js stage
@@ -54,11 +56,11 @@ try {
   stage = createStage(stageCanvas);
 } catch (error) {
   console.error("WebGL stage failed:", error);
-  stageCanvas.style.display = "none";
+  if (stageCanvas) stageCanvas.style.display = "none";
 }
 
 /* ------------------------------------------------------------------
-   Small utilities
+   DOM Elements
 ------------------------------------------------------------------- */
 
 const header = document.getElementById("header");
@@ -79,31 +81,30 @@ const heroTopline = document.querySelector(".hero__topline");
 const stageShade = document.querySelector(".stage-shade");
 const waFab = document.getElementById("waFab");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
 const isFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 /* ------------------------------------------------------------------
-   Scroll: header, morph progress, hero parallax
+   Scroll handling (Unified, Single rAF, High Performance)
 ------------------------------------------------------------------- */
 
-let lastScroll = 0;
 let morphP = 0;
 let menuOpen = false;
 
 function updateScrollUI() {
   const y = window.scrollY;
-  header.classList.toggle("is-scrolled", y > 36);
+  header?.classList.toggle("is-scrolled", y > 36);
   waFab?.classList.toggle("is-on", y > 300);
 
-  if (heroCopy) {
-    const heroShift = Math.min(y, window.innerHeight) * 0.055;
-    heroCopy.style.transform = reduceMotion ? "" : `translate3d(0, ${heroShift}px, 0)`;
+  if (heroCopy && !reduceMotion) {
+    const heroShift = Math.min(y, window.innerHeight) * 0.05;
+    heroCopy.style.transform = `translate3d(0, ${heroShift}px, 0)`;
   }
-  if (heroTopline) {
-    const lineShift = Math.min(y, window.innerHeight) * 0.025;
-    heroTopline.style.transform = reduceMotion ? "" : `translate3d(0, ${lineShift}px, 0)`;
+  if (heroTopline && !reduceMotion) {
+    const lineShift = Math.min(y, window.innerHeight) * 0.02;
+    heroTopline.style.transform = `translate3d(0, ${lineShift}px, 0)`;
   }
 
+  // 3D Morph progress
   if (morph) {
     const total = Math.max(1, morph.offsetHeight - window.innerHeight);
     const rect = morph.getBoundingClientRect();
@@ -116,12 +117,8 @@ function updateScrollUI() {
     morph.classList.toggle("is-bim", isBim);
     document.body.classList.toggle("is-bim", isBim && inMorphView);
 
-    /* The paper veil fades out continuously with the morph so it never snaps
-       back over a tower that is already in BIM mode. */
     if (stageShade) {
-      stageShade.style.opacity = reduceMotion
-        ? ""
-        : String(clamp(1 - morphP / 0.22, 0, 1));
+      stageShade.style.opacity = reduceMotion ? "" : String(clamp(1 - morphP / 0.22, 0, 1));
     }
 
     if (morphBar) morphBar.style.width = `${morphP * 100}%`;
@@ -137,7 +134,7 @@ function updateScrollUI() {
 
     if (hudLod) {
       const lod = morphP < 0.24 ? 200 : morphP < 0.54 ? 300 : morphP < 0.8 ? 350 : 400;
-      if (hudLod.textContent !== String(lod)) hudLod.textContent = lod;
+      if (hudLod.textContent !== String(lod)) hudLod.textContent = String(lod);
     }
     if (hudElements) {
       const elements = Math.round(easeOut(morphP) * 18420);
@@ -145,8 +142,6 @@ function updateScrollUI() {
       if (hudElements.textContent !== formatted) hudElements.textContent = formatted;
     }
   }
-
-  lastScroll = y;
 }
 
 let scrollTicking = false;
@@ -166,7 +161,7 @@ window.addEventListener(
 window.addEventListener("resize", updateScrollUI, { passive: true });
 
 /* ------------------------------------------------------------------
-   Mouse + cursor
+   Mouse + Cursor
 ------------------------------------------------------------------- */
 
 let mouseX = window.innerWidth / 2;
@@ -216,25 +211,7 @@ if (isFinePointer && cursor) {
 }
 
 /* ------------------------------------------------------------------
-   Magnetic buttons
-------------------------------------------------------------------- */
-
-if (isFinePointer && !reduceMotion) {
-  document.querySelectorAll(".btn, .header__cta").forEach((button) => {
-    button.addEventListener("pointermove", (event) => {
-      const rect = button.getBoundingClientRect();
-      const x = event.clientX - rect.left - rect.width / 2;
-      const y = event.clientY - rect.top - rect.height / 2;
-      button.style.transform = `translate(${x * 0.12}px, ${y * 0.16}px)`;
-    });
-    button.addEventListener("pointerleave", () => {
-      button.style.transform = "";
-    });
-  });
-}
-
-/* ------------------------------------------------------------------
-   BIM discipline layer switch
+   BIM Discipline Layers
 ------------------------------------------------------------------- */
 
 layerButtons.forEach((button) => {
@@ -249,7 +226,7 @@ layerButtons.forEach((button) => {
 });
 
 /* ------------------------------------------------------------------
-   Reveal + counters
+   Reveal Observer + Counters
 ------------------------------------------------------------------- */
 
 const revealObserver = new IntersectionObserver(
@@ -260,23 +237,12 @@ const revealObserver = new IntersectionObserver(
       revealObserver.unobserve(entry.target);
     });
   },
-  { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+  { threshold: 0.1, rootMargin: "0px 0px -6% 0px" }
 );
 
 document.querySelectorAll("[data-reveal]").forEach((element) => {
   revealObserver.observe(element);
 });
-
-const stepObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      entry.target.classList.toggle("is-active", entry.isIntersecting);
-    });
-  },
-  { threshold: 0.55, rootMargin: "-20% 0px -28% 0px" }
-);
-
-document.querySelectorAll(".step").forEach((step) => stepObserver.observe(step));
 
 function animateCounter(element) {
   const raw = element.dataset.count;
@@ -285,7 +251,7 @@ function animateCounter(element) {
   const suffix = element.dataset.suffix || "";
   const decimals = raw.includes(".") ? 1 : 0;
   const nogroup = "nogroup" in element.dataset;
-  const duration = reduceMotion ? 0 : 1300;
+  const duration = reduceMotion ? 0 : 1200;
   const start = performance.now();
 
   const tick = (now) => {
@@ -311,7 +277,7 @@ const counterObserver = new IntersectionObserver(
       counterObserver.unobserve(entry.target);
     });
   },
-  { threshold: 0.6 }
+  { threshold: 0.5 }
 );
 
 document.querySelectorAll("[data-count]").forEach((element) => {
@@ -319,16 +285,16 @@ document.querySelectorAll("[data-count]").forEach((element) => {
 });
 
 /* ------------------------------------------------------------------
-   Mobile menu + anchors
+   Mobile Menu + Anchors
 ------------------------------------------------------------------- */
 
 function setMenu(open) {
   menuOpen = open;
-  burger.classList.toggle("is-open", open);
-  burger.setAttribute("aria-expanded", String(open));
-  burger.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
-  mobileMenu.classList.toggle("is-open", open);
-  mobileMenu.setAttribute("aria-hidden", String(!open));
+  burger?.classList.toggle("is-open", open);
+  burger?.setAttribute("aria-expanded", String(open));
+  burger?.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+  mobileMenu?.classList.toggle("is-open", open);
+  mobileMenu?.setAttribute("aria-hidden", String(!open));
   document.body.classList.toggle("menu-open", open);
   document.body.style.overflow = open ? "hidden" : "";
 }
@@ -353,7 +319,7 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
     event.preventDefault();
     if (menuOpen) setMenu(false);
 
-    const headerOffset = hash === "#morph" ? 0 : 58;
+    const headerOffset = hash === "#morph" ? 0 : 64;
     const top =
       hash === "#top"
         ? 0
@@ -364,235 +330,7 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
 });
 
 /* ------------------------------------------------------------------
-   Contact form
-------------------------------------------------------------------- */
-
-const form = document.getElementById("contactForm");
-const formHint = document.getElementById("formHint");
-
-form?.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const data = new FormData(form);
-  const name = String(data.get("name") || "").trim();
-  const company = String(data.get("company") || "").trim();
-  const contact = String(data.get("contact") || "").trim();
-  const area = String(data.get("area") || "").trim();
-  const type = String(data.get("type") || "").trim();
-  const floors = String(data.get("floors") || "").trim();
-  const message = String(data.get("message") || "").trim();
-
-  if (!name || !contact) {
-    formHint.textContent = "Заполните имя и контакт — иначе мы не сможем ответить.";
-    formHint.style.color = "#fb7185";
-    formHint.classList.remove("is-ok");
-    return;
-  }
-
-  const subject = `BIM-запрос — ${company || name}`;
-  const body = [
-    `Имя: ${name}`,
-    `Компания: ${company || "—"}`,
-    `Контакт: ${contact}`,
-    `Тип объекта: ${type || "—"}`,
-    `Этажность: ${floors || "—"}`,
-    `Площадь: ${area || "—"} м²`,
-    "",
-    message || "Без комментария",
-  ].join("\n");
-
-  const waText = `${subject}\n\n${body}`;
-  const waUrl = `https://wa.me/77775556789?text=${encodeURIComponent(
-    waText
-  )}`;
-
-  formHint.textContent = "Запрос сформирован. Открываем WhatsApp — или позвоните нам.";
-  formHint.style.color = "";
-  formHint.classList.add("is-ok");
-
-  window.setTimeout(() => {
-    window.location.href = waUrl;
-  }, 320);
-});
-
-/* ------------------------------------------------------------------
-   TIMSO deadline checker
-------------------------------------------------------------------- */
-
-const DEADLINES = {
-  inf: "2026-08-01",
-  soc600: "2026-08-01",
-  main: "2028-01-01",
-  rest: "2030-01-01",
-};
-
-const KIND_ATTRS = {
-  res: { label: "Этажность", show: "floors" },
-  pub: { label: "Этажность", show: "floors" },
-  soc: { label: "Вместимость, мест", show: "capacity" },
-  ind: { label: "Крупный объект перечня", show: "hint" },
-  inf: { label: "Инфраструктура перечня", show: "hint" },
-};
-
-const KIND_HINTS = {
-  ind: "Энергетика, нефтегаз и магистральные сети входят в перечень приказа № 114 — дата 01.01.2028.",
-  inf: "Мосты от 100 м, аэропорты, тоннели и метро — перечень первой волны. Мосты до 100 м переходят на 01.01.2030.",
-};
-
-const chkKindBtns = document.querySelectorAll("[data-kind]");
-const chkFloorBtns = document.querySelectorAll("[data-floors]");
-const chkAttr = document.getElementById("chkAttr");
-const chkAttrLabel = document.getElementById("chkAttrLabel");
-const chkFloors = document.getElementById("chkFloors");
-const chkCap = document.getElementById("chkCap");
-const chkHint = document.getElementById("chkHint");
-const chkDate = document.getElementById("chkDate");
-const chkLeft = document.getElementById("chkLeft");
-const chkWhy = document.getElementById("chkWhy");
-const chkNote = document.getElementById("chkNote");
-
-const checkerState = { kind: "res", floors: "mid" };
-
-function fmtDate(iso) {
-  const [y, m, d] = iso.split("-");
-  return `${d}.${m}.${y}`;
-}
-
-function daysLeft(iso) {
-  const target = new Date(`${iso}T00:00:00`);
-  const now = new Date();
-  const diff = Math.ceil((target - now) / 86400000);
-  if (diff > 1) return `осталось ${diff.toLocaleString("ru-RU")} дней`;
-  if (diff === 1) return "осталось 1 день";
-  if (diff === 0) return "вступает в силу сегодня";
-  return "уже действует";
-}
-
-function verdict() {
-  const { kind, floors } = checkerState;
-
-  if (kind === "inf") {
-    return {
-      iso: DEADLINES.inf,
-      why: "Мосты от 100 метров, аэропорты и авиационная инфраструктура, тоннели и метро входят в первую волну приказа № 114 — обязательный ТИМСО с 1 августа 2026 года.",
-      note: KIND_HINTS.inf,
-    };
-  }
-
-  if (kind === "soc") {
-    const cap = Number(chkCap.value || 0);
-    if (cap >= 600) {
-      return {
-        iso: DEADLINES.soc600,
-        why: `Школы от 600 учащихся — объект первой волны приказа № 114. При вместимости ${cap.toLocaleString("ru-RU")} мест обязательный ТИМСО действует с 1 августа 2026 года.`,
-        note: "Для точного статуса важно назначение объекта: школы, интернаты и медицинские учреждения попадают в разные строки перечня.",
-      };
-    }
-    return {
-      iso: DEADLINES.main,
-      why: cap > 0
-        ? `При вместимости ${cap.toLocaleString("ru-RU")} мест объект не относится к школам первой волны, но социальные объекты общей строки перечня переходят на обязательный ТИМСО с 1 января 2028 года.`
-        : "Объекты здравоохранения, дошкольного и среднего образования из перечня приказа № 114 переходят на обязательный ТИМСО с 1 января 2028 года. Укажите вместимость — так оценка будет точнее.",
-      note: "Это предварительная оценка. Точный статус объекта зависит от назначения и уровня ответственности — его подтверждает экспресс-аудит.",
-    };
-  }
-
-  if (kind === "ind") {
-    return {
-      iso: DEADLINES.main,
-      why: "Энергетика, нефтегаз и магистральные сети включены в перечень приказа № 114 и переходят на обязательный ТИМСО с 1 января 2028 года.",
-      note: KIND_HINTS.ind,
-    };
-  }
-
-  if (kind === "pub" && floors === "low") {
-    return {
-      iso: DEADLINES.rest,
-      why: "Общественные и административно-бытовые здания до 3 этажей не входят в волну 2028 года. Универсальное требование для остальных объектов начинается с 1 января 2030 года.",
-      note: "Статус зависит от назначения и уровня ответственности: ТРЦ, гостиницы и офисы различаются по строкам перечня.",
-    };
-  }
-
-  if (kind === "res" && floors === "low") {
-    return {
-      iso: DEADLINES.rest,
-      why: "Жилые дома до 5 этажей не попадают в волну 2028 года. Универсальное требование для остальных объектов начинается с 1 января 2030 года.",
-      note: "Исключение — объекты первой волны и сложные инженерные условия. Точный статус подтверждает экспресс-аудит.",
-    };
-  }
-
-  if (kind === "pub") {
-    return {
-      iso: DEADLINES.main,
-      why: "Общественные и административно-бытовые здания от 3 этажей входят в перечень приказа № 114 — обязательный ТИМСО с 1 января 2028 года.",
-      note: "Это предварительная оценка. Точный статус объекта зависит от назначения, уровня ответственности и параметров — его подтверждает экспресс-аудит.",
-    };
-  }
-
-  return {
-    iso: DEADLINES.main,
-    why: "Жилые и многофункциональные здания от 6 этажей входят в перечень приказа № 114 и переходят на обязательный ТИМСО с 1 января 2028 года.",
-    note: "Это предварительная оценка. Точный статус объекта зависит от назначения, уровня ответственности и параметров — его подтверждает экспресс-аудит.",
-  };
-}
-
-function renderChecker() {
-  if (!chkDate) return;
-  const result = verdict();
-  chkDate.textContent = fmtDate(result.iso);
-  chkLeft.textContent = daysLeft(result.iso);
-  chkWhy.textContent = result.why;
-  chkNote.textContent = result.note;
-}
-
-function setKind(kind) {
-  checkerState.kind = kind;
-  const cfg = KIND_ATTRS[kind];
-  chkAttrLabel.textContent = cfg.label;
-  chkFloors.hidden = cfg.show !== "floors";
-  chkCap.hidden = cfg.show !== "capacity";
-  chkHint.hidden = cfg.show !== "hint";
-  if (cfg.show === "hint") chkHint.textContent = KIND_HINTS[kind];
-  renderChecker();
-}
-
-chkKindBtns.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    chkKindBtns.forEach((b) => b.classList.remove("is-on"));
-    btn.classList.add("is-on");
-    setKind(btn.dataset.kind);
-  });
-});
-
-chkFloorBtns.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    chkFloorBtns.forEach((b) => b.classList.remove("is-on"));
-    btn.classList.add("is-on");
-    checkerState.floors = btn.dataset.floors;
-    renderChecker();
-  });
-});
-
-chkCap?.addEventListener("input", renderChecker);
-setKind("res");
-
-/* ------------------------------------------------------------------
-   Mini project models
-------------------------------------------------------------------- */
-
-try {
-  createMiniScenes();
-} catch (error) {
-  console.error("Mini scenes failed:", error);
-}
-
-/* ------------------------------------------------------------------
-   Init
-------------------------------------------------------------------- */
-
-updateScrollUI();
-
-/* ------------------------------------------------------------------
-   Urgent BIM Estimator Calculator
+   Interactive Urgent Estimator Calculator
 ------------------------------------------------------------------- */
 
 const calcState = {
@@ -616,8 +354,8 @@ function updateCalculator() {
 
   if (dwg === "no") {
     calcTimeOut.textContent = "НЕ БЕРЕМ";
-    calcStatusOut.textContent = "Исходные данные отсутствуют";
-    calcWhyOut.textContent = "Без чертежей (DWG/PDF) поднять модель невозможно. Рекомендуем сначала заказать проектирование РД, иначе это будет выдумка, а не BIM.";
+    if (calcStatusOut) calcStatusOut.textContent = "Исходные данные отсутствуют";
+    if (calcWhyOut) calcWhyOut.textContent = "Без чертежей (DWG/PDF) поднять модель невозможно. Рекомендуем сначала заказать проектирование РД, иначе это будет выдумка, а не BIM.";
     if (calcCtaBtn) {
       calcCtaBtn.querySelector("span").textContent = "Обсудить подготовку чертежей";
       calcCtaBtn.href = "https://wa.me/77775556789?text=" + encodeURIComponent("Здравствуйте, у нас пока нет чертежей, но нужна консультация");
@@ -663,13 +401,13 @@ function updateCalculator() {
   }
 
   if (dwg === "partial") {
-    timeText += " (+1-2 дня на уточнения)";
+    timeText += " (+1-2 дня)";
     whyText += " Так как чертежи частичные, потребуется быстрая стыковка с вашим ГИПом для снятия вопросов.";
   }
 
   calcTimeOut.textContent = timeText;
-  calcStatusOut.textContent = statusText;
-  calcWhyOut.textContent = whyText;
+  if (calcStatusOut) calcStatusOut.textContent = statusText;
+  if (calcWhyOut) calcWhyOut.textContent = whyText;
 
   const waMsg = `Здравствуйте! По калькулятору: чертежи: ${dwg}, разделы: ${sec}, срок: ${urgency} (${timeText}). Хотим отправить чертежи на экспресс-оценку.`;
   if (calcCtaBtn) {
@@ -678,27 +416,27 @@ function updateCalculator() {
   }
 }
 
-calcDwgBtns.forEach(btn => {
+calcDwgBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
-    calcDwgBtns.forEach(b => b.classList.remove("is-on"));
+    calcDwgBtns.forEach((b) => b.classList.remove("is-on"));
     btn.classList.add("is-on");
     calcState.dwg = btn.dataset.dwg;
     updateCalculator();
   });
 });
 
-calcSecBtns.forEach(btn => {
+calcSecBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
-    calcSecBtns.forEach(b => b.classList.remove("is-on"));
+    calcSecBtns.forEach((b) => b.classList.remove("is-on"));
     btn.classList.add("is-on");
     calcState.sec = btn.dataset.sec;
     updateCalculator();
   });
 });
 
-calcTimeBtns.forEach(btn => {
+calcTimeBtns.forEach((btn) => {
   btn.addEventListener("click", () => {
-    calcTimeBtns.forEach(b => b.classList.remove("is-on"));
+    calcTimeBtns.forEach((b) => b.classList.remove("is-on"));
     btn.classList.add("is-on");
     calcState.urgency = btn.dataset.urgency;
     updateCalculator();
@@ -706,85 +444,6 @@ calcTimeBtns.forEach(btn => {
 });
 
 updateCalculator();
-
-/* ------------------------------------------------------------------
-   Scroll Storyline Engine: Qualifier Sticky & Horizontal Conveyor
-------------------------------------------------------------------- */
-
-const qualScrollSection = document.querySelector("[data-qualifier-scroll]");
-const qPanelNo = document.getElementById("qPanelNo");
-const qPanelYes = document.getElementById("qPanelYes");
-const qualBar = document.getElementById("qualBar");
-const qualPct = document.getElementById("qualPct");
-const qualCueText = document.getElementById("qualCueText");
-
-const conveyorSection = document.querySelector("[data-conveyor-scroll]");
-const conveyorTrack = document.getElementById("conveyorTrack");
-const conveyorBar = document.getElementById("conveyorBar");
-const conveyorPct = document.getElementById("conveyorPct");
-const conveyorCards = document.querySelectorAll(".conveyor-card");
-
-function updateScrollStory() {
-  const y = window.scrollY;
-
-  // 1. Qualifier Sticky Scene (0..1)
-  if (qualScrollSection && qPanelNo && qPanelYes) {
-    const total = Math.max(1, qualScrollSection.offsetHeight - window.innerHeight);
-    const rect = qualScrollSection.getBoundingClientRect();
-    const p = clamp(-rect.top / total, 0, 1);
-
-    if (qualBar) qualBar.style.width = `${p * 100}%`;
-
-    if (p < 0.45) {
-      // Step 1: No DWG visible, Yes DWG hidden below
-      qPanelNo.style.opacity = String(1 - p * 1.5);
-      qPanelNo.style.transform = `scale(${1 - p * 0.08}) translateY(${-p * 40}px)`;
-      qPanelYes.style.opacity = "0";
-      qPanelYes.style.transform = "translateY(60px) scale(0.95)";
-      qPanelYes.style.pointerEvents = "none";
-      qPanelNo.style.pointerEvents = "auto";
-      if (qualPct) qualPct.textContent = "01 / 02";
-      if (qualCueText) qualCueText.textContent = "Сценарий 1: Нет чертежей (крутите дальше)";
-    } else {
-      // Step 2: Yes DWG emerges prominently
-      const p2 = clamp((p - 0.45) / 0.55, 0, 1);
-      qPanelNo.style.opacity = "0";
-      qPanelNo.style.pointerEvents = "none";
-      qPanelYes.style.opacity = String(p2);
-      qPanelYes.style.transform = `translateY(${(1 - p2) * 40}px) scale(${0.96 + p2 * 0.04})`;
-      qPanelYes.style.pointerEvents = "auto";
-      if (qualPct) qualPct.textContent = "02 / 02";
-      if (qualCueText) qualCueText.textContent = "Сценарий 2: Горят сроки — берем в работу";
-    }
-  }
-
-  // 2. Horizontal Conveyor Scene (0..1)
-  if (conveyorSection && conveyorTrack && window.innerWidth > 900) {
-    const totalC = Math.max(1, conveyorSection.offsetHeight - window.innerHeight);
-    const rectC = conveyorSection.getBoundingClientRect();
-    const pC = clamp(-rectC.top / totalC, 0, 1);
-
-    const maxShift = conveyorTrack.scrollWidth - conveyorTrack.parentElement.clientWidth;
-    const shift = pC * maxShift;
-    conveyorTrack.style.transform = `translate3d(${-shift}px, 0, 0)`;
-
-    if (conveyorBar) conveyorBar.style.width = `${pC * 100}%`;
-
-    const activeIndex = Math.min(3, Math.floor(pC * 4));
-    conveyorCards.forEach((card, idx) => {
-      card.classList.toggle("is-active", idx === activeIndex);
-    });
-
-    if (conveyorPct) {
-      conveyorPct.textContent = `0${activeIndex + 1} / 04`;
-    }
-  }
-}
-
-// Hook into the main rAF scroll listener
-window.addEventListener("scroll", () => {
-  requestAnimationFrame(updateScrollStory);
-}, { passive: true });
 
 /* ------------------------------------------------------------------
    Interactive NDA vs Pilot Switch
@@ -801,18 +460,83 @@ if (btnNda && btnPilot) {
   btnNda.addEventListener("click", () => {
     btnNda.classList.add("is-active");
     btnPilot.classList.remove("is-active");
-    dealTitle.textContent = "Вариант 1. Железная конфиденциальность (NDA)";
-    dealText.textContent = "Перед тем как вы передадите нам чертежи, мы подписываем соглашение о неразглашении (NDA). Ваш объект, планировки, ведомости объемов и сметные данные никогда не попадут в рекламу, соцсети или конкурентам. Все права и исходные файлы Revit остаются исключительно вашей собственностью.";
-    dealBadge.textContent = "100% Защита данных";
-    dealNote.textContent = "Оплата производится по этапам с договором на юридическое лицо в Казахстане.";
+    if (dealTitle) dealTitle.textContent = "Вариант 1. Железная конфиденциальность (NDA)";
+    if (dealText) dealText.textContent = "Перед тем как вы передадите нам чертежи, мы подписываем соглашение о неразглашении (NDA). Ваш объект, планировки, ведомости объемов и сметные данные никогда не попадут в рекламу, соцсети или конкурентам. Все права и исходные файлы Revit остаются исключительно вашей собственностью.";
+    if (dealBadge) dealBadge.textContent = "100% Защита данных";
+    if (dealNote) dealNote.textContent = "Оплата производится по этапам с договором на юридическое лицо в Казахстане.";
   });
 
   btnPilot.addEventListener("click", () => {
     btnPilot.classList.add("is-active");
     btnNda.classList.remove("is-active");
-    dealTitle.textContent = "Вариант 2. Экспериментальный пилот без предоплаты";
-    dealText.textContent = "Сомневаетесь в нашей скорости или точности? Мы бесплатно сделаем пилотный блок или типовой этаж вашего объекта за 48 часов. Единственное условие: мы получаем право открыто транслировать эту модель в наших кейсах и соцсетях. Вы проверяете качество модели без риска и копейки вложений.";
-    dealBadge.textContent = "0 ₸ Предоплаты";
-    dealNote.textContent = "Идеально для тех, кому нужно срочно убедиться в результате перед оплатой.";
+    if (dealTitle) dealTitle.textContent = "Вариант 2. Экспериментальный пилот без предоплаты";
+    if (dealText) dealText.textContent = "Сомневаетесь в нашей скорости или точности? Мы бесплатно сделаем пилотный блок или типовой этаж вашего объекта за 48 часов. Единственное условие: мы получаем право открыто транслировать эту модель в наших кейсах и соцсетях. Вы проверяете качество модели без риска и копейки вложений.";
+    if (dealBadge) dealBadge.textContent = "0 ₸ Предоплаты";
+    if (dealNote) dealNote.textContent = "Идеально для тех, кому нужно срочно убедиться в результате перед оплатой.";
   });
 }
+
+/* ------------------------------------------------------------------
+   Contact form
+------------------------------------------------------------------- */
+
+const form = document.getElementById("contactForm");
+const formHint = document.getElementById("formHint");
+
+form?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const data = new FormData(form);
+  const name = String(data.get("name") || "").trim();
+  const company = String(data.get("company") || "").trim();
+  const contact = String(data.get("contact") || "").trim();
+  const deadline = String(data.get("deadline") || "").trim();
+  const format = String(data.get("format") || "").trim();
+  const area = String(data.get("area") || "").trim();
+  const message = String(data.get("message") || "").trim();
+
+  if (!name || !contact) {
+    if (formHint) {
+      formHint.textContent = "Заполните имя и контакт — иначе мы не сможем ответить.";
+      formHint.style.color = "#fb7185";
+      formHint.classList.remove("is-ok");
+    }
+    return;
+  }
+
+  const subject = `Срочный BIM-запрос — ${company || name}`;
+  const body = [
+    `Имя: ${name}`,
+    `Компания: ${company || "—"}`,
+    `Контакт: ${contact}`,
+    `Дедлайн: ${deadline || "Горит"}`,
+    `Формат: ${format || "Autodesk Revit"}`,
+    `Площадь: ${area || "—"} м²`,
+    "",
+    message || "Чертежи прикрепим в диалоге",
+  ].join("\n");
+
+  const waText = `${subject}\n\n${body}`;
+  const waUrl = `https://wa.me/77775556789?text=${encodeURIComponent(waText)}`;
+
+  if (formHint) {
+    formHint.textContent = "Запрос сформирован. Переходим в WhatsApp...";
+    formHint.style.color = "";
+    formHint.classList.add("is-ok");
+  }
+
+  window.setTimeout(() => {
+    window.location.href = waUrl;
+  }, 300);
+});
+
+/* ------------------------------------------------------------------
+   Init Mini Scenes & First Layout
+------------------------------------------------------------------- */
+
+try {
+  createMiniScenes();
+} catch (error) {
+  console.error("Mini scenes failed:", error);
+}
+
+updateScrollUI();
