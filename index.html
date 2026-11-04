@@ -60,7 +60,6 @@
       <a href="#qualifier" data-cursor="link">Для кого</a>
       <a href="#morph" data-cursor="link">Модель</a>
       <a href="#calc" data-cursor="link">Оценка сроков</a>
-      <a href="#conveyor" data-cursor="link">Конвейер 48 ч</a>
       <a href="#deal" data-cursor="link">NDA / Пилот</a>
       <a href="#contact" data-cursor="link">Контакты</a>
     </nav>
@@ -80,7 +79,6 @@
         <a href="#qualifier" data-cursor="link"><span>01</span>Для кого</a>
         <a href="#morph" data-cursor="link"><span>02</span>Модель</a>
         <a href="#calc" data-cursor="link"><span>03</span>Оценка сроков</a>
-        <a href="#conveyor" data-cursor="link"><span>04</span>Конвейер 48 ч</a>
         <a href="#deal" data-cursor="link"><span>05</span>NDA / Пилот</a>
         <a href="#contact" data-cursor="link"><span>06</span>Контакты</a>
       </nav>
@@ -107,9 +105,9 @@
           <p class="eyebrow hero__eyebrow"><span class="dot"></span>Горят сроки по договору или экспертизе?</p>
 
           <h1 class="hero__title">
-            <span class="line"><span>Срочная</span></span>
-            <span class="line"><span>BIM-модель</span></span>
-            <span class="line"><span><em>от 3 дней.</em></span></span>
+            <span class="line"><span>Из чертежей</span></span>
+            <span class="line"><span>в рабочую модель</span></span>
+            <span class="line"><span><em>Revit</em> за 3 дня</span></span>
           </h1>
 
           <p class="hero__lede">
@@ -357,91 +355,6 @@
       </div>
     </section>
 
-    <!-- 5. HORIZONTAL CONVEYOR SECTION (Sticky Progress Timeline) -->
-    <section class="conveyor-section" id="conveyor" data-conveyor-scroll>
-      <div class="conveyor-sticky">
-        <div class="conveyor-head">
-          <div>
-            <p class="eyebrow"><span class="dot dot--light"></span>04 / Конвейер производства</p>
-            <h2>От чертежей до сдачи:<br /><em>путь за 48 часов.</em></h2>
-          </div>
-          <div class="mono" style="font-size: 11px; color: var(--bim); text-align: right;">
-            РЕЖИМ ЭКСТРЕННОГО СПРИНТА
-          </div>
-        </div>
-
-        <div class="conveyor-track-wrapper">
-          <div class="conveyor-track" id="conveyorTrack">
-            <!-- Stage 1 -->
-            <article class="conveyor-card is-active">
-              <div class="conveyor-card__num">
-                <span>01 // ВХОД ДАННЫХ</span>
-                <span class="conveyor-card__time">ЧАС 0–3</span>
-              </div>
-              <div>
-                <h3>Загрузка DWG / PDF</h3>
-                <p>Вы сбрасываете архив планов, фасадов и разрезов. Проверяем комплектность, привязываем сетку осей и нулевую отметку здания в Revit.</p>
-              </div>
-              <div class="conveyor-card__tech">
-                <span>AutoCAD</span><span>PDF</span><span>Сетка осей</span>
-              </div>
-            </article>
-
-            <!-- Stage 2 -->
-            <article class="conveyor-card">
-              <div class="conveyor-card__num">
-                <span>02 // КАРКАС И СТЕНЫ</span>
-                <span class="conveyor-card__time">ЧАС 3–24</span>
-              </div>
-              <div>
-                <h3>Сборка конструктива (КР)</h3>
-                <p>Моделлеры поднимают фундаментную плиту, колонны, пилоны, перекрытия и лестничные клетки. Толщины и отметки строго по РД.</p>
-              </div>
-              <div class="conveyor-card__tech">
-                <span>Revit Структура</span><span>Колонны</span><span>Перекрытия</span>
-              </div>
-            </article>
-
-            <!-- Stage 3 -->
-            <article class="conveyor-card">
-              <div class="conveyor-card__num">
-                <span>03 // ПИЛОТ И СЕТИ</span>
-                <span class="conveyor-card__time">ЧАС 24–48</span>
-              </div>
-              <div>
-                <h3>Пилотный блок + Инженерия</h3>
-                <p>Выдаем тестовую секцию на проверку заказчику. Параллельно прокладываем магистральные воздуховоды (ОВ) и трубопроводы (ВК).</p>
-              </div>
-              <div class="conveyor-card__tech">
-                <span>Пилот 48 ч</span><span>MEP</span><span>Семейства</span>
-              </div>
-            </article>
-
-            <!-- Stage 4 -->
-            <article class="conveyor-card">
-              <div class="conveyor-card__num">
-                <span>04 // КОЛЛИЗИИ И СДАЧА</span>
-                <span class="conveyor-card__time">ЧАС 48–72</span>
-              </div>
-              <div>
-                <h3>Сводная модель и экспертиза</h3>
-                <p>Прогоняем модель в Navisworks на пересечения. Формируем чистый файл .RVT и экспорт в IFC 4.3 под требования СП РК 1.02-117-2018.</p>
-              </div>
-              <div class="conveyor-card__tech">
-                <span>Navisworks</span><span>IFC 4.3</span><span>СП РК 1.02-117</span>
-              </div>
-            </article>
-          </div>
-        </div>
-
-        <div class="conveyor-foot">
-          <span class="mono" style="font-size: 9px; letter-spacing: 0.1em; color: rgba(242, 238, 230, 0.5);">КРУТИТЕ ДЛЯ ДВИЖЕНИЯ ПО ЭТАПАМ</span>
-          <div class="conveyor-progress-bar"><span id="conveyorBar"></span></div>
-          <span class="mono" id="conveyorPct" style="font-size: 9px; color: var(--bim);">01 / 04</span>
-        </div>
-      </div>
-    </section>
-
     <!-- 6. DEAL SECTION (Interactive NDA vs Pilot Switch) -->
     <section class="deal-section" id="deal">
       <div class="section__head">
@@ -643,7 +556,6 @@
         <a href="#qualifier" data-cursor="link">Для кого</a>
         <a href="#morph" data-cursor="link">Модель</a>
         <a href="#calc" data-cursor="link">Оценка сроков</a>
-        <a href="#conveyor" data-cursor="link">Конвейер 48 ч</a>
         <a href="#deal" data-cursor="link">NDA / Пилот</a>
         <a href="#contact" data-cursor="link">Контакты</a>
       </nav>

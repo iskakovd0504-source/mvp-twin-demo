@@ -144,6 +144,15 @@ function updateScrollUI() {
   }
 }
 
+const footerWord = document.querySelector(".footer__word");
+function updateFooterWord() {
+  if (!footerWord) return;
+  const r = footerWord.getBoundingClientRect();
+  const p = Math.min(1, Math.max(0, (window.innerHeight - r.top) / (window.innerHeight * 0.6)));
+  footerWord.style.setProperty("--fp", p.toFixed(3));
+}
+updateFooterWord();
+
 let scrollTicking = false;
 window.addEventListener(
   "scroll",
@@ -152,6 +161,7 @@ window.addEventListener(
     scrollTicking = true;
     requestAnimationFrame(() => {
       updateScrollUI();
+      updateFooterWord();
       scrollTicking = false;
     });
   },
