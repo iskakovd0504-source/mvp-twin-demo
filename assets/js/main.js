@@ -144,12 +144,17 @@ function updateScrollUI() {
   }
 }
 
+let footerWordP = -1;
 const footerWord = document.querySelector(".footer__word");
 function updateFooterWord() {
   if (!footerWord) return;
-  const r = footerWord.getBoundingClientRect();
+  const r = footerWord.parentElement.getBoundingClientRect();
+  if (r.top > window.innerHeight) return;
   const p = Math.min(1, Math.max(0, (window.innerHeight - r.top) / (window.innerHeight * 0.6)));
-  footerWord.style.setProperty("--fp", p.toFixed(3));
+  const q = Math.round(p * 100) / 100;
+  if (q === footerWordP) return;
+  footerWordP = q;
+  footerWord.style.setProperty("--fp", q);
 }
 updateFooterWord();
 

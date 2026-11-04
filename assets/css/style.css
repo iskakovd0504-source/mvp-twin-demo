@@ -2390,9 +2390,9 @@ body.is-ready .hero__footer {
 .footer__word {
   margin-top: clamp(30px, 4vw, 70px);
   font-family: var(--font-display);
-  font-size: clamp(110px, 25vw, 400px);
+  font-size: clamp(56px, 16vw, 280px);
   font-weight: 300;
-  line-height: 0.64;
+  line-height: 0.7;
   letter-spacing: -0.065em;
   text-align: center;
   color: rgba(242, 238, 230, 0.94);
@@ -2400,12 +2400,12 @@ body.is-ready .hero__footer {
   /* --fp: 0..1 — прогресс появления футера, задаётся в main.js */
   transform: translate3d(calc((1 - var(--fp, 1)) * 14vw), 0, 0);
   opacity: calc(0.25 + var(--fp, 1) * 0.75);
-  letter-spacing: calc(-0.065em + (1 - var(--fp, 1)) * 0.06em);
+  white-space: nowrap;
   will-change: transform, opacity;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .footer__word { transform: none; opacity: 1; letter-spacing: -0.065em; }
+  .footer__word { transform: none; opacity: 1; }
 }
 
 .footer__bottom {
