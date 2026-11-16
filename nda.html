@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NDA — Соглашение о неразглашении конфиденциальной информации | BIMTWIN</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #f8fafc;
+      --paper: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --primary: #0f172a;
+      --accent: #b85c38;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.6;
+      font-size: 14px;
+      padding: 30px 15px;
+    }
+
+    .toolbar {
+      max-width: 820px;
+      margin: 0 auto 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: var(--paper);
+      padding: 14px 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .toolbar__brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .toolbar__brand span {
+      background: var(--accent);
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--mono);
+    }
+
+    .btn-print {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: opacity .15s ease;
+      font-family: var(--font);
+    }
+    .btn-print:hover { opacity: 0.9; }
+
+    .paper {
+      max-width: 820px;
+      margin: 0 auto;
+      background: var(--paper);
+      padding: 50px 60px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    }
+
+    .doc-header {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 24px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .doc-title h1 {
+      font-size: 20px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+
+    .doc-title p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .doc-meta {
+      text-align: right;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .city-date {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--muted);
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 10px;
+    }
+
+    .preamble {
+      margin-bottom: 24px;
+      text-align: justify;
+    }
+
+    h2 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 24px 0 10px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h2::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 14px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    p, ul {
+      margin-bottom: 12px;
+      color: #334155;
+      text-align: justify;
+    }
+
+    ul {
+      padding-left: 20px;
+      list-style-type: square;
+    }
+
+    li { margin-bottom: 6px; }
+
+    .highlight-box {
+      background: #f1f5f9;
+      border-left: 3px solid var(--accent);
+      padding: 12px 16px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+      font-size: 13px;
+    }
+
+    .signatures {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 2px solid var(--primary);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+    }
+
+    .sig-col h3 {
+      font-size: 13px;
+      text-transform: uppercase;
+      font-family: var(--mono);
+      color: var(--muted);
+      margin-bottom: 14px;
+      letter-spacing: 0.05em;
+    }
+
+    .sig-details {
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .sig-details p {
+      margin-bottom: 6px;
+      text-align: left;
+    }
+
+    .sig-line {
+      margin-top: 36px;
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; font-size: 12pt; }
+      .toolbar { display: none; }
+      .paper { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+      h2 { page-break-after: avoid; }
+      .signatures { page-break-inside: avoid; }
+    }
+
+    @media (max-width: 640px) {
+      .paper { padding: 30px 20px; }
+      .signatures { grid-template-columns: 1fr; gap: 24px; }
+      .doc-header { flex-direction: column; }
+      .doc-meta { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <div class="toolbar__brand">
+      BIMTWIN<span>NDA</span>
+      <small style="color:var(--muted); font-size:12px; font-weight:normal;">Соглашение о конфиденциальности</small>
+    </div>
+    <button class="btn-print" onclick="window.print()">🖨️ Распечатать / Сохранить в PDF</button>
+  </div>
+
+  <main class="paper">
+    <header class="doc-header">
+      <div class="doc-title">
+        <h1>Соглашение о конфиденциальности (NDA)</h1>
+        <p>О защите коммерческой тайны, проектной документации и BIM-данных</p>
+      </div>
+      <div class="doc-meta">
+        <div>Номер: <strong>NDA-TWIN-2026/01</strong></div>
+        <div>Объект: ~35 000 м²</div>
+      </div>
+    </header>
+
+    <div class="city-date">
+      <span>г. Ташкент / г. Костанай</span>
+      <span>«___» ____________ 2026 г.</span>
+    </div>
+
+    <div class="preamble">
+      <p>
+        <strong>Заказчик / Раскрывающая сторона:</strong> ________________________________________________, с одной стороны, и
+      </p>
+      <p>
+        <strong>Исполнитель / Получающая сторона:</strong> Проектная группа <strong>BIMTWIN</strong> (представитель Iskakov D. / Данил icareun.io), с другой стороны,
+      </p>
+      <p>
+        далее совместно именуемые «Стороны», заключили настоящее Соглашение о конфиденциальности (далее — «Соглашение») о нижеследующем:
+      </p>
+    </div>
+
+    <h2>1. Предмет Соглашения</h2>
+    <p>
+      1.1. Стороны намерены взаимодействовать с целью проведения независимого BIM-аудита, выявления междисциплинарных пространственных коллизий, анализа геометрических нестыковок и проверки ведомостей объемов работ (BIM Clash Detection & QTO) по строящемуся объекту общей площадью ориентировочно <strong>35 000 кв. м</strong> (далее — «Объект»).
+    </p>
+    <p>
+      1.2. В процессе сотрудничества Раскрывающая сторона передает Получающей стороне доступ к исходной проектной, рабочей документации и сопутствующим техническим данным.
+    </p>
+
+    <h2>2. Понятие Конфиденциальной информации</h2>
+    <p>
+      2.1. Под «Конфиденциальной информацией» в рамках настоящего Соглашения понимаются любые сведения, передаваемые в любой форме (электронной, графической, устной, текстовой), включая, но не ограничиваясь:
+    </p>
+    <ul>
+      <li>Архитектурные, конструктивные и инженерные чертежи (форматы DWG, DXF, PDF, сканы РД, ПД);</li>
+      <li>Цифровые трехмерные модели (Revit .RVT, IFC, Navisworks .NWD/.NWC, CAD);</li>
+      <li>Спецификации материалов, сметные расчеты, ведомости объемов работ (ВОР), коммерческие предложения подрядчиков;</li>
+      <li>Местоположение, планировочные решения, технико-экономические показатели (ТЭП) и коммерческие условия реализации Объекта.</li>
+    </ul>
+
+    <div class="highlight-box">
+      <strong>Ключевая гарантия:</strong> Все передаваемые файлы, чертежи и производные трехмерные модели являются исключительной собственностью Заказчика и ни при каких обстоятельствах не подлежат публикации в портфолио, открытых источниках или передаче третьим лицам без прямого письменного согласия Заказчика.
+    </div>
+
+    <h2>3. Обязательства Получающей стороны</h2>
+    <p>3.1. Получающая сторона обязуется:</p>
+    <ul>
+      <li>Использовать Конфиденциальную информацию строго и исключительно для выполнения аудита, поиска коллизий и построения проверочных BIM-моделей по согласованному Объекту;</li>
+      <li>Ограничить круг лиц, имеющих доступ к чертежам, исключительно ведущими профильными инженерами-разработчиками;</li>
+      <li>Не раскрывать, не разглашать и не передавать Конфиденциальную информацию третьим лицам без предварительного письменного согласия Раскрывающей стороны;</li>
+      <li>Обеспечить хранение цифровых материалов на защищенных носителях и в изолированных репозиториях;</li>
+      <li>По первому требованию Раскрывающей стороны либо по завершении анализа удалить или возвратить все исходные файлы и их копии.</li>
+    </ul>
+
+    <h2>4. Исключения из конфиденциальности</h2>
+    <p>
+      4.1. Обязательства по конфиденциальности не распространяются на информацию, которая:
+    </p>
+    <ul>
+      <li>Является или стала общедоступной без нарушения условий настоящего Соглашения;</li>
+      <li>Была законно известна Получающей стороне до момента раскрытия без обязательства соблюдения тайны;</li>
+      <li>Подлежит раскрытию в силу требований действующего законодательства по официальному судебному или государственному запросу (с незамедлительным уведомлением Раскрывающей стороны).</li>
+    </ul>
+
+    <h2>5. Срок действия Соглашения</h2>
+    <p>
+      5.1. Настоящее Соглашение вступает в силу с момента его подписания (в том числе путем обмена сканированными копиями по электронной почте или в мессенджерах) и действует в течение <strong>3 (трех) лет</strong> с даты подписания.
+    </p>
+
+    <h2>6. Ответственность Сторон</h2>
+    <p>
+      6.1. За неисполнение или ненадлежащее исполнение обязательств Стороны несут ответственность в соответствии с применимым законодательством и возмещают документально доказанный реальный ущерб, причиненный несанкционированным разглашением конфиденциальных сведений.
+    </p>
+
+    <h2>7. Реквизиты и подписи Сторон</h2>
+
+    <div class="signatures">
+      <div class="sig-col">
+        <h3>Раскрывающая сторона (Заказчик):</h3>
+        <div class="sig-details">
+          <p><strong>Организация / ФИО:</strong></p>
+          <p>_____________________________________________</p>
+          <p><strong>Адрес / Контакты:</strong></p>
+          <p>г. Ташкент, Республика Узбекистан</p>
+          <p>Тел.: _______________________________________</p>
+        </div>
+        <div class="sig-line">
+          <span>Подпись: __________________</span>
+          <span>(М.П.)</span>
+        </div>
+      </div>
+
+      <div class="sig-col">
+        <h3>Получающая сторона (Исполнитель):</h3>
+        <div class="sig-details">
+          <p><strong>BIMTWIN Production</strong></p>
+          <p>BIM-аудит, моделирование и координация</p>
+          <p><strong>Контакты:</strong></p>
+          <p>Казахстан / Онлайн-производство</p>
+          <p>WhatsApp / Телефон: +7 777 555 67 89</p>
+          <p>Сайт: https://bimtwin.kz</p>
+        </div>
+        <div class="sig-line">
+          <span>Подпись: __________________</span>
+          <span>(М.П.)</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
