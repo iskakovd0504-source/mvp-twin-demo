@@ -3,30 +3,32 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Соглашение о неразглашении конфиденциальной информации (NDA) | BIMTWIN / ИП Искаков Д.Р.</title>
+  <title>Соглашение о неразглашении конфиденциальной информации (NDA) | BIMTWIN</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
     :root {
-      --bg: #f8fafc;
+      --bg: #f1f5f9;
       --paper: #ffffff;
       --text: #0f172a;
-      --muted: #475569;
-      --border: #e2e8f0;
+      --muted: #64748b;
+      --border: #cbd5e1;
       --primary: #0f172a;
       --accent: #b85c38;
-      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --mono: 'JetBrains Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       background: var(--bg);
       color: var(--text);
       font-family: var(--font);
       line-height: 1.6;
-      font-size: 14px;
+      font-size: 13.5px;
       padding: 30px 15px;
+      -webkit-font-smoothing: antialiased;
     }
 
     .toolbar {
@@ -60,20 +62,36 @@
       font-family: var(--mono);
     }
 
-    .btn-print {
+    .toolbar__actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: var(--primary);
-      color: #ffffff;
-      border: none;
-      padding: 9px 18px;
+      padding: 9px 16px;
       font-size: 13px;
       font-weight: 600;
       border-radius: 6px;
       cursor: pointer;
-      transition: opacity .15s ease;
+      text-decoration: none;
+      transition: all .15s ease;
       font-family: var(--font);
+      border: 1px solid transparent;
+    }
+
+    .btn-docx {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .btn-docx:hover { background: #0369a1; }
+
+    .btn-print {
+      background: var(--primary);
+      color: #ffffff;
     }
     .btn-print:hover { opacity: 0.9; }
 
@@ -89,8 +107,8 @@
 
     .doc-header {
       border-bottom: 2px solid var(--primary);
-      padding-bottom: 24px;
-      margin-bottom: 30px;
+      padding-bottom: 20px;
+      margin-bottom: 24px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
@@ -98,16 +116,17 @@
     }
 
     .doc-title h1 {
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 700;
-      text-transform: uppercase;
       letter-spacing: -0.01em;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      color: var(--primary);
     }
 
     .doc-title p {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12.5px;
+      line-height: 1.4;
     }
 
     .doc-meta {
@@ -115,28 +134,59 @@
       font-family: var(--mono);
       font-size: 12px;
       color: var(--muted);
+      line-height: 1.5;
     }
 
-    .city-date {
+    .city-date-row {
       display: flex;
       justify-content: space-between;
       margin-bottom: 24px;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 13px;
-      color: var(--muted);
+      color: var(--text);
       border-bottom: 1px dashed var(--border);
-      padding-bottom: 10px;
+      padding-bottom: 12px;
+    }
+
+    .fill-line {
+      display: inline-block;
+      min-width: 180px;
+      border-bottom: 1px solid #000;
+      vertical-align: bottom;
     }
 
     .preamble {
-      margin-bottom: 24px;
-      text-align: justify;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .preamble-block {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+    }
+
+    .preamble-block p {
+      margin-bottom: 8px;
+      text-align: left;
+    }
+    .preamble-block p:last-child { margin-bottom: 0; }
+
+    .line-slot {
+      display: block;
+      width: 100%;
+      height: 24px;
+      border-bottom: 1px solid #94a3b8;
+      margin-top: 4px;
+      margin-bottom: 8px;
     }
 
     h2 {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
-      margin: 24px 0 10px;
+      margin: 22px 0 10px;
       color: var(--primary);
       display: flex;
       align-items: center;
@@ -147,102 +197,154 @@
       content: "";
       display: inline-block;
       width: 4px;
-      height: 14px;
+      height: 13px;
       background: var(--accent);
       border-radius: 2px;
     }
 
-    p, ul {
-      margin-bottom: 12px;
+    p {
+      margin-bottom: 10px;
       color: #334155;
-      text-align: justify;
+      text-align: left;
+      line-height: 1.6;
     }
 
     ul {
       padding-left: 20px;
       list-style-type: square;
+      margin-bottom: 12px;
     }
 
-    li { margin-bottom: 6px; }
+    li { 
+      margin-bottom: 6px;
+      color: #334155;
+      text-align: left;
+      line-height: 1.5;
+    }
 
     .highlight-box {
-      background: #f1f5f9;
+      background: #f8fafc;
       border-left: 3px solid var(--accent);
       padding: 12px 16px;
-      margin: 16px 0;
+      margin: 14px 0;
       border-radius: 0 6px 6px 0;
       font-size: 13px;
     }
 
-    .field-placeholder {
-      color: var(--muted);
-      border-bottom: 1px dotted var(--muted);
-      padding: 0 4px;
-      font-style: italic;
-    }
-
-    .signatures {
-      margin-top: 40px;
-      padding-top: 24px;
+    /* REQUISITES & SIGNATURES TABLE */
+    .req-section {
+      margin-top: 32px;
+      padding-top: 20px;
       border-top: 2px solid var(--primary);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 36px;
+      page-break-inside: avoid;
     }
 
-    .sig-col h3 {
-      font-size: 13px;
+    .req-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      page-break-inside: avoid;
+    }
+
+    .req-table td {
+      vertical-align: top;
+      width: 50%;
+      padding: 16px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+    }
+
+    .req-table td.contractor {
+      background: #f8fafc;
+    }
+
+    .req-table h3 {
+      font-size: 12px;
       text-transform: uppercase;
       font-family: var(--mono);
       color: var(--muted);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
     }
 
-    .sig-details {
+    .req-table p {
       font-size: 12.5px;
-      line-height: 1.6;
-    }
-
-    .sig-details p {
+      line-height: 1.55;
       margin-bottom: 6px;
-      text-align: left;
     }
 
-    .bank-block {
-      background: #f8fafc;
+    .client-field {
+      margin-bottom: 10px;
+    }
+    .client-field label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-family: var(--mono);
+      margin-bottom: 2px;
+    }
+    .client-field .blank-line {
+      display: block;
+      width: 100%;
+      height: 20px;
+      border-bottom: 1px solid #94a3b8;
+    }
+
+    .bank-card {
+      background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 8px 12px;
+      padding: 8px 10px;
       margin: 8px 0;
       font-family: var(--mono);
-      font-size: 11.5px;
-      line-height: 1.5;
+      font-size: 11px;
+      line-height: 1.45;
     }
 
-    .sig-line {
-      margin-top: 28px;
-      border-top: 1px solid var(--border);
-      padding-top: 8px;
-      font-size: 12px;
+    .sig-area {
+      margin-top: 24px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+    .sig-area .line {
+      display: block;
+      width: 100%;
+      height: 24px;
+      border-bottom: 1px solid #000;
+      margin-bottom: 4px;
+    }
+    .sig-area .caption {
+      font-size: 11px;
       color: var(--muted);
       display: flex;
       justify-content: space-between;
     }
 
     @media print {
-      body { background: #fff; padding: 0; font-size: 11pt; }
-      .toolbar { display: none; }
+      body { background: #fff; padding: 0; font-size: 11pt; color: #000; }
+      .toolbar { display: none !important; }
       .paper { box-shadow: none; border: none; padding: 0; max-width: 100%; }
       h2 { page-break-after: avoid; }
-      .signatures { page-break-inside: avoid; }
+      .req-section, .req-table { page-break-inside: avoid !important; }
+      .preamble-block { background: #fff; border: 1px solid #ccc; }
+      .req-table td { border: 1px solid #000 !important; }
+      .req-table td.contractor { background: #fff !important; }
+      .bank-card { border: 1px solid #ccc; background: #fff; }
     }
 
     @media (max-width: 768px) {
-      .paper { padding: 30px 20px; }
-      .signatures { grid-template-columns: 1fr; gap: 28px; }
+      .paper { padding: 24px 16px; }
       .doc-header { flex-direction: column; }
       .doc-meta { text-align: left; }
+      .req-table { display: block; }
+      .req-table tr, .req-table td { display: block; width: 100%; }
+      .req-table td:first-child { margin-bottom: 16px; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .toolbar__actions { justify-content: stretch; }
+      .toolbar__actions .btn { flex: 1; justify-content: center; }
     }
   </style>
 </head>
@@ -253,14 +355,21 @@
       BIMTWIN<span>NDA</span>
       <small style="color:var(--muted); font-size:12px; font-weight:normal;">Соглашение о конфиденциальности</small>
     </div>
-    <button class="btn-print" onclick="window.print()">🖨️ Распечатать / Сохранить в PDF</button>
+    <div class="toolbar__actions">
+      <a class="btn btn-docx" href="nda.docx" download="NDA_BIMTWIN_Template.docx">
+        📥 Скачать в Word (.docx)
+      </a>
+      <button class="btn btn-print" onclick="window.print()">
+        🖨️ Распечатать / Сохранить в PDF
+      </button>
+    </div>
   </div>
 
   <main class="paper">
     <header class="doc-header">
       <div class="doc-title">
-        <h1>Соглашение о конфиденциальности (NDA)</h1>
-        <p>О защите коммерческой тайны, проектной документации и цифровых информационных моделей (BIM)</p>
+        <h1>СОГЛАШЕНИЕ О КОНФИДЕНЦИАЛЬНОСТИ (NDA)</h1>
+        <p>о защите коммерческой тайны, проектной документации и цифровых моделей (BIM)</p>
       </div>
       <div class="doc-meta">
         <div>Номер: <strong>NDA-TWIN-202_ / ___</strong></div>
@@ -268,31 +377,41 @@
       </div>
     </header>
 
-    <div class="city-date">
-      <span>г. ________________________</span>
-      <span>«___» ____________ 202_ г.</span>
+    <div class="city-date-row">
+      <div>г. <span class="fill-line" style="min-width: 140px;"></span></div>
+      <div>«<span class="fill-line" style="min-width: 30px;"></span>» <span class="fill-line" style="min-width: 100px;"></span> 202_ г.</div>
     </div>
 
     <div class="preamble">
-      <p>
-        <strong>Заказчик / Раскрывающая сторона:</strong> <span class="field-placeholder">____________________________________________________________________________________</span>, в лице <span class="field-placeholder">________________________________________________</span>, действующего на основании <span class="field-placeholder">________________________________</span>, с одной стороны, и
-      </p>
-      <p>
-        <strong>Исполнитель / Получающая сторона:</strong> <strong>Индивидуальный предприниматель Искаков Дмитрий Рашитович (ИП Искаков Д.Р.)</strong>, бренд проектного производства <strong>BIMTWIN</strong>, действующий на основании Талона о регистрации индивидуального предпринимателя, с другой стороны,
-      </p>
-      <p>
+      <div class="preamble-block">
+        <p><strong>Заказчик (Раскрывающая сторона):</strong></p>
+        <span class="line-slot" title="Наименование организации или ФИО Заказчика"></span>
+        <span class="line-slot" title="в лице Должность, ФИО представителя и основание полномочий"></span>
+      </div>
+
+      <div class="preamble-block" style="background:#ffffff;">
+        <p>
+          <strong>Исполнитель (Получающая сторона):</strong> <strong>Индивидуальный предприниматель Искаков Дмитрий Рашитович (ИП Искаков Д.Р.)</strong>, бренд проектного производства <strong>BIMTWIN</strong>, действующий на основании Талона о государственной регистрации индивидуального предпринимателя, с другой стороны,
+        </p>
+      </div>
+
+      <p style="margin-top: 10px;">
         далее совместно именуемые «Стороны», а по отдельности — «Сторона», заключили настоящее Соглашение о конфиденциальности (далее — «Соглашение») о нижеследующем:
       </p>
     </div>
 
     <h2>1. Предмет Соглашения</h2>
     <p>
-      1.1. Стороны намерены осуществлять техническое, расчетное и проектное взаимодействие, включая передачу исходных материалов для проведения предварительной оценки, выполнения BIM-моделирования, разработки разделов проектной и рабочей документации, независимого BIM-аудита, координации разделов, выявления пространственных и междисциплинарных коллизий (Clash Detection в Navisworks / Revit) и верификации объемов работ и материалов (QTO) в отношении Объекта (Объектов) Заказчика:
+      1.1. Стороны намерены осуществлять техническое, расчетное и проектное взаимодействие, включая передачу исходных материалов для предварительной оценки, выполнения BIM-моделирования, разработки разделов проектной и рабочей документации, независимого BIM-аудита, координации разделов, поиска междисциплинарных коллизий (Clash Detection в Navisworks / Revit) и верификации объемов материалов (QTO) в отношении Объекта (Объектов) Заказчика:
     </p>
-    <p>
-      <strong>Наименование / строительный адрес объекта:</strong> <span class="field-placeholder">____________________________________________________________________________________________________</span><br>
-      <strong>Ориентировочная площадь / характеристики:</strong> <span class="field-placeholder">________________________________________</span> (далее — «Объект»).
-    </p>
+    
+    <div style="background:#f8fafc; border:1px solid var(--border); border-radius:6px; padding:12px 16px; margin:10px 0 14px;">
+      <p style="margin-bottom:4px;"><strong>Наименование / строительный адрес объекта:</strong></p>
+      <span class="line-slot"></span>
+      <p style="margin-bottom:4px; margin-top:10px;"><strong>Ориентировочная площадь / характеристики:</strong></p>
+      <span class="line-slot" style="margin-bottom:0;"></span>
+    </div>
+
     <p>
       1.2. В целях исполнения указанных задач Раскрывающая сторона предоставляет Получающей стороне доступ к исходной исходно-разрешительной, архитектурной, конструктивной, инженерной, технологической и сопутствующей документации.
     </p>
@@ -324,70 +443,96 @@
     </ul>
 
     <h2>4. Исключения из конфиденциальности</h2>
-    <p>4.1. Обязательства по сохранению тайны не распространяются на сведения, которые:</p>
-    <ul>
-      <li>Являются общеизвестными или стали публично доступными без нарушения условий настоящего Соглашения;</li>
-      <li>Были официально известны Получающей стороне до момента их раскрытия без обязательства соблюдения конфиденциальности;</li>
-      <li>Подлежат раскрытию по законному требованию уполномоченных государственных органов или суда (с предварительным уведомлением Раскрывающей стороны, если это разрешено законом).</li>
-    </ul>
+    <p>
+      4.1. Обязательства по сохранению тайны не распространяются на сведения, которые являются общеизвестными, были официально известны Получающей стороне до их раскрытия, либо подлежат раскрытию по законному требованию уполномоченных государственных органов или суда.
+    </p>
 
     <h2>5. Срок действия Соглашения</h2>
     <p>
-      5.1. Настоящее Соглашение вступает в силу с даты его подписания (включая обмен подписанными электронными / скан-копиями посредством электронной почты или защищенных мессенджеров) и сохраняет свою силу в течение <strong>3 (трех) лет</strong> с даты подписания.
+      5.1. Настоящее Соглашение вступает в силу с даты его подписания (включая обмен подписанными скан-копиями по электронной почте или в защищенных мессенджерах) и сохраняет свою силу в течение <strong>3 (трех) лет</strong> с даты подписания.
     </p>
 
     <h2>6. Ответственность Сторон</h2>
     <p>
-      6.1. В случае нарушения обязательств, предусмотренных настоящим Соглашением, виновная Сторона обязуется возместить другой Стороне документально подтвержденный реальный ущерб, причиненный разглашением Конфиденциальной информации, в порядке, предусмотренном применимым законодательством.
+      6.1. В случае нарушения обязательств виновная Сторона обязуется возместить другой Стороне документально подтвержденный реальный ущерб в порядке, предусмотренном действующим законодательством.
     </p>
 
-    <h2>7. Реквизиты и подписи Сторон</h2>
+    <!-- 7. REQUISITES & SIGNATURES -->
+    <div class="req-section">
+      <h2>7. Реквизиты и подписи Сторон</h2>
 
-    <div class="signatures">
-      <div class="sig-col">
-        <h3>Раскрывающая сторона (Заказчик):</h3>
-        <div class="sig-details">
-          <p><strong>Организация / ФИО:</strong></p>
-          <p class="field-placeholder">__________________________________________________</p>
-          <p><strong>БИН / ИИН / Рег. номер:</strong></p>
-          <p class="field-placeholder">__________________________________________________</p>
-          <p><strong>Юридический / почтовый адрес:</strong></p>
-          <p class="field-placeholder">__________________________________________________</p>
-          <p><strong>Телефон / Email:</strong></p>
-          <p class="field-placeholder">__________________________________________________</p>
-          <p><strong>Банковские реквизиты (IBAN, Банк):</strong></p>
-          <p class="field-placeholder">__________________________________________________</p>
-        </div>
-        <div class="sig-line">
-          <span>Подпись: __________________</span>
-          <span>(М.П.)</span>
-        </div>
-      </div>
+      <table class="req-table">
+        <tr>
+          <!-- CLIENT -->
+          <td>
+            <h3>Заказчик (Раскрывающая сторона):</h3>
+            
+            <div class="client-field">
+              <label>Организация / ФИО:</label>
+              <span class="blank-line"></span>
+            </div>
 
-      <div class="sig-col">
-        <h3>Получающая сторона (Исполнитель):</h3>
-        <div class="sig-details">
-          <p><strong>ИП Искаков Д.Р.</strong></p>
-          <p>BIMTWIN Production · BIM-моделирование и координация</p>
-          <p><strong>ИИН:</strong> 840405350469</p>
-          <p><strong>Адрес:</strong> 110000, Республика Казахстан, г. Костанай, ул. Абая 28/1</p>
-          
-          <div class="bank-block">
-            <strong>Банковские реквизиты:</strong><br>
-            ИИК: KZ14722S000029502043 (KZT)<br>
-            Банк: АО «Kaspi Bank»<br>
-            БИК: CASPKZKA
-          </div>
+            <div class="client-field">
+              <label>БИН / ИИН / Регистрационный №:</label>
+              <span class="blank-line"></span>
+            </div>
 
-          <p><strong>Email:</strong> zolotomoskvy@yandex.ru</p>
-          <p><strong>Тел. / WhatsApp:</strong> +7 (777) 555-67-89</p>
-          <p><strong>Сайт:</strong> https://bimtwin.kz</p>
-        </div>
-        <div class="sig-line">
-          <span>Подпись: __________________ / Искаков Д.Р.</span>
-          <span>(М.П.)</span>
-        </div>
-      </div>
+            <div class="client-field">
+              <label>Юридический / почтовый адрес:</label>
+              <span class="blank-line"></span>
+            </div>
+
+            <div class="client-field">
+              <label>Телефон / Email:</label>
+              <span class="blank-line"></span>
+            </div>
+
+            <div class="client-field">
+              <label>Банковские реквизиты (IBAN, Банк):</label>
+              <span class="blank-line"></span>
+              <span class="blank-line" style="margin-top:6px;"></span>
+            </div>
+
+            <div class="sig-area">
+              <span class="line"></span>
+              <div class="caption">
+                <span>Подпись представителя</span>
+                <span>(М.П.)</span>
+              </div>
+            </div>
+          </td>
+
+          <!-- CONTRACTOR -->
+          <td class="contractor">
+            <h3>Исполнитель (Получающая сторона):</h3>
+            
+            <p><strong>ИП Искаков Д.Р.</strong></p>
+            <p style="color:var(--muted); font-size:11.5px; margin-top:-2px;">BIMTWIN Production · BIM-моделирование и координация</p>
+            
+            <p style="margin-top:8px;"><strong>ИИН:</strong> 840405350469</p>
+            <p><strong>Адрес:</strong> 110000, РК, г. Костанай, ул. Абая 28/1</p>
+
+            <div class="bank-card">
+              <strong>Банковские реквизиты:</strong><br>
+              ИИК: KZ14722S000029502043 (KZT)<br>
+              Банк: АО «Kaspi Bank»<br>
+              БИК: CASPKZKA
+            </div>
+
+            <p><strong>Email:</strong> iskakovd0504@gmail.com</p>
+            <p><strong>Тел. / WhatsApp:</strong> +7 (777) 555-67-89</p>
+            <p><strong>Сайт:</strong> https://bimtwin.kz</p>
+
+            <div class="sig-area">
+              <span class="line"></span>
+              <div class="caption">
+                <span>Искаков Д.Р.</span>
+                <span>(М.П.)</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
     </div>
   </main>
 
